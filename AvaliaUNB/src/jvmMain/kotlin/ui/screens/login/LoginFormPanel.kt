@@ -14,8 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import resources.StringResources
 import theme.*
 import ui.components.GeneralTextField
+import java.util.*
 
 @Composable
 fun LoginFormPanel() {
@@ -58,14 +60,14 @@ private fun LoginFormTitle() {
         )
         Text(
             textAlign = TextAlign.Center,
-            text = "AvaliaUNB",
+            text = StringResources.screenLoginAppTitle,
             style = MaterialTheme.typography.h4,
             modifier = Modifier
                 .padding(start = 26.dp)
         )
     }
     Text(
-        text = "Veja avaliações de outros estudantes e se informe no período de matrículas!",
+        text = StringResources.screenLoginSubtitle,
         textAlign = TextAlign.Justify,
         style = MaterialTheme.typography.subtitle2,
         modifier = Modifier
@@ -76,7 +78,7 @@ private fun LoginFormTitle() {
 @Composable
 private fun LoginFormFields() {
     Text(
-        text = "LOGIN",
+        text = StringResources.screenLoginFormTitle.uppercase(Locale.getDefault()),
         style = MaterialTheme.typography.h6
     )
     Divider(
@@ -84,7 +86,7 @@ private fun LoginFormFields() {
             .padding(start = 8.dp, end = 8.dp, top = 14.dp, bottom = 16.dp)
     )
     Text(
-        text = "E-MAIL",
+        text = StringResources.screenLoginEmailFieldTitle.uppercase(Locale.getDefault()),
         style = MaterialTheme.typography.subtitle1,
         modifier = Modifier
             .padding(bottom = 12.dp)
@@ -92,11 +94,11 @@ private fun LoginFormFields() {
     GeneralTextField(
         value = "",
         onValueChange = {},
-        hintText = "Insira seu e-mail",
+        hintText = StringResources.screenLoginEmailFieldHint,
         startIcon = Icons.Filled.Email
     )
     Text(
-        text = "SENHA",
+        text = StringResources.screenLoginEmailPasswordTitle.uppercase(Locale.getDefault()),
         style = MaterialTheme.typography.subtitle1,
         modifier = Modifier
             .padding(bottom = 12.dp, top = 20.dp)
@@ -104,7 +106,7 @@ private fun LoginFormFields() {
     GeneralTextField(
         value = "",
         onValueChange = {},
-        hintText = "Insira sua senha",
+        hintText = StringResources.screenLoginEmailPasswordHint,
         startIcon = Icons.Filled.Lock,
         endIcon = Icons.Filled.Visibility
     )
@@ -121,7 +123,7 @@ private fun LoginFormFields() {
             .padding(top = 36.dp)
     ) {
         Text(
-            text = "LOGIN",
+            text = StringResources.screenLoginButton.uppercase(Locale.getDefault()),
             style = MaterialTheme.typography.button
         )
     }
@@ -134,7 +136,7 @@ private fun LoginFormFields() {
                 .weight(1f)
         )
         Text(
-            text = "Ou",
+            text = StringResources.screenLoginOr,
             style = MaterialTheme.typography.subtitle2
         )
         Divider(
@@ -154,7 +156,7 @@ private fun LoginFormFields() {
             .fillMaxWidth()
     ) {
         Text(
-            text = "ENTRAR SEM CONTA",
+            text = StringResources.screenLoginWithoutAccountButton.uppercase(Locale.getDefault()),
             style = MaterialTheme.typography.button,
             color = DimGray
         )
@@ -170,13 +172,13 @@ private fun LoginRegister() {
             .fillMaxWidth()
     ) {
         Text(
-            text = "Não possui uma conta?",
+            text = StringResources.screenLoginNoAccountQuestion,
             style = MaterialTheme.typography.body2,
             modifier = Modifier
                 .padding(end = 6.dp)
         )
         Text(
-            text = "Registre-se!",
+            text = StringResources.screenLoginNoAccountRegister,
             style = MaterialTheme.typography.body2,
             color = UnbGreen
         )
