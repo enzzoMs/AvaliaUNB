@@ -8,16 +8,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import resources.StringResources
-import theme.*
+import theme.DimGray
+import theme.Platinum
+import theme.UnbGreen
+import theme.White
 import ui.components.GeneralTextField
 import java.util.*
+
 
 @Composable
 fun LoginFormPanel() {
@@ -77,6 +84,11 @@ private fun LoginFormTitle() {
 
 @Composable
 private fun LoginFormFields() {
+    var userEmail by remember { mutableStateOf("") }
+    var userPassword by remember { mutableStateOf("") }
+    var passwordFieldEndIcon by remember { mutableStateOf(Icons.Filled.Visibility) }
+    var passwordFieldVisualTransformation by remember { mutableStateOf(VisualTransformation.None) }
+
     Text(
         text = StringResources.screenLoginFormTitle.uppercase(Locale.getDefault()),
         style = MaterialTheme.typography.h6
@@ -92,8 +104,8 @@ private fun LoginFormFields() {
             .padding(bottom = 12.dp)
     )
     GeneralTextField(
-        value = "",
-        onValueChange = {},
+        value = userEmail,
+        onValueChange = { userEmail = it },
         hintText = StringResources.screenLoginEmailFieldHint,
         startIcon = Icons.Filled.Email
     )
@@ -104,11 +116,21 @@ private fun LoginFormFields() {
             .padding(bottom = 12.dp, top = 20.dp)
     )
     GeneralTextField(
-        value = "",
-        onValueChange = {},
+        value = userPassword,
+        onValueChange = { userPassword = it},
         hintText = StringResources.screenLoginEmailPasswordHint,
         startIcon = Icons.Filled.Lock,
-        endIcon = Icons.Filled.Visibility
+        endIcon = passwordFieldEndIcon,
+        visualTransformation = passwordFieldVisualTransformation,
+        onEndIconClicked = {
+            if (passwordFieldVisualTransformation == VisualTransformation.None) {
+                passwordFieldVisualTransformation = PasswordVisualTransformation()
+                passwordFieldEndIcon = Icons.Filled.VisibilityOff
+            } else {
+                passwordFieldVisualTransformation = VisualTransformation.None
+                passwordFieldEndIcon = Icons.Filled.Visibility
+            }
+        }
     )
     Button(
         onClick = {},
