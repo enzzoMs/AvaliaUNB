@@ -1,6 +1,8 @@
 package resources
 
 object StringResources {
+
+    // Tela de Login -------------------------------------------
     const val screenLoginAppTitle = "AvaliaUNB"
     const val screenLoginSubtitle = "Veja avaliações de outros estudantes e se informe no período de matrículas!"
     const val screenLoginFormTitle = "Login"
@@ -13,4 +15,6 @@ object StringResources {
     const val screenLoginWithoutAccountButton = "Entrar sem conta"
     const val screenLoginNoAccountQuestion = "Não possui uma conta?"
     const val screenLoginNoAccountRegister = "Registre-se!"
+    const val screenLoginSidePanelTeachersCaptionTitle = "AVALIAÇÕES DE PROFESSORES"
+    const val screenLoginSidePanelTeachersCaption = "Veja avaliações de outros estudantes e se informe no período de matrículas!"
 }

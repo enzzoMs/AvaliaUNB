@@ -36,7 +36,7 @@ fun LoginFormPanel() {
                 modifier = Modifier
                     .weight(1f)
             )
-            LoginRegister()
+            LoginRegisterText()
         }
         VerticalScrollbar(
             adapter = rememberScrollbarAdapter(stateVertical),
@@ -164,11 +164,11 @@ private fun LoginFormFields() {
 }
 
 @Composable
-private fun LoginRegister() {
+private fun LoginRegisterText() {
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
-            .padding(bottom = 40.dp)
+            .padding(bottom = 40.dp, top = 26.dp)
             .fillMaxWidth()
     ) {
         Text(

@@ -19,7 +19,9 @@ fun LoginScreen() {
             .fillMaxSize()
             .weight(1f)
             .background(MaterialTheme.colors.primary)
-        ) {}
+        ) {
+            LoginSideCarouselPanel()
+        }
     }
 }
 
