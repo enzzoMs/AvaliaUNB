@@ -14,13 +14,19 @@ const val LOGIN_CAROUSEL_SLIDE_DURATION_MS = 6000L
 fun LoginSideCarouselPanel() {
     AutoSlidingImageCarousel(
         imageItems = arrayOf(
-            painterResource("images/rating_people.svg")
-        ),
+            painterResource("images/rating_people.svg"),
+            painterResource("images/rating_subjects.svg"),
+            painterResource("images/students_talking.svg"),
+            ),
         imageTitles = arrayOf(
-            StringResources.screenLoginSidePanelTeachersCaptionTitle
+            StringResources.screenLoginSidePanelTeachersCaptionTitle,
+            StringResources.screenLoginSidePanelSubjectsCaptionTitle,
+            StringResources.screenLoginSidePanelStudentsCaptionTitle
         ),
         imageCaptions = arrayOf(
-            StringResources.screenLoginSidePanelTeachersCaption
+            StringResources.screenLoginSidePanelTeachersCaption,
+            StringResources.screenLoginSidePanelSubjectsCaption,
+            StringResources.screenLoginSidePanelStudentsCaption
         ),
         autoSlideDurationMs = LOGIN_CAROUSEL_SLIDE_DURATION_MS,
         modifier = Modifier

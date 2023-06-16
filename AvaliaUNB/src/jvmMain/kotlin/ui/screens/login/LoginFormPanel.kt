@@ -12,6 +12,9 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -23,6 +26,7 @@ import theme.Platinum
 import theme.UnbGreen
 import theme.White
 import ui.components.GeneralTextField
+import java.awt.Cursor
 import java.util.*
 
 
@@ -60,10 +64,11 @@ private fun LoginFormTitle() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image (
-            painter = painterResource("images/logo_unb.svg"),
+            painter = painterResource("images/logo_avalia_unb.svg"),
             contentDescription = null,
+            contentScale = ContentScale.Fit,
             modifier = Modifier
-                .size(75.dp, (37.5).dp)
+                .size(90.dp)
         )
         Text(
             textAlign = TextAlign.Center,
@@ -78,7 +83,7 @@ private fun LoginFormTitle() {
         textAlign = TextAlign.Justify,
         style = MaterialTheme.typography.subtitle2,
         modifier = Modifier
-            .padding(top = 26.dp, bottom = 24.dp)
+            .padding(top = 20.dp, bottom = 24.dp)
     )
 }
 
@@ -86,8 +91,8 @@ private fun LoginFormTitle() {
 private fun LoginFormFields() {
     var userEmail by remember { mutableStateOf("") }
     var userPassword by remember { mutableStateOf("") }
-    var passwordFieldEndIcon by remember { mutableStateOf(Icons.Filled.Visibility) }
-    var passwordFieldVisualTransformation by remember { mutableStateOf(VisualTransformation.None) }
+    var passwordFieldEndIcon by remember { mutableStateOf(Icons.Filled.VisibilityOff) }
+    var passwordFieldVisualTransformation: VisualTransformation by remember { mutableStateOf(PasswordVisualTransformation()) }
 
     Text(
         text = StringResources.screenLoginFormTitle.uppercase(Locale.getDefault()),
@@ -202,7 +207,9 @@ private fun LoginRegisterText() {
         Text(
             text = StringResources.screenLoginNoAccountRegister,
             style = MaterialTheme.typography.body2,
-            color = UnbGreen
+            color = UnbGreen,
+            modifier = Modifier
+                .pointerHoverIcon(PointerIcon(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)))
         )
     }
 }

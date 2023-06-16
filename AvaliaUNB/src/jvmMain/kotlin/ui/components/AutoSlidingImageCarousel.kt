@@ -55,7 +55,7 @@ fun AutoSlidingImageCarousel(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxSize()
-                        .padding(top = 64.dp, start = 64.dp, end = 64.dp, bottom = 50.dp)
+                        .padding(top = 72.dp, start = 72.dp, end = 72.dp, bottom = 65.dp)
                 )
 
                 imageTitles?.get(imageIndex)?.let {
@@ -83,7 +83,7 @@ fun AutoSlidingImageCarousel(
             numberOfDots = imageItems.size,
             selectedDotIndex = currentImageIndex,
             modifier = Modifier
-                .padding(top = 48.dp)
+                .padding(top = 58.dp)
         )
     }
 

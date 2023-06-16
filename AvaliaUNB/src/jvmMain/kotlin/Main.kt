@@ -7,7 +7,7 @@ import ui.screens.login.LoginScreen
 
 fun main() = application {
     Window(onCloseRequest = ::exitApplication) {
-        AvaliaUnbTheme() {
+        AvaliaUnbTheme {
             AppAvaliaUNB()
         }
     }

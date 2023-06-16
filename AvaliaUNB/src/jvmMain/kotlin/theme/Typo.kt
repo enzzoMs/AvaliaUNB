@@ -18,7 +18,7 @@ val Typography = Typography(
 
     h4 = TextStyle(
         fontWeight = FontWeight.Bold,
-        fontSize = 34.sp,
+        fontSize = 38.sp,
         color = DarkCharcoal
     ),
 
@@ -36,7 +36,7 @@ val Typography = Typography(
 
     subtitle2 = TextStyle(
         fontWeight = FontWeight.SemiBold,
-        fontSize = 14.sp,
+        fontSize = 16.sp,
         color = Gray
     ),
 

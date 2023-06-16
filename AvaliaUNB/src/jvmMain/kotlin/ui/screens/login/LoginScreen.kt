@@ -11,7 +11,7 @@ fun LoginScreen() {
     Row {
         Column(modifier = Modifier
             .fillMaxSize()
-            .weight(1f)
+            .weight(1.2f)
         ) {
             LoginFormPanel()
         }
