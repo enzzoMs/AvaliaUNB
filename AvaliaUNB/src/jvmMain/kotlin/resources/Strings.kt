@@ -1,6 +1,9 @@
 package resources
 
 object StringResources {
+    // Splash Screen -------------------------------------------
+    const val splashScreenFirstAppTitle = "Avalia"
+    const val splashScreenSecondAppTitle = "UNB"
 
     // Tela de Login -------------------------------------------
     const val screenLoginAppTitle = "Bem-vindo ao AvaliaUNB!"
