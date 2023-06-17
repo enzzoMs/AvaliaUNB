@@ -10,11 +10,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import utils.navigation.NavigationController
 
 @Composable
 fun AnimatedSplashScreen(
     splashAnimationDurationMs: Int,
     splashContent: @Composable (scaleModifier: Modifier) -> Unit,
+    onSplashEnd: () -> Unit,
     targetValue: Float,
     modifier: Modifier
 ) {
@@ -27,6 +29,7 @@ fun AnimatedSplashScreen(
                 durationMillis = splashAnimationDurationMs
             )
         )
+        onSplashEnd()
     }
 
     Box(

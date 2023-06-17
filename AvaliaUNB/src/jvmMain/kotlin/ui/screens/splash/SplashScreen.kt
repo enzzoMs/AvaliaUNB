@@ -1,5 +1,6 @@
 package ui.screens.splash
 
+import Screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -21,14 +22,16 @@ import resources.StringResources
 import theme.UnbBlue
 import theme.UnbGreen
 import ui.components.AnimatedSplashScreen
+import utils.navigation.NavigationController
 
 const val SPLASH_ANIMATION_DURATION_MS = 2000
 
 @Composable
-fun SplashScreen() {
+fun SplashScreen(navigationController: NavigationController) {
     AnimatedSplashScreen(
         splashAnimationDurationMs = SPLASH_ANIMATION_DURATION_MS,
         targetValue = 0.9f,
+        onSplashEnd = { navigationController.navigateTo(Screen.Login.label) },
         modifier = Modifier
             .background(Color.White),
         splashContent = { scaleModifier ->
