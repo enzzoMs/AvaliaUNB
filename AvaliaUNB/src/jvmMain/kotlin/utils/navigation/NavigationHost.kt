@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 
 class NavigationHost(
     private val navigationController: NavigationController,
-    private val transitionAnimationDurationMs: Int = 1000,
+    private val transitionAnimationDurationMs: Int = 700,
     private val modifier: Modifier = Modifier
 ) {
 

@@ -56,7 +56,7 @@ fun SplashScreen(navigationController: NavigationController) {
                                 fontSize = 56.sp
                             )
                         ) {
-                            append(StringResources.splashScreenFirstAppTitle)
+                            append(StringResources.FIRST_PART_APP_TITLE)
                         }
 
                         withStyle(
@@ -66,7 +66,7 @@ fun SplashScreen(navigationController: NavigationController) {
                                 fontSize = 56.sp
                             )
                         ) {
-                            append(StringResources.splashScreenSecondAppTitle)
+                            append(StringResources.SECOND_PART_APP_TITLE)
                         }
                     }
                 )

@@ -1,6 +1,8 @@
 package ui.screens.login
 
+import Screen
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -26,12 +28,12 @@ import theme.Platinum
 import theme.UnbGreen
 import theme.White
 import ui.components.GeneralTextField
+import utils.navigation.NavigationController
 import java.awt.Cursor
-import java.util.*
 
 
 @Composable
-fun LoginFormPanel() {
+fun LoginFormPanel(navigationController: NavigationController) {
     Box {
         val stateVertical = rememberScrollState()
 
@@ -47,7 +49,7 @@ fun LoginFormPanel() {
                 modifier = Modifier
                     .weight(1f)
             )
-            LoginRegisterText()
+            LoginRegisterText(navigationController)
         }
         VerticalScrollbar(
             adapter = rememberScrollbarAdapter(stateVertical),
@@ -72,14 +74,14 @@ private fun LoginFormTitle() {
         )
         Text(
             textAlign = TextAlign.Center,
-            text = StringResources.screenLoginAppTitle,
+            text = StringResources.LOGIN_TITLE,
             style = MaterialTheme.typography.h4,
             modifier = Modifier
                 .padding(start = 26.dp)
         )
     }
     Text(
-        text = StringResources.screenLoginSubtitle,
+        text = StringResources.LOGIN_SUBTITLE,
         textAlign = TextAlign.Justify,
         style = MaterialTheme.typography.subtitle2,
         modifier = Modifier
@@ -95,15 +97,18 @@ private fun LoginFormFields() {
     var passwordFieldVisualTransformation: VisualTransformation by remember { mutableStateOf(PasswordVisualTransformation()) }
 
     Text(
-        text = StringResources.screenLoginFormTitle.uppercase(Locale.getDefault()),
+        text = StringResources.LOGIN_FORM_TITLE,
         style = MaterialTheme.typography.h6
     )
+
     Divider(
         modifier = Modifier
             .padding(start = 8.dp, end = 8.dp, top = 14.dp, bottom = 16.dp)
     )
+
+    // Email Field -------------------------------------------------------
     Text(
-        text = StringResources.screenLoginEmailFieldTitle.uppercase(Locale.getDefault()),
+        text = StringResources.EMAIL_FIELD_TITLE,
         style = MaterialTheme.typography.subtitle1,
         modifier = Modifier
             .padding(bottom = 12.dp)
@@ -111,11 +116,13 @@ private fun LoginFormFields() {
     GeneralTextField(
         value = userEmail,
         onValueChange = { userEmail = it },
-        hintText = StringResources.screenLoginEmailFieldHint,
+        hintText = StringResources.EMAIL_FIELD_HINT,
         startIcon = Icons.Filled.Email
     )
+
+    // Password Field -------------------------------------------------------
     Text(
-        text = StringResources.screenLoginEmailPasswordTitle.uppercase(Locale.getDefault()),
+        text = StringResources.PASSWORD_FIELD_TITLE,
         style = MaterialTheme.typography.subtitle1,
         modifier = Modifier
             .padding(bottom = 12.dp, top = 20.dp)
@@ -123,7 +130,7 @@ private fun LoginFormFields() {
     GeneralTextField(
         value = userPassword,
         onValueChange = { userPassword = it},
-        hintText = StringResources.screenLoginEmailPasswordHint,
+        hintText = StringResources.PASSWORD_FIELD_HINT,
         startIcon = Icons.Filled.Lock,
         endIcon = passwordFieldEndIcon,
         visualTransformation = passwordFieldVisualTransformation,
@@ -137,6 +144,7 @@ private fun LoginFormFields() {
             }
         }
     )
+
     Button(
         onClick = {},
         shape = RoundedCornerShape(4.dp),
@@ -150,10 +158,11 @@ private fun LoginFormFields() {
             .padding(top = 36.dp)
     ) {
         Text(
-            text = StringResources.screenLoginButton.uppercase(Locale.getDefault()),
+            text = StringResources.LOGIN_BUTTON,
             style = MaterialTheme.typography.button
         )
     }
+
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -163,7 +172,7 @@ private fun LoginFormFields() {
                 .weight(1f)
         )
         Text(
-            text = StringResources.screenLoginOr,
+            text = StringResources.GENERAL_TEXT_OR,
             style = MaterialTheme.typography.subtitle2
         )
         Divider(
@@ -172,6 +181,7 @@ private fun LoginFormFields() {
                 .weight(1f)
         )
     }
+
     Button(
         onClick = {},
         shape = RoundedCornerShape(4.dp),
@@ -183,7 +193,7 @@ private fun LoginFormFields() {
             .fillMaxWidth()
     ) {
         Text(
-            text = StringResources.screenLoginWithoutAccountButton.uppercase(Locale.getDefault()),
+            text = StringResources.LOGIN_WITHOUT_ACCOUNT_BUTTON,
             style = MaterialTheme.typography.button,
             color = DimGray
         )
@@ -191,7 +201,7 @@ private fun LoginFormFields() {
 }
 
 @Composable
-private fun LoginRegisterText() {
+private fun LoginRegisterText(navigationController: NavigationController) {
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -199,17 +209,22 @@ private fun LoginRegisterText() {
             .fillMaxWidth()
     ) {
         Text(
-            text = StringResources.screenLoginNoAccountQuestion,
+            text = StringResources.LOGIN_NO_ACCOUNT_QUESTION,
             style = MaterialTheme.typography.body2,
             modifier = Modifier
                 .padding(end = 6.dp)
         )
         Text(
-            text = StringResources.screenLoginNoAccountRegister,
+            text = StringResources.LOGIN_NO_ACCOUNT_REGISTER,
             style = MaterialTheme.typography.body2,
             color = UnbGreen,
             modifier = Modifier
                 .pointerHoverIcon(PointerIcon(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)))
+                .clickable(
+                    onClick = { navigationController.navigateTo(Screen.Register.label) },
+                    indication = null,
+                    interactionSource = MutableInteractionSource()
+                )
         )
     }
 }

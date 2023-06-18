@@ -11,7 +11,7 @@ import ui.components.AutoSlidingImageCarousel
 const val LOGIN_CAROUSEL_SLIDE_DURATION_MS = 6000L
 
 @Composable
-fun LoginSideCarouselPanel() {
+fun MainSideCarouselPanel() {
     AutoSlidingImageCarousel(
         imageItems = arrayOf(
             painterResource("images/rating_people.svg"),
@@ -19,14 +19,14 @@ fun LoginSideCarouselPanel() {
             painterResource("images/students_talking.svg"),
             ),
         imageTitles = arrayOf(
-            StringResources.screenLoginSidePanelTeachersCaptionTitle,
-            StringResources.screenLoginSidePanelSubjectsCaptionTitle,
-            StringResources.screenLoginSidePanelStudentsCaptionTitle
+            StringResources.PANEL_TEACHERS_CAPTION_TITLE,
+            StringResources.PANEL_SUBJECTS_CAPTION_TITLE,
+            StringResources.PANEL_STUDENTS_CAPTION_TITLE
         ),
         imageCaptions = arrayOf(
-            StringResources.screenLoginSidePanelTeachersCaption,
-            StringResources.screenLoginSidePanelSubjectsCaption,
-            StringResources.screenLoginSidePanelStudentsCaption
+            StringResources.PANEL_TEACHERS_CAPTION,
+            StringResources.PANEL_SUBJECTS_CAPTION,
+            StringResources.PANEL_STUDENTS_CAPTION
         ),
         autoSlideDurationMs = LOGIN_CAROUSEL_SLIDE_DURATION_MS,
         modifier = Modifier
