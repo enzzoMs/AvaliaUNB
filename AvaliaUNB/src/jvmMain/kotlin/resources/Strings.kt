@@ -35,6 +35,10 @@ object StringResources {
     const val COURSE_FIELD_TITLE = "CURSO"
     const val COURSE_FIELD_HINT = "Insira seu curso"
 
+    const val INVALID_REGISTRATION_NUMBER = "* Matrícula inválida"
+    const val REQUIRED_FIELD = "* Campo obrigatório"
+
+
     const val GENERAL_TEXT_OR = "Ou"
 
 }

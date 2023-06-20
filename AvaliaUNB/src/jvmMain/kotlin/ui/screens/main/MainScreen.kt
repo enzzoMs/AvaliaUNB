@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import ui.screens.login.LoginFormPanel
 import ui.screens.login.MainSideCarouselPanel
 import ui.screens.register.RegisterFormPanel
+import ui.screens.register.viewmodel.RegisterViewModel
 import utils.navigation.NavigationController
 import utils.navigation.NavigationHost
 
@@ -21,7 +22,7 @@ fun MainScreen() {
             this.destinations = { destinationLabel ->
                 when(destinationLabel) {
                     Screen.Login.label -> LoginFormPanel(this)
-                    Screen.Register.label -> RegisterFormPanel(this)
+                    Screen.Register.label -> RegisterFormPanel(this, RegisterViewModel())
                 }
             }
         }

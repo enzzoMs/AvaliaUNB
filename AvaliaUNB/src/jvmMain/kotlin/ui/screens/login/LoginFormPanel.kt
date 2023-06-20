@@ -27,7 +27,9 @@ import theme.DimGray
 import theme.Platinum
 import theme.UnbGreen
 import theme.White
+import ui.components.FormField
 import ui.components.GeneralTextField
+import ui.screens.register.EMAIL_FIELD_INDEX
 import utils.navigation.NavigationController
 import java.awt.Cursor
 
@@ -93,8 +95,6 @@ private fun LoginFormTitle() {
 private fun LoginFormFields() {
     var userEmail by remember { mutableStateOf("") }
     var userPassword by remember { mutableStateOf("") }
-    var passwordFieldEndIcon by remember { mutableStateOf(Icons.Filled.VisibilityOff) }
-    var passwordFieldVisualTransformation: VisualTransformation by remember { mutableStateOf(PasswordVisualTransformation()) }
 
     Text(
         text = StringResources.LOGIN_FORM_TITLE,
@@ -107,41 +107,47 @@ private fun LoginFormFields() {
     )
 
     // Email Field -------------------------------------------------------
-    Text(
-        text = StringResources.EMAIL_FIELD_TITLE,
-        style = MaterialTheme.typography.subtitle1,
-        modifier = Modifier
-            .padding(bottom = 12.dp)
-    )
-    GeneralTextField(
-        value = userEmail,
-        onValueChange = { userEmail = it },
-        hintText = StringResources.EMAIL_FIELD_HINT,
-        startIcon = Icons.Filled.Email
+    FormField(
+        title = StringResources.EMAIL_FIELD_TITLE,
+        textField = {
+            GeneralTextField(
+                value = userEmail,
+                onValueChange = { userEmail = it },
+                hintText = StringResources.EMAIL_FIELD_HINT,
+                startIcon = Icons.Filled.Email
+            )
+        }
     )
 
     // Password Field -------------------------------------------------------
-    Text(
-        text = StringResources.PASSWORD_FIELD_TITLE,
-        style = MaterialTheme.typography.subtitle1,
+    FormField(
+        title = StringResources.PASSWORD_FIELD_TITLE,
         modifier = Modifier
-            .padding(bottom = 12.dp, top = 20.dp)
-    )
-    GeneralTextField(
-        value = userPassword,
-        onValueChange = { userPassword = it},
-        hintText = StringResources.PASSWORD_FIELD_HINT,
-        startIcon = Icons.Filled.Lock,
-        endIcon = passwordFieldEndIcon,
-        visualTransformation = passwordFieldVisualTransformation,
-        onEndIconClicked = {
-            if (passwordFieldVisualTransformation == VisualTransformation.None) {
-                passwordFieldVisualTransformation = PasswordVisualTransformation()
-                passwordFieldEndIcon = Icons.Filled.VisibilityOff
-            } else {
-                passwordFieldVisualTransformation = VisualTransformation.None
-                passwordFieldEndIcon = Icons.Filled.Visibility
+            .padding(top = 22.dp),
+        textField = {
+            var passwordFieldEndIcon by remember { mutableStateOf(Icons.Filled.VisibilityOff) }
+            var passwordFieldVisualTransformation: VisualTransformation by remember {
+                    mutableStateOf(PasswordVisualTransformation()
+                )
             }
+
+            GeneralTextField(
+                value = userPassword,
+                onValueChange = { userPassword = it},
+                hintText = StringResources.PASSWORD_FIELD_HINT,
+                startIcon = Icons.Filled.Lock,
+                endIcon = passwordFieldEndIcon,
+                visualTransformation = passwordFieldVisualTransformation,
+                onEndIconClicked = {
+                    if (passwordFieldVisualTransformation == VisualTransformation.None) {
+                        passwordFieldVisualTransformation = PasswordVisualTransformation()
+                        passwordFieldEndIcon = Icons.Filled.VisibilityOff
+                    } else {
+                        passwordFieldVisualTransformation = VisualTransformation.None
+                        passwordFieldEndIcon = Icons.Filled.Visibility
+                    }
+                }
+            )
         }
     )
 

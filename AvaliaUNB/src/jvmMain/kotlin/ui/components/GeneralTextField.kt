@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import theme.AntiFlashWhite
 import theme.DimGray
 import theme.Gray
@@ -33,6 +34,7 @@ import theme.UnbGreen
 fun GeneralTextField(
     value: String,
     onValueChange: (String) -> Unit,
+    error: Boolean = false,
     hintText: String = "",
     hintTextColor: Color = Gray,
     textStyle: TextStyle = MaterialTheme.typography.body1,
@@ -41,7 +43,7 @@ fun GeneralTextField(
     onEndIconClicked: (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     iconTint: Color = DimGray,
-    borderColor: Color = UnbGreen,
+    focusedBorderColor: Color = UnbGreen,
     modifier: Modifier = Modifier
 ) {
     var hint by remember { mutableStateOf(hintText) }
@@ -56,11 +58,11 @@ fun GeneralTextField(
         modifier = Modifier
             .onFocusChanged { focusState ->
                 hint = if (focusState.hasFocus) "" else hintText
-                border = if (focusState.hasFocus) borderColor else Transparent
+                border = if (focusState.hasFocus) focusedBorderColor else Transparent
             }
             .border(
                 width = 2.dp,
-                color = border,
+                color = if (error) MaterialTheme.colors.error else border,
                 shape = RoundedCornerShape(6.dp)
             ),
         decorationBox = { innerTextField ->

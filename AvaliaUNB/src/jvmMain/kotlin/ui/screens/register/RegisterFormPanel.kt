@@ -19,14 +19,28 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import resources.StringResources
 import theme.*
+import ui.components.FormField
 import ui.components.GeneralTextField
+import ui.screens.register.viewmodel.RegisterViewModel
 import utils.navigation.NavigationController
-import java.util.*
+import java.text.Normalizer.Form
+
+const val REGISTRATION_NUMBER_FIELD_INDEX = 0
+const val NAME_FIELD_INDEX = 1
+const val COURSE_FIELD_INDEX = 2
+const val EMAIL_FIELD_INDEX = 3
+const val PASSWORD_FIELD_INDEX = 4
 
 @Composable
-fun RegisterFormPanel(navigationController: NavigationController) {
+fun RegisterFormPanel(
+    navigationController: NavigationController,
+    registerViewModel: RegisterViewModel
+) {
+    val registerUiState by registerViewModel.registerUiState.collectAsState()
+
     Box {
         val stateVertical = rememberScrollState()
 
@@ -36,13 +50,33 @@ fun RegisterFormPanel(navigationController: NavigationController) {
                 .verticalScroll(stateVertical)
         ) {
             RegisterFormTitle(navigationController)
-            RegisterFormFields()
+            RegisterFormFields(
+                userRegistrationNumber = registerUiState.registrationNumber,
+                onRegistrationNumberChanged = { registerViewModel.updateRegistrationNumber(it) },
+                userName = registerUiState.name,
+                onNameChanged = { registerViewModel.updateName(it) },
+                userCourse = registerUiState.course,
+                onCourseChanged = { registerViewModel.updateCourse(it) },
+                userEmail = registerUiState.email,
+                onEmailChanged = { registerViewModel.updateEmail(it) },
+                userPassword = registerUiState.password,
+                onPasswordChanged = { registerViewModel.updatePassword(it) },
+                invalidFields = registerUiState.run {
+                    listOf(
+                        invalidRegistrationNumber,
+                        invalidName,
+                        invalidCourse,
+                        invalidEmail,
+                        invalidPassword
+                    )
+                }
+            )
             Spacer(
                 modifier = Modifier
                     .weight(1f)
                     .background(Color.Red)
             )
-            RegisterFormButton()
+            RegisterFormButton { registerViewModel.registerUser() }
         }
         VerticalScrollbar(
             adapter = rememberScrollbarAdapter(stateVertical),
@@ -101,17 +135,19 @@ private fun RegisterFormTitle(navigationController: NavigationController) {
 }
 
 @Composable
-private fun RegisterFormFields() {
-    var userRegistrationNumber by remember { mutableStateOf("") }
-    var userName by remember { mutableStateOf("") }
-    var userCourse by remember { mutableStateOf("") }
-
-    var userPassword by remember { mutableStateOf("") }
-    var passwordFieldEndIcon by remember { mutableStateOf(Icons.Filled.VisibilityOff) }
-    var passwordFieldVisualTransformation: VisualTransformation by remember { mutableStateOf(
-        PasswordVisualTransformation()
-    ) }
-
+private fun RegisterFormFields(
+    userRegistrationNumber: String,
+    onRegistrationNumberChanged: (String) -> Unit,
+    userName: String,
+    onNameChanged: (String) -> Unit,
+    userCourse: String,
+    onCourseChanged: (String) -> Unit,
+    userEmail: String,
+    onEmailChanged: (String) -> Unit,
+    userPassword: String,
+    onPasswordChanged: (String) -> Unit,
+    invalidFields: List<Boolean>
+) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -127,78 +163,117 @@ private fun RegisterFormFields() {
         )
 
         // Registration Number Field -----------------------------------------
-        Text(
-            text = StringResources.REGISTRATION_NUMBER_FIELD_TITLE,
-            style = MaterialTheme.typography.subtitle1,
-            modifier = Modifier
-                .padding(bottom = 12.dp)
-        )
-        GeneralTextField(
-            value = userRegistrationNumber,
-            onValueChange = { userRegistrationNumber = it },
-            hintText = StringResources.REGISTRATION_NUMBER_FIELD_HINT,
-            startIcon = Icons.Outlined.Badge
+        FormField(
+            title = StringResources.REGISTRATION_NUMBER_FIELD_TITLE,
+            error = invalidFields[REGISTRATION_NUMBER_FIELD_INDEX],
+            errorMessage = StringResources.INVALID_REGISTRATION_NUMBER,
+            textField = {
+                GeneralTextField(
+                    value = userRegistrationNumber,
+                    onValueChange = onRegistrationNumberChanged,
+                    error = invalidFields[REGISTRATION_NUMBER_FIELD_INDEX],
+                    hintText = StringResources.REGISTRATION_NUMBER_FIELD_HINT,
+                    startIcon = Icons.Outlined.Badge
+                )
+            }
         )
 
+
         // Name Field -------------------------------------------------------
-        Text(
-            text = StringResources.NAME_FIELD_TITLE,
-            style = MaterialTheme.typography.subtitle1,
+        FormField(
+            title = StringResources.NAME_FIELD_TITLE,
+            error = invalidFields[NAME_FIELD_INDEX],
+            errorMessage = StringResources.REQUIRED_FIELD,
             modifier = Modifier
-                .padding(bottom = 12.dp, top = 20.dp)
-        )
-        GeneralTextField(
-            value = userName,
-            onValueChange = { userName = it },
-            hintText = StringResources.NAME_FIELD_HINT,
-            startIcon = Icons.Filled.TextFields
+                .padding(top = 22.dp),
+            textField = {
+                GeneralTextField(
+                    value = userName,
+                    onValueChange = onNameChanged,
+                    error = invalidFields[NAME_FIELD_INDEX],
+                    hintText = StringResources.NAME_FIELD_HINT,
+                    startIcon = Icons.Filled.TextFields
+                )
+            }
         )
 
         // Course Field -------------------------------------------------------
-        Text(
-            text = StringResources.COURSE_FIELD_TITLE,
-            style = MaterialTheme.typography.subtitle1,
+        FormField(
+            title = StringResources.COURSE_FIELD_TITLE,
+            error = invalidFields[COURSE_FIELD_INDEX],
+            errorMessage = StringResources.REQUIRED_FIELD,
             modifier = Modifier
-                .padding(bottom = 12.dp, top = 20.dp)
+                .padding(top = 22.dp),
+            textField = {
+                GeneralTextField(
+                    value = userCourse,
+                    onValueChange = onCourseChanged,
+                    error = invalidFields[COURSE_FIELD_INDEX],
+                    hintText = StringResources.COURSE_FIELD_HINT,
+                    startIcon = Icons.Outlined.CollectionsBookmark
+                )
+            }
         )
-        GeneralTextField(
-            value = userCourse,
-            onValueChange = { userCourse = it },
-            hintText = StringResources.COURSE_FIELD_HINT,
-            startIcon = Icons.Outlined.CollectionsBookmark
+
+        // Email Field -------------------------------------------------------
+        FormField(
+            title = StringResources.EMAIL_FIELD_TITLE,
+            error = invalidFields[EMAIL_FIELD_INDEX],
+            errorMessage = StringResources.REQUIRED_FIELD,
+            modifier = Modifier
+                .padding(top = 22.dp),
+            textField = {
+                GeneralTextField(
+                    value = userEmail,
+                    onValueChange = onEmailChanged,
+                    error = invalidFields[EMAIL_FIELD_INDEX],
+                    hintText = StringResources.EMAIL_FIELD_HINT,
+                    startIcon = Icons.Filled.Email
+                )
+            }
         )
 
         // Password Field -------------------------------------------------------
-        Text(
-            text = StringResources.PASSWORD_FIELD_TITLE,
-            style = MaterialTheme.typography.subtitle1,
+        FormField(
+            title = StringResources.PASSWORD_FIELD_TITLE,
+            error = invalidFields[PASSWORD_FIELD_INDEX],
+            errorMessage = StringResources.REQUIRED_FIELD,
             modifier = Modifier
-                .padding(bottom = 12.dp, top = 20.dp)
-        )
-        GeneralTextField(
-            value = userPassword,
-            onValueChange = { userPassword = it},
-            hintText = StringResources.PASSWORD_FIELD_HINT,
-            startIcon = Icons.Filled.Lock,
-            endIcon = passwordFieldEndIcon,
-            visualTransformation = passwordFieldVisualTransformation,
-            onEndIconClicked = {
-                if (passwordFieldVisualTransformation == VisualTransformation.None) {
-                    passwordFieldVisualTransformation = PasswordVisualTransformation()
-                    passwordFieldEndIcon = Icons.Filled.VisibilityOff
-                } else {
-                    passwordFieldVisualTransformation = VisualTransformation.None
-                    passwordFieldEndIcon = Icons.Filled.Visibility
+                .padding(top = 22.dp),
+            textField = {
+                var passwordFieldEndIcon by remember { mutableStateOf(Icons.Filled.VisibilityOff) }
+                var passwordFieldVisualTransformation: VisualTransformation by remember { mutableStateOf(
+                        PasswordVisualTransformation()
+                    )
                 }
+
+                GeneralTextField(
+                    value = userPassword,
+                    onValueChange = onPasswordChanged,
+                    error = invalidFields[PASSWORD_FIELD_INDEX],
+                    hintText = StringResources.PASSWORD_FIELD_HINT,
+                    startIcon = Icons.Filled.Lock,
+                    endIcon = passwordFieldEndIcon,
+                    visualTransformation = passwordFieldVisualTransformation,
+                    onEndIconClicked = {
+                        if (passwordFieldVisualTransformation == VisualTransformation.None) {
+                            passwordFieldVisualTransformation = PasswordVisualTransformation()
+                            passwordFieldEndIcon = Icons.Filled.VisibilityOff
+                        } else {
+                            passwordFieldVisualTransformation = VisualTransformation.None
+                            passwordFieldEndIcon = Icons.Filled.Visibility
+                        }
+                    }
+                )
             }
         )
     }
 }
 
 @Composable
-private fun RegisterFormButton() {
+private fun RegisterFormButton(onRegisterButtonClicked: () -> Unit) {
     Button(
-        onClick = {},
+        onClick = onRegisterButtonClicked,
         shape = RoundedCornerShape(4.dp),
         contentPadding = PaddingValues(vertical = 11.dp),
         colors = ButtonDefaults.buttonColors(
