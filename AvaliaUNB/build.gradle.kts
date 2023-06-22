@@ -27,6 +27,7 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(compose.materialIconsExtended)
+                implementation("org.postgresql:postgresql:42.3.1")
             }
         }
         val jvmTest by getting

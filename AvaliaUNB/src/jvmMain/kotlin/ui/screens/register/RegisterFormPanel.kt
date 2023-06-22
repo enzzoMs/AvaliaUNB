@@ -19,24 +19,19 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import resources.StringResources
 import theme.*
 import ui.components.FormField
 import ui.components.GeneralTextField
 import ui.screens.register.viewmodel.RegisterViewModel
-import utils.navigation.NavigationController
-import java.text.Normalizer.Form
 
 const val REGISTRATION_NUMBER_FIELD_INDEX = 0
 const val NAME_FIELD_INDEX = 1
-const val COURSE_FIELD_INDEX = 2
-const val EMAIL_FIELD_INDEX = 3
-const val PASSWORD_FIELD_INDEX = 4
+const val EMAIL_FIELD_INDEX = 2
+const val PASSWORD_FIELD_INDEX = 3
 
 @Composable
 fun RegisterFormPanel(
-    navigationController: NavigationController,
     registerViewModel: RegisterViewModel
 ) {
     val registerUiState by registerViewModel.registerUiState.collectAsState()
@@ -49,23 +44,24 @@ fun RegisterFormPanel(
                 .fillMaxHeight()
                 .verticalScroll(stateVertical)
         ) {
-            RegisterFormTitle(navigationController)
+            RegisterFormTitle { registerViewModel.navigateBack() }
             RegisterFormFields(
                 userRegistrationNumber = registerUiState.registrationNumber,
                 onRegistrationNumberChanged = { registerViewModel.updateRegistrationNumber(it) },
                 userName = registerUiState.name,
                 onNameChanged = { registerViewModel.updateName(it) },
-                userCourse = registerUiState.course,
+                userCourse = registerUiState.course ?: "",
                 onCourseChanged = { registerViewModel.updateCourse(it) },
                 userEmail = registerUiState.email,
                 onEmailChanged = { registerViewModel.updateEmail(it) },
                 userPassword = registerUiState.password,
                 onPasswordChanged = { registerViewModel.updatePassword(it) },
+                registrationNumberAlreadyInUse = registerUiState.registrationNumberAlreadyInUse,
+                emailAlreadyInUse = registerUiState.emailAlreadyInUse,
                 invalidFields = registerUiState.run {
                     listOf(
                         invalidRegistrationNumber,
                         invalidName,
-                        invalidCourse,
                         invalidEmail,
                         invalidPassword
                     )
@@ -88,14 +84,16 @@ fun RegisterFormPanel(
 }
 
 @Composable
-private fun RegisterFormTitle(navigationController: NavigationController) {
+private fun RegisterFormTitle(
+    onBackClicked: () -> Unit
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(top = 22.dp)
     ) {
         Button(
-            onClick = { navigationController.navigateTo(Screen.Login.label) },
+            onClick = onBackClicked,
             shape = RectangleShape,
             contentPadding = PaddingValues(start = 38.dp, end = 24.dp, top = 10.dp, bottom = 10.dp),
             colors = ButtonDefaults.buttonColors(
@@ -146,6 +144,8 @@ private fun RegisterFormFields(
     onEmailChanged: (String) -> Unit,
     userPassword: String,
     onPasswordChanged: (String) -> Unit,
+    registrationNumberAlreadyInUse: Boolean = false,
+    emailAlreadyInUse: Boolean = false,
     invalidFields: List<Boolean>
 ) {
     Column(
@@ -165,13 +165,17 @@ private fun RegisterFormFields(
         // Registration Number Field -----------------------------------------
         FormField(
             title = StringResources.REGISTRATION_NUMBER_FIELD_TITLE,
-            error = invalidFields[REGISTRATION_NUMBER_FIELD_INDEX],
-            errorMessage = StringResources.INVALID_REGISTRATION_NUMBER,
+            error = invalidFields[REGISTRATION_NUMBER_FIELD_INDEX] || registrationNumberAlreadyInUse,
+            errorMessage = if (registrationNumberAlreadyInUse) {
+                StringResources.REGISTRATION_NUMBER_ALREADY_IN_USE
+            } else {
+                StringResources.INVALID_REGISTRATION_NUMBER
+            },
             textField = {
                 GeneralTextField(
                     value = userRegistrationNumber,
                     onValueChange = onRegistrationNumberChanged,
-                    error = invalidFields[REGISTRATION_NUMBER_FIELD_INDEX],
+                    error = invalidFields[REGISTRATION_NUMBER_FIELD_INDEX] || registrationNumberAlreadyInUse,
                     hintText = StringResources.REGISTRATION_NUMBER_FIELD_HINT,
                     startIcon = Icons.Outlined.Badge
                 )
@@ -200,7 +204,7 @@ private fun RegisterFormFields(
         // Course Field -------------------------------------------------------
         FormField(
             title = StringResources.COURSE_FIELD_TITLE,
-            error = invalidFields[COURSE_FIELD_INDEX],
+            optional = true,
             errorMessage = StringResources.REQUIRED_FIELD,
             modifier = Modifier
                 .padding(top = 22.dp),
@@ -208,7 +212,6 @@ private fun RegisterFormFields(
                 GeneralTextField(
                     value = userCourse,
                     onValueChange = onCourseChanged,
-                    error = invalidFields[COURSE_FIELD_INDEX],
                     hintText = StringResources.COURSE_FIELD_HINT,
                     startIcon = Icons.Outlined.CollectionsBookmark
                 )
@@ -218,15 +221,19 @@ private fun RegisterFormFields(
         // Email Field -------------------------------------------------------
         FormField(
             title = StringResources.EMAIL_FIELD_TITLE,
-            error = invalidFields[EMAIL_FIELD_INDEX],
-            errorMessage = StringResources.REQUIRED_FIELD,
+            error = invalidFields[EMAIL_FIELD_INDEX] || emailAlreadyInUse,
+            errorMessage = if (emailAlreadyInUse) {
+                StringResources.EMAIL_ALREADY_IN_USE
+            } else {
+                StringResources.REQUIRED_FIELD
+            },
             modifier = Modifier
                 .padding(top = 22.dp),
             textField = {
                 GeneralTextField(
                     value = userEmail,
                     onValueChange = onEmailChanged,
-                    error = invalidFields[EMAIL_FIELD_INDEX],
+                    error = invalidFields[EMAIL_FIELD_INDEX] || emailAlreadyInUse,
                     hintText = StringResources.EMAIL_FIELD_HINT,
                     startIcon = Icons.Filled.Email
                 )

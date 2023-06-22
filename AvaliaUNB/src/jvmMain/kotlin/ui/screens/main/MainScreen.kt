@@ -6,6 +6,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import data.repositories.UserRepository
+import data.source.AppDatabase
+import data.source.UserDAO
 import ui.screens.login.LoginFormPanel
 import ui.screens.login.MainSideCarouselPanel
 import ui.screens.register.RegisterFormPanel
@@ -14,7 +17,7 @@ import utils.navigation.NavigationController
 import utils.navigation.NavigationHost
 
 @Composable
-fun MainScreen() {
+fun MainScreen(userDao: UserDAO) {
     val navigationController = remember {
         NavigationController(
             startDestination = Screen.Login.label
@@ -22,7 +25,12 @@ fun MainScreen() {
             this.destinations = { destinationLabel ->
                 when(destinationLabel) {
                     Screen.Login.label -> LoginFormPanel(this)
-                    Screen.Register.label -> RegisterFormPanel(this, RegisterViewModel())
+                    Screen.Register.label -> RegisterFormPanel(
+                        RegisterViewModel(
+                            navigationController = this,
+                            userRepository = UserRepository(userDao)
+                        )
+                    )
                 }
             }
         }
