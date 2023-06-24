@@ -32,7 +32,8 @@ const val PASSWORD_FIELD_INDEX = 3
 
 @Composable
 fun RegisterFormPanel(
-    registerViewModel: RegisterViewModel
+    registerViewModel: RegisterViewModel,
+    onBackClicked: () -> Unit
 ) {
     val registerUiState by registerViewModel.registerUiState.collectAsState()
 
@@ -44,7 +45,7 @@ fun RegisterFormPanel(
                 .fillMaxHeight()
                 .verticalScroll(stateVertical)
         ) {
-            RegisterFormTitle { registerViewModel.navigateBack() }
+            RegisterFormTitle(onBackClicked)
             RegisterFormFields(
                 userRegistrationNumber = registerUiState.registrationNumber,
                 onRegistrationNumberChanged = { registerViewModel.updateRegistrationNumber(it) },

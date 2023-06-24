@@ -1,9 +1,12 @@
 package data.source
 
 import data.models.UserModel
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserDAO(
-    private val database: AppDatabase
+@Singleton
+class UserDAO @Inject constructor(
+    private val database: DatabaseManager
 ) {
 
     fun insertUser(user: UserModel) {

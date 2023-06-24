@@ -2,8 +2,11 @@ package data.repositories
 
 import data.models.UserModel
 import data.source.UserDAO
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserRepository(
+@Singleton
+class UserRepository @Inject constructor(
     private val userDAO: UserDAO
 ) {
 

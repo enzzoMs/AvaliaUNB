@@ -1,23 +1,24 @@
 package utils.navigation
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 
 class NavigationController(
-    startDestination: String
+    startDestination: Screen
 ) {
-    var destinations: (@Composable (destinationLabel: String) -> Unit)? = null
-
     private var _currentDestination = mutableStateOf(startDestination)
-    val currentDestination: State<String> = _currentDestination
+    val currentDestination: State<Screen> = _currentDestination
 
-    fun navigateTo(destination: String) {
+    private val backStack: MutableList<Screen> = mutableListOf()
+
+    fun navigateTo(destination: Screen) {
+        backStack.add(_currentDestination.value)
         _currentDestination.value = destination
     }
 
-    @Composable
-    fun GetDestination(destinationLabel: String) {
-        destinations?.let { it(destinationLabel) }
+    fun navigateBack() {
+        if (backStack.isNotEmpty()) {
+            _currentDestination.value = backStack.removeLast()
+        }
     }
 }

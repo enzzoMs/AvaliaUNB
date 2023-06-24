@@ -6,13 +6,12 @@ import data.repositories.UserRepository.SaveUserResult.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import utils.navigation.NavigationController
+import javax.inject.Inject
 
 const val REGISTRATION_NUMBER_LENGTH = 9
 const val FIELD_MAX_LENGTH = 100
 
-class RegisterViewModel(
-    private val navigationController: NavigationController,
+class RegisterViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) {
     private val _registerUiState = MutableStateFlow(RegisterUiState())
@@ -70,10 +69,6 @@ class RegisterViewModel(
         return !_registerUiState.value.run {
             invalidRegistrationNumber || invalidName || invalidEmail || invalidPassword
         }
-    }
-
-    fun navigateBack() {
-        navigationController.navigateTo(Screen.Login.label)
     }
 
     fun updateRegistrationNumber(newRegistrationNumber: String) {

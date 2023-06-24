@@ -1,5 +1,6 @@
 import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 
 plugins {
     kotlin("multiplatform")
@@ -15,6 +16,8 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
+apply(plugin = "kotlin-kapt")
+
 kotlin {
     jvm {
         compilations.all {
@@ -22,12 +25,15 @@ kotlin {
         }
         withJava()
     }
+
     sourceSets {
         val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(compose.materialIconsExtended)
                 implementation("org.postgresql:postgresql:42.3.1")
+                implementation("com.google.dagger:dagger:2.46.1")
+                configurations["kapt"].dependencies.add(project.dependencies.create("com.google.dagger:dagger-compiler:2.46.1"))
             }
         }
         val jvmTest by getting

@@ -1,6 +1,5 @@
 package ui.screens.login
 
-import Screen
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -31,6 +30,7 @@ import ui.components.FormField
 import ui.components.GeneralTextField
 import ui.screens.register.EMAIL_FIELD_INDEX
 import utils.navigation.NavigationController
+import utils.navigation.Screen
 import java.awt.Cursor
 
 
@@ -227,7 +227,7 @@ private fun LoginRegisterText(navigationController: NavigationController) {
             modifier = Modifier
                 .pointerHoverIcon(PointerIcon(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)))
                 .clickable(
-                    onClick = { navigationController.navigateTo(Screen.Register.label) },
+                    onClick = { navigationController.navigateTo(Screen.REGISTER) },
                     indication = null,
                     interactionSource = MutableInteractionSource()
                 )
