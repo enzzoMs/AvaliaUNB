@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
+import javax.inject.Singleton
 
 const val REGISTRATION_NUMBER_LENGTH = 9
 const val FIELD_MAX_LENGTH = 100
@@ -17,7 +18,7 @@ class RegisterViewModel @Inject constructor(
     private val _registerUiState = MutableStateFlow(RegisterUiState())
     val registerUiState = _registerUiState.asStateFlow()
 
-    fun registerUser() {
+    fun registerUser(): Boolean {
         if (validateRegisterState()) {
             val saveResult = userRepository.save(_registerUiState.value.run {
                 UserModel(
@@ -31,7 +32,7 @@ class RegisterViewModel @Inject constructor(
 
 
             when (saveResult) {
-                is Success -> print(saveResult.message)
+                is Success -> return true
                 else -> {
                     val isRegistrationNumberAlreadyInUse =
                         saveResult is RegistrationNumberAlreadyInUse
@@ -54,6 +55,8 @@ class RegisterViewModel @Inject constructor(
             }
 
         }
+
+        return false
     }
 
     private fun validateRegisterState(): Boolean {

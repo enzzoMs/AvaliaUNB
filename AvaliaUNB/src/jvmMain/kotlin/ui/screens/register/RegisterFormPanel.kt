@@ -33,7 +33,8 @@ const val PASSWORD_FIELD_INDEX = 3
 @Composable
 fun RegisterFormPanel(
     registerViewModel: RegisterViewModel,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    onRegisterButtonClicked: () -> Unit
 ) {
     val registerUiState by registerViewModel.registerUiState.collectAsState()
 
@@ -73,7 +74,7 @@ fun RegisterFormPanel(
                     .weight(1f)
                     .background(Color.Red)
             )
-            RegisterFormButton { registerViewModel.registerUser() }
+            RegisterFormButton(onRegisterButtonClicked)
         }
         VerticalScrollbar(
             adapter = rememberScrollbarAdapter(stateVertical),

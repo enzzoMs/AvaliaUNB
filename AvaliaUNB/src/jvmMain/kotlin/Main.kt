@@ -3,6 +3,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import di.DaggerComponentHolder
 import theme.AvaliaUnbTheme
 import ui.screens.main.MainScreen
 import ui.screens.splash.SplashScreen

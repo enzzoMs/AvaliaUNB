@@ -28,7 +28,6 @@ import theme.UnbGreen
 import theme.White
 import ui.components.FormField
 import ui.components.GeneralTextField
-import ui.screens.register.EMAIL_FIELD_INDEX
 import utils.navigation.NavigationController
 import utils.navigation.Screen
 import java.awt.Cursor
@@ -227,7 +226,7 @@ private fun LoginRegisterText(navigationController: NavigationController) {
             modifier = Modifier
                 .pointerHoverIcon(PointerIcon(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)))
                 .clickable(
-                    onClick = { navigationController.navigateTo(Screen.REGISTER) },
+                    onClick = { navigationController.navigateTo(Screen.REGISTER_FORM) },
                     indication = null,
                     interactionSource = MutableInteractionSource()
                 )

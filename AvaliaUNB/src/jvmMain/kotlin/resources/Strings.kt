@@ -42,6 +42,11 @@ object StringResources {
     const val REQUIRED_FIELD = "* Campo obrigatório"
     const val OPTIONAL_FIELD = "(Opcional)"
 
+    const val REGISTER_SUCCESSFUL_TITLE = "Registrado com successo!"
+    const val REGISTER_SUCCESSFUL_MESSAGE = "Parabéns! Você já está cadastrado."
+
+    const val BACK_TO_LOGIN_BUTTON = "VOLTAR PARA LOGIN"
+
     const val GENERAL_TEXT_OR = "Ou"
 
 }

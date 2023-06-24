@@ -10,6 +10,5 @@ import javax.inject.Singleton
 @Singleton @Component(modules = [DatabaseModule::class])
 interface AppComponent {
 
-    @Singleton
     fun getRegisterViewModel() : RegisterViewModel
 }

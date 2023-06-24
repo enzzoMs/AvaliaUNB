@@ -1,5 +1,6 @@
 package data.source
 
+import kotlinx.coroutines.*
 import java.io.File
 import java.sql.Connection
 import java.sql.DriverManager
@@ -20,7 +21,6 @@ class DatabaseManager @Inject constructor(
     private val databaseConnection = DriverManager.getConnection(jdbcURL, databaseUser, databasePassword)
 
     init {
-
         val databaseSchema = File(SCHEMA_PATH).readText()
 
         val statements = databaseSchema.split(";")
@@ -28,7 +28,9 @@ class DatabaseManager @Inject constructor(
         statements.forEach { executeStatement(it) }
     }
 
-    fun executeStatement(sqlStatement: String) = databaseConnection.prepareStatement(sqlStatement).execute()
+    fun executeStatement(sqlStatement: String) {
+        databaseConnection.prepareStatement(sqlStatement).execute()
+    }
 
     fun executeQuery(sqlQueryStatement: String): ResultSet = databaseConnection.prepareStatement(sqlQueryStatement).executeQuery()
 }

@@ -12,6 +12,7 @@ import di.DaggerComponentHolder
 import ui.screens.login.LoginFormPanel
 import ui.screens.login.MainSideCarouselPanel
 import ui.screens.register.RegisterFormPanel
+import ui.screens.register.RegisterSuccessfulPanel
 import utils.navigation.NavigationComponent
 import utils.navigation.NavigationController
 import utils.navigation.Screen
@@ -30,9 +31,21 @@ fun MainScreen() {
                 getDestination = { destination ->
                     when(destination) {
                         Screen.LOGIN -> LoginFormPanel(navigationController)
-                        Screen.REGISTER -> RegisterFormPanel(
-                            registerViewModel = DaggerComponentHolder.getAppComponent().getRegisterViewModel(),
-                            onBackClicked = { navigationController.navigateBack() }
+                        Screen.REGISTER_FORM -> {
+                            val registerViewModel = DaggerComponentHolder.appComponent.getRegisterViewModel()
+
+                            RegisterFormPanel(
+                                registerViewModel = registerViewModel,
+                                onBackClicked = { navigationController.navigateBack() },
+                                onRegisterButtonClicked = {
+                                    if (registerViewModel.registerUser()) {
+                                        navigationController.navigateTo(Screen.REGISTER_SUCCESSFUL)
+                                    }
+                                }
+                            )
+                        }
+                        Screen.REGISTER_SUCCESSFUL -> RegisterSuccessfulPanel(
+                            onBackClicked = { navigationController.navigateTo(Screen.LOGIN) }
                         )
                         else -> error("Destination not supported: $destination")
                     }

@@ -3,5 +3,6 @@ package utils.navigation
 enum class Screen {
     SPLASH,
     LOGIN,
-    REGISTER
+    REGISTER_FORM,
+    REGISTER_SUCCESSFUL
 }
