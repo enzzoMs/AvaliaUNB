@@ -1,6 +1,6 @@
 package ui.screens.register.viewmodel
 
-data class RegisterUiState(
+data class RegisterFormUiState(
     val registrationNumber: String = "",
     val name: String = "",
     val course: String? = null,

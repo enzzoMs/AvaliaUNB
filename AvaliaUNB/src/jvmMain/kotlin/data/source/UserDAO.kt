@@ -21,7 +21,17 @@ class UserDAO @Inject constructor(
         )
     }
 
-    fun isUserRegistered(registrationNumber: String): Boolean {
+    fun getUserPassword(registrationNumber: String): String {
+        val queryResult = database.executeQuery(
+            "SELECT senha FROM avalia_unb.usuario WHERE matricula = '${registrationNumber}'"
+        )
+
+        queryResult.next()
+
+        return queryResult.getString("senha")
+    }
+
+    fun isRegistrationNumberInUse(registrationNumber: String): Boolean {
         val queryResult = database.executeQuery(
             "SELECT * FROM avalia_unb.usuario WHERE matricula = '${registrationNumber}'"
         )
@@ -29,7 +39,7 @@ class UserDAO @Inject constructor(
         return queryResult.next()
     }
 
-    fun isEmailRegistered(email: String): Boolean {
+    fun isEmailInUse(email: String): Boolean {
         val queryResult = database.executeQuery(
             "SELECT * FROM avalia_unb.usuario WHERE email = '${email}'"
         )

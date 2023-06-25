@@ -23,7 +23,7 @@ import resources.StringResources
 import theme.*
 import ui.components.FormField
 import ui.components.GeneralTextField
-import ui.screens.register.viewmodel.RegisterViewModel
+import ui.screens.register.viewmodel.RegisterFormViewModel
 
 const val REGISTRATION_NUMBER_FIELD_INDEX = 0
 const val NAME_FIELD_INDEX = 1
@@ -32,11 +32,11 @@ const val PASSWORD_FIELD_INDEX = 3
 
 @Composable
 fun RegisterFormPanel(
-    registerViewModel: RegisterViewModel,
+    registerFormViewModel: RegisterFormViewModel,
     onBackClicked: () -> Unit,
     onRegisterButtonClicked: () -> Unit
 ) {
-    val registerUiState by registerViewModel.registerUiState.collectAsState()
+    val registerUiState by registerFormViewModel.registerFormUiState.collectAsState()
 
     Box {
         val stateVertical = rememberScrollState()
@@ -49,15 +49,15 @@ fun RegisterFormPanel(
             RegisterFormTitle(onBackClicked)
             RegisterFormFields(
                 userRegistrationNumber = registerUiState.registrationNumber,
-                onRegistrationNumberChanged = { registerViewModel.updateRegistrationNumber(it) },
                 userName = registerUiState.name,
-                onNameChanged = { registerViewModel.updateName(it) },
                 userCourse = registerUiState.course ?: "",
-                onCourseChanged = { registerViewModel.updateCourse(it) },
                 userEmail = registerUiState.email,
-                onEmailChanged = { registerViewModel.updateEmail(it) },
                 userPassword = registerUiState.password,
-                onPasswordChanged = { registerViewModel.updatePassword(it) },
+                onRegistrationNumberChanged = { registerFormViewModel.updateRegistrationNumber(it) },
+                onNameChanged = { registerFormViewModel.updateName(it) },
+                onCourseChanged = { registerFormViewModel.updateCourse(it) },
+                onEmailChanged = { registerFormViewModel.updateEmail(it) },
+                onPasswordChanged = { registerFormViewModel.updatePassword(it) },
                 registrationNumberAlreadyInUse = registerUiState.registrationNumberAlreadyInUse,
                 emailAlreadyInUse = registerUiState.emailAlreadyInUse,
                 invalidFields = registerUiState.run {
@@ -137,14 +137,14 @@ private fun RegisterFormTitle(
 @Composable
 private fun RegisterFormFields(
     userRegistrationNumber: String,
-    onRegistrationNumberChanged: (String) -> Unit,
     userName: String,
-    onNameChanged: (String) -> Unit,
     userCourse: String,
-    onCourseChanged: (String) -> Unit,
     userEmail: String,
-    onEmailChanged: (String) -> Unit,
     userPassword: String,
+    onRegistrationNumberChanged: (String) -> Unit,
+    onNameChanged: (String) -> Unit,
+    onCourseChanged: (String) -> Unit,
+    onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     registrationNumberAlreadyInUse: Boolean = false,
     emailAlreadyInUse: Boolean = false,

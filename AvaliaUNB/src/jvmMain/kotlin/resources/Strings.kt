@@ -38,6 +38,8 @@ object StringResources {
     const val INVALID_REGISTRATION_NUMBER = "* Matrícula inválida"
     const val REGISTRATION_NUMBER_ALREADY_IN_USE = "* Matrícula já cadastrada"
     const val EMAIL_ALREADY_IN_USE = "* Email já cadastrado"
+    const val USER_NOT_REGISTERED = " * Usuário não cadastrado"
+    const val WRONG_PASSWORD = " * Senha incorreta"
 
     const val REQUIRED_FIELD = "* Campo obrigatório"
     const val OPTIONAL_FIELD = "(Opcional)"

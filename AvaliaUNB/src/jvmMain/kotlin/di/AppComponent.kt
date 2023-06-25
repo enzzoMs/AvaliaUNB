@@ -1,14 +1,13 @@
 package di
 import dagger.Component
-import dagger.Provides
-import data.repositories.UserRepository
-import data.source.UserDAO
-import ui.screens.register.viewmodel.RegisterViewModel
-import javax.inject.Named
+import ui.screens.login.viewmodel.LoginViewModel
+import ui.screens.register.viewmodel.RegisterFormViewModel
 import javax.inject.Singleton
 
 @Singleton @Component(modules = [DatabaseModule::class])
 interface AppComponent {
 
-    fun getRegisterViewModel() : RegisterViewModel
+    fun getRegisterFormViewModel(): RegisterFormViewModel
+
+    fun getLoginViewModel(): LoginViewModel
 }

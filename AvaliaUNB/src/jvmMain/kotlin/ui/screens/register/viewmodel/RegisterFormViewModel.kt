@@ -7,20 +7,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
-import javax.inject.Singleton
 
-const val REGISTRATION_NUMBER_LENGTH = 9
-const val FIELD_MAX_LENGTH = 100
+private const val REGISTRATION_NUMBER_LENGTH = 9
+private const val FIELD_MAX_LENGTH = 100
 
-class RegisterViewModel @Inject constructor(
+class RegisterFormViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) {
-    private val _registerUiState = MutableStateFlow(RegisterUiState())
-    val registerUiState = _registerUiState.asStateFlow()
+    private val _registerFormUiState = MutableStateFlow(RegisterFormUiState())
+    val registerFormUiState = _registerFormUiState.asStateFlow()
 
     fun registerUser(): Boolean {
         if (validateRegisterState()) {
-            val saveResult = userRepository.save(_registerUiState.value.run {
+            val saveResult = userRepository.save(_registerFormUiState.value.run {
                 UserModel(
                     registrationNumber,
                     name,
@@ -30,37 +29,22 @@ class RegisterViewModel @Inject constructor(
                 )
             })
 
-
-            when (saveResult) {
-                is Success -> return true
-                else -> {
-                    val isRegistrationNumberAlreadyInUse =
-                        saveResult is RegistrationNumberAlreadyInUse
-
-                    val isEmailAlreadyInUse =
-                        saveResult is EmailAlreadyInUse
-
-                    val isEmailAndRegistrationNumberInUse =
-                        saveResult is EmailAndRegistrationNumberInUse
-
-                    _registerUiState.update { registerUiState ->
-                        registerUiState.copy(
-                            registrationNumberAlreadyInUse =
-                                isRegistrationNumberAlreadyInUse || isEmailAndRegistrationNumberInUse,
-                            emailAlreadyInUse =
-                                isEmailAlreadyInUse || isEmailAndRegistrationNumberInUse
-                        )
-                    }
+        when (saveResult) {
+            is Success -> return true
+            is Failure -> _registerFormUiState.update { registerUiState ->
+                    registerUiState.copy(
+                        registrationNumberAlreadyInUse = saveResult.registrationNumberAlreadyInUse,
+                        emailAlreadyInUse = saveResult.emailAlreadyInUse
+                    )
                 }
             }
-
         }
 
         return false
     }
 
     private fun validateRegisterState(): Boolean {
-        _registerUiState.update { registerUiState ->
+        _registerFormUiState.update { registerUiState ->
             registerUiState.copy(
                 invalidRegistrationNumber = registerUiState.registrationNumber.length != REGISTRATION_NUMBER_LENGTH,
                 invalidName = registerUiState.name.isEmpty(),
@@ -69,13 +53,13 @@ class RegisterViewModel @Inject constructor(
             )
         }
 
-        return !_registerUiState.value.run {
+        return !_registerFormUiState.value.run {
             invalidRegistrationNumber || invalidName || invalidEmail || invalidPassword
         }
     }
 
     fun updateRegistrationNumber(newRegistrationNumber: String) {
-        _registerUiState.update { registerUiState ->
+        _registerFormUiState.update { registerUiState ->
             val registrationNumber =  newRegistrationNumber.filter { char -> char.isDigit() }
 
             if (registrationNumber.length <= REGISTRATION_NUMBER_LENGTH) {
@@ -92,7 +76,7 @@ class RegisterViewModel @Inject constructor(
 
     fun updateName(newName: String) {
         if (newName.length <= FIELD_MAX_LENGTH) {
-            _registerUiState.update { registerUiState ->
+            _registerFormUiState.update { registerUiState ->
                 registerUiState.copy(
                     name = newName,
                     invalidName = false
@@ -103,7 +87,7 @@ class RegisterViewModel @Inject constructor(
 
     fun updateCourse(newCourse: String) {
         if (newCourse.length <= FIELD_MAX_LENGTH) {
-            _registerUiState.update { registerUiState ->
+            _registerFormUiState.update { registerUiState ->
                 registerUiState.copy(
                     course = newCourse.ifEmpty { null },
                 )
@@ -113,7 +97,7 @@ class RegisterViewModel @Inject constructor(
 
     fun updateEmail(newEmail: String) {
         if (newEmail.length <= FIELD_MAX_LENGTH) {
-            _registerUiState.update { registerUiState ->
+            _registerFormUiState.update { registerUiState ->
                 registerUiState.copy(
                     email = newEmail,
                     invalidEmail = false,
@@ -125,7 +109,7 @@ class RegisterViewModel @Inject constructor(
 
     fun updatePassword(newPassword: String) {
         if (newPassword.length <= FIELD_MAX_LENGTH) {
-            _registerUiState.update { registerUiState ->
+            _registerFormUiState.update { registerUiState ->
                 registerUiState.copy(
                     password = newPassword,
                     invalidPassword = false

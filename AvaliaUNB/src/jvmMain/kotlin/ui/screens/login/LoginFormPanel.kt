@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.Badge
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import data.repositories.UserRepository
 import resources.StringResources
 import theme.DimGray
 import theme.Platinum
@@ -28,13 +30,20 @@ import theme.UnbGreen
 import theme.White
 import ui.components.FormField
 import ui.components.GeneralTextField
+import ui.screens.login.viewmodel.LoginViewModel
 import utils.navigation.NavigationController
 import utils.navigation.Screen
 import java.awt.Cursor
 
 
 @Composable
-fun LoginFormPanel(navigationController: NavigationController) {
+fun LoginFormPanel(
+    loginViewModel: LoginViewModel,
+    onLoginButtonClicked: () -> Unit,
+    onRegisterClicked: () -> Unit
+) {
+    val loginUiState by loginViewModel.loginUiState.collectAsState()
+
     Box {
         val stateVertical = rememberScrollState()
 
@@ -45,12 +54,22 @@ fun LoginFormPanel(navigationController: NavigationController) {
                 .verticalScroll(stateVertical)
         ) {
             LoginFormTitle()
-            LoginFormFields()
+            LoginFormFields(
+                userRegistrationNumber = loginUiState.registrationNumber,
+                userPassword = loginUiState.password,
+                onRegistrationNumberChanged = { loginViewModel.updateRegistrationNumber(it) },
+                onPasswordChanged = { loginViewModel.updatePassword(it) },
+                invalidRegistrationNumber= loginUiState.invalidRegistrationNumber,
+                invalidPassword = loginUiState.invalidPassword,
+                userNotRegistered = loginUiState.userNotRegistered,
+                wrongPassword = loginUiState.wrongPassword,
+                onLoginButtonClicked = onLoginButtonClicked
+            )
             Spacer(
                 modifier = Modifier
                     .weight(1f)
             )
-            LoginRegisterText(navigationController)
+            LoginRegisterText(onRegisterClicked)
         }
         VerticalScrollbar(
             adapter = rememberScrollbarAdapter(stateVertical),
@@ -91,9 +110,17 @@ private fun LoginFormTitle() {
 }
 
 @Composable
-private fun LoginFormFields() {
-    var userEmail by remember { mutableStateOf("") }
-    var userPassword by remember { mutableStateOf("") }
+private fun LoginFormFields(
+    userRegistrationNumber: String,
+    userPassword: String,
+    onRegistrationNumberChanged: (String) -> Unit,
+    onPasswordChanged: (String) -> Unit,
+    invalidRegistrationNumber: Boolean = false,
+    invalidPassword: Boolean = false,
+    userNotRegistered: Boolean = false,
+    wrongPassword: Boolean = false,
+    onLoginButtonClicked: () -> Unit
+) {
 
     Text(
         text = StringResources.LOGIN_FORM_TITLE,
@@ -105,15 +132,22 @@ private fun LoginFormFields() {
             .padding(start = 8.dp, end = 8.dp, top = 14.dp, bottom = 16.dp)
     )
 
-    // Email Field -------------------------------------------------------
+    // Registration Number Field -------------------------------------------------------
     FormField(
-        title = StringResources.EMAIL_FIELD_TITLE,
+        title = StringResources.REGISTRATION_NUMBER_FIELD_TITLE,
+        error = invalidRegistrationNumber || userNotRegistered,
+        errorMessage = if (userNotRegistered) {
+            StringResources.USER_NOT_REGISTERED
+        } else {
+            StringResources.INVALID_REGISTRATION_NUMBER
+        },
         textField = {
             GeneralTextField(
-                value = userEmail,
-                onValueChange = { userEmail = it },
-                hintText = StringResources.EMAIL_FIELD_HINT,
-                startIcon = Icons.Filled.Email
+                value = userRegistrationNumber,
+                onValueChange = onRegistrationNumberChanged,
+                error = invalidRegistrationNumber || userNotRegistered,
+                hintText = StringResources.REGISTRATION_NUMBER_FIELD_HINT,
+                startIcon = Icons.Outlined.Badge
             )
         }
     )
@@ -121,6 +155,12 @@ private fun LoginFormFields() {
     // Password Field -------------------------------------------------------
     FormField(
         title = StringResources.PASSWORD_FIELD_TITLE,
+        error = invalidPassword || wrongPassword,
+        errorMessage = if (wrongPassword) {
+            StringResources.WRONG_PASSWORD
+        } else {
+            StringResources.REQUIRED_FIELD
+        },
         modifier = Modifier
             .padding(top = 22.dp),
         textField = {
@@ -132,7 +172,8 @@ private fun LoginFormFields() {
 
             GeneralTextField(
                 value = userPassword,
-                onValueChange = { userPassword = it},
+                onValueChange = onPasswordChanged,
+                error = invalidPassword || wrongPassword,
                 hintText = StringResources.PASSWORD_FIELD_HINT,
                 startIcon = Icons.Filled.Lock,
                 endIcon = passwordFieldEndIcon,
@@ -151,7 +192,7 @@ private fun LoginFormFields() {
     )
 
     Button(
-        onClick = {},
+        onClick = onLoginButtonClicked,
         shape = RoundedCornerShape(4.dp),
         contentPadding = PaddingValues(vertical = 10.dp),
         colors = ButtonDefaults.buttonColors(
@@ -206,7 +247,9 @@ private fun LoginFormFields() {
 }
 
 @Composable
-private fun LoginRegisterText(navigationController: NavigationController) {
+private fun LoginRegisterText(
+    onRegisterClicked: () -> Unit
+) {
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -226,7 +269,7 @@ private fun LoginRegisterText(navigationController: NavigationController) {
             modifier = Modifier
                 .pointerHoverIcon(PointerIcon(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)))
                 .clickable(
-                    onClick = { navigationController.navigateTo(Screen.REGISTER_FORM) },
+                    onClick = onRegisterClicked,
                     indication = null,
                     interactionSource = MutableInteractionSource()
                 )

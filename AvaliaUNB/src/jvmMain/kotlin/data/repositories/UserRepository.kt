@@ -9,37 +9,43 @@ import javax.inject.Singleton
 class UserRepository @Inject constructor(
     private val userDAO: UserDAO
 ) {
-
-    fun save(user: UserModel): SaveUserResult {
-        val isUserRegistered = userDAO.isUserRegistered(user.registrationNumber)
-        val isEmailRegistered = userDAO.isEmailRegistered(user.email)
+    fun isUserRegistered(registrationNumber: String, password: String): UserRegistrationStatus {
+        val isRegistrationNumberInUse = userDAO.isRegistrationNumberInUse(registrationNumber)
 
         return when {
-            isUserRegistered && isEmailRegistered -> SaveUserResult.EmailAndRegistrationNumberInUse()
-            isUserRegistered -> SaveUserResult.RegistrationNumberAlreadyInUse()
-            isEmailRegistered -> SaveUserResult.EmailAlreadyInUse()
+            !isRegistrationNumberInUse -> UserRegistrationStatus.NotRegistered
+            userDAO.getUserPassword(registrationNumber) != password -> UserRegistrationStatus.WrongPassword
+            else -> UserRegistrationStatus.Registered
+        }
+    }
+
+    fun save(user: UserModel): SaveUserResult {
+        val isRegistrationNumberInUse = userDAO.isRegistrationNumberInUse(user.registrationNumber)
+        val isEmailInUse = userDAO.isEmailInUse(user.email)
+
+        return when {
+            isRegistrationNumberInUse || isEmailInUse -> SaveUserResult.Failure(
+                registrationNumberAlreadyInUse = isRegistrationNumberInUse,
+                emailAlreadyInUse = isEmailInUse
+            )
             else -> {
                 userDAO.insertUser(user)
-                SaveUserResult.Success()
+                SaveUserResult.Success
             }
         }
     }
 
     sealed class SaveUserResult {
-        data class Success(
-            val message: String = "User saved successfully"
+        object Success : SaveUserResult()
+        data class Failure(
+            val registrationNumberAlreadyInUse: Boolean = false,
+            val emailAlreadyInUse: Boolean = false
         ) : SaveUserResult()
+    }
 
-        data class EmailAlreadyInUse(
-            val errorMessage: String = "Email already in use"
-        ) : SaveUserResult()
-
-        data class RegistrationNumberAlreadyInUse(
-            val errorMessage: String = "Registration number already in use"
-        ) : SaveUserResult()
-
-        data class EmailAndRegistrationNumberInUse(
-            val errorMessage: String = "Both the email and registration number are already in use"
-        ) : SaveUserResult()
+    enum class UserRegistrationStatus {
+        Registered,
+        NotRegistered,
+        WrongPassword
     }
 }

@@ -22,20 +22,29 @@ fun MainScreen() {
     val navigationController = remember { NavigationController(startDestination = Screen.LOGIN) }
 
     Row {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .weight(1.2f)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1.2f)
         ) {
             NavigationComponent(
                 navigationController = navigationController,
                 getDestination = { destination ->
-                    when(destination) {
-                        Screen.LOGIN -> LoginFormPanel(navigationController)
+                    when (destination) {
+                        Screen.LOGIN -> {
+                            val loginViewModel = DaggerComponentHolder.appComponent.getLoginViewModel()
+
+                            LoginFormPanel(
+                                loginViewModel = loginViewModel,
+                                onRegisterClicked = { navigationController.navigateTo(Screen.REGISTER_FORM) },
+                                onLoginButtonClicked = { loginViewModel.login() }
+                            )
+                        }
                         Screen.REGISTER_FORM -> {
-                            val registerViewModel = DaggerComponentHolder.appComponent.getRegisterViewModel()
+                            val registerViewModel = DaggerComponentHolder.appComponent.getRegisterFormViewModel()
 
                             RegisterFormPanel(
-                                registerViewModel = registerViewModel,
+                                registerFormViewModel = registerViewModel,
                                 onBackClicked = { navigationController.navigateBack() },
                                 onRegisterButtonClicked = {
                                     if (registerViewModel.registerUser()) {
@@ -52,10 +61,11 @@ fun MainScreen() {
                 }
             )
         }
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .weight(1f)
-            .background(MaterialTheme.colors.primary)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+                .background(MaterialTheme.colors.primary)
         ) {
             MainSideCarouselPanel()
         }
