@@ -19,6 +19,8 @@ class UserRepository @Inject constructor(
         }
     }
 
+    fun getUser(userRegistrationNumber: String): UserModel = userDAO.getUser(userRegistrationNumber)
+
     fun save(user: UserModel): SaveUserResult {
         val isRegistrationNumberInUse = userDAO.isRegistrationNumberInUse(user.registrationNumber)
         val isEmailInUse = userDAO.isEmailInUse(user.email)

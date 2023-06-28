@@ -1,11 +1,10 @@
 package resources
 
 object StringResources {
-    // Splash Screen -------------------------------------------
     const val FIRST_PART_APP_TITLE = "Avalia"
     const val SECOND_PART_APP_TITLE = "UNB"
+    const val COMPLETE_APP_TITLE = "AvaliaUNB"
 
-    // Main Screen  -------------------------------------------
     const val PANEL_TEACHERS_CAPTION_TITLE = "AVALIAÇÕES DE PROFESSORES"
     const val PANEL_TEACHERS_CAPTION = "Veja avaliações de outros estudantes e se informe no período de matrículas!"
     const val PANEL_SUBJECTS_CAPTION_TITLE = "AVALIAÇÕES DE DISCIPLINAS"
@@ -48,6 +47,14 @@ object StringResources {
     const val REGISTER_SUCCESSFUL_MESSAGE = "Parabéns! Você já está cadastrado."
 
     const val BACK_TO_LOGIN_BUTTON = "VOLTAR PARA LOGIN"
+
+    const val SUBJECTS = "Disciplinas"
+    const val CLASSES = "Turmas"
+    const val TEACHERS = "Professores"
+
+    const val LOGOUT = "Sair"
+
+    const val EDIT_PROFILE = "Editar perfil"
 
     const val GENERAL_TEXT_OR = "Ou"
 

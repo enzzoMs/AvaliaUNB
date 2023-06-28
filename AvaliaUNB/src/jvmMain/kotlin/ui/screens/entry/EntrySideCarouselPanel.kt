@@ -11,7 +11,7 @@ import ui.components.AutoSlidingImageCarousel
 const val LOGIN_CAROUSEL_SLIDE_DURATION_MS = 6000L
 
 @Composable
-fun MainSideCarouselPanel() {
+fun EntrySideCarouselPanel() {
     AutoSlidingImageCarousel(
         imageItems = arrayOf(
             painterResource("images/rating_people.svg"),
