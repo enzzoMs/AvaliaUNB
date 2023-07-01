@@ -1,15 +1,12 @@
 package data.source
 
+import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import data.models.UserModel
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.nio.file.Files
 import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.inject.Singleton
-
-private const val DEFAULT_PROFILE_PIC_PATH = "src/jvmMain/resources/images/person.png"
 
 @Singleton
 class UserDAO @Inject constructor(
@@ -17,18 +14,54 @@ class UserDAO @Inject constructor(
 ) {
 
     fun insertUser(user: UserModel) {
-        val defaultProfilePicture = File(DEFAULT_PROFILE_PIC_PATH)
-        val svgBytes = Files.readAllBytes(defaultProfilePicture.toPath())
+        val defaultProfilePic = user.profilePicture.toAwtImage()
+        val stream = ByteArrayOutputStream()
+        ImageIO.write(defaultProfilePic, "png", stream)
+        val defaultProfilePicBytes = stream.toByteArray()
 
+        val userInsertStatement = "INSERT INTO avalia_unb.usuario VALUES (?, ?, ?, ?, ?, ?)"
+
+        val preparedStatement = database.prepareStatement(userInsertStatement)
+        user.apply {
+            preparedStatement.setString(1, registrationNumber)
+            preparedStatement.setString(2, name)
+            preparedStatement.setString(3, course)
+            preparedStatement.setString(4, email)
+            preparedStatement.setString(5, password)
+            preparedStatement.setBytes(6, defaultProfilePicBytes)
+        }
+
+        preparedStatement.execute()
+    }
+
+    fun updateUser(oldRegistrationNumber: String, updatedUserModel: UserModel) {
+        val userUpdateStatement =
+            "UPDATE avalia_unb.usuario " +
+            "SET matricula = ?, nome = ?, curso = ?, email = ?, " +
+            "senha = ?, foto_de_perfil = ? WHERE matricula = '${oldRegistrationNumber}';"
+
+        val profilePictureBytes = updatedUserModel.profilePicture.toAwtImage()
+        val stream = ByteArrayOutputStream()
+        ImageIO.write(profilePictureBytes, "png", stream)
+
+        val bytes = stream.toByteArray()
+
+        val preparedStatement = database.prepareStatement(userUpdateStatement)
+        updatedUserModel.apply {
+            preparedStatement.setString(1, registrationNumber)
+            preparedStatement.setString(2, name)
+            preparedStatement.setString(3, course)
+            preparedStatement.setString(4, email)
+            preparedStatement.setString(5, password)
+            preparedStatement.setBytes(6, bytes)
+        }
+
+        preparedStatement.execute()
+    }
+
+    fun deleteUser(registrationNumber: String) {
         database.executeStatement(
-            "INSERT INTO avalia_unb.usuario VALUES ('%s', '%s', '%s', '%s', '%s', '%s');".format(
-                user.registrationNumber,
-                user.name,
-                user.course,
-                user.email,
-                user.password,
-                svgBytes
-            )
+            "DELETE FROM avalia_unb.usuario WHERE matricula = '${registrationNumber}'"
         )
     }
 
@@ -39,13 +72,9 @@ class UserDAO @Inject constructor(
 
         queryResult.next()
 
-
         val profilePicBytes = queryResult.getBytes("foto_de_perfil")
-
-        println(profilePicBytes.inputStream())
-        val bufferedImage = ImageIO.read(profilePicBytes.inputStream())
-
-        //val imageBitmap = bufferedImage.toComposeImageBitmap()
+        val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
+        val profilePic = bufferedProfilePicImage.toComposeImageBitmap()
 
         return UserModel(
             queryResult.getString("matricula"),
@@ -53,7 +82,7 @@ class UserDAO @Inject constructor(
             queryResult.getString("curso"),
             queryResult.getString("email"),
             queryResult.getString("senha"),
-            //imageBitmap
+            profilePic
         )
     }
 

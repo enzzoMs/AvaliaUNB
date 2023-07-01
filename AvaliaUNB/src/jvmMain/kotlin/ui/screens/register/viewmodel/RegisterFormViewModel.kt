@@ -2,7 +2,7 @@ package ui.screens.register.viewmodel
 
 import data.models.UserModel
 import data.repositories.UserRepository
-import data.repositories.UserRepository.SaveUserResult.*
+import data.repositories.UserRepository.UserModificationResult.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

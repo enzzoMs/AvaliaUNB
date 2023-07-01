@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 fun NavigationComponent(
     navigationController: NavigationController,
     getDestination: (@Composable (destination: Screen) -> Unit),
-    transitionAnimationDurationMs: Int = 600,
+    transitionAnimationDurationMs: Int = 500,
     modifier: Modifier = Modifier
 ) {
      Box(

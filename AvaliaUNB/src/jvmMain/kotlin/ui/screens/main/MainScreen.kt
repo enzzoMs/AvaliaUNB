@@ -1,5 +1,6 @@
 package ui.screens.main
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,23 +13,32 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import data.models.UserModel
+import di.DaggerComponentHolder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import resources.StringResources
 import theme.*
 import ui.components.NavigationItem
 import ui.components.NavigationPanelColors
 import ui.components.SideNavigationPanel
 import ui.screens.classes.ClassesScreen
-import ui.screens.subjects.SubjectsScreen
 import ui.screens.main.viewmodel.MainScreenViewModel
+import ui.screens.profile.ProfileScreen
+import ui.screens.profile.viewmodel.ProfileViewModel
+import ui.screens.subjects.SubjectsScreen
 import ui.screens.teachers.TeachersScreen
 import utils.navigation.NavigationComponent
 import utils.navigation.NavigationController
 import utils.navigation.Screen
 
+const val NAV_NO_SELECTED_ITEM_INDEX = -1
 const val NAV_ITEM_SUBJECTS_INDEX = 0
 const val NAV_ITEM_CLASSES_INDEX = 1
 const val NAV_ITEM_TEACHERS_INDEX = 2
@@ -36,8 +46,8 @@ const val NAV_ITEM_TEACHERS_INDEX = 2
 @Composable
 fun MainScreen(
     mainScreenViewModel: MainScreenViewModel,
-    userModel: UserModel? = null,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onDeleteAccount: () -> Unit
 ) {
     val navigationController = remember { NavigationController(startDestination = Screen.SUBJECTS) }
 
@@ -46,20 +56,25 @@ fun MainScreen(
     Row {
         SideNavigationPanel(
             onLogoutClicked = onLogout,
-            selectedNavIndex = if (mainScreenUiState.currentSelectedNavItem == null) {
-                mainScreenViewModel.updateNavItem(
-                    NavigationItem(
-                        label = StringResources.SUBJECTS,
-                        icon = Icons.Outlined.School,
-                        index = NAV_ITEM_SUBJECTS_INDEX
+            selectedNavIndex = when {
+                mainScreenUiState.onEditProfile -> NAV_NO_SELECTED_ITEM_INDEX
+                mainScreenUiState.selectedNavItemIndex == null -> {
+                    mainScreenViewModel.updatePageInformation(
+                        newTitle = StringResources.SUBJECTS,
+                        newIcon = Icons.Outlined.School
                     )
-                )
-                NAV_ITEM_SUBJECTS_INDEX
-            } else {
-                mainScreenUiState.currentSelectedNavItem!!.index
+                    NAV_ITEM_SUBJECTS_INDEX
+                }
+                else -> mainScreenUiState.selectedNavItemIndex!!
             },
             onItemClicked = { navItem ->
-                mainScreenViewModel.updateNavItem(navItem)
+                mainScreenViewModel.setIsEditingProfile(false)
+
+                mainScreenViewModel.updatePageInformation(
+                    newTitle = navItem.label,
+                    newIcon = navItem.icon,
+                )
+                mainScreenViewModel.updateSelectedNavIndex(navItem.index)
                 navigationController.navigateTo(
                     when(navItem.index) {
                         NAV_ITEM_SUBJECTS_INDEX -> Screen.SUBJECTS
@@ -77,15 +92,56 @@ fun MainScreen(
                 .weight(4f)
         ) {
             MainScreenContent(
-                pageTitle = mainScreenUiState.currentSelectedNavItem?.label ?: "",
-                pageIcon = mainScreenUiState.currentSelectedNavItem?.icon,
+                pageTitle = if (mainScreenUiState.onEditProfile) {
+                    StringResources.PROFILE
+                } else {
+                    mainScreenUiState.pageTitle
+                },
+                pageIcon = if (mainScreenUiState.onEditProfile) {
+                    Icons.Outlined.Badge
+                } else {
+                    mainScreenUiState.pageIcon
+                },
+                userName = mainScreenUiState.userModel.name,
+                userProfilePicture = mainScreenUiState.userModel.profilePicture,
+                onEditProfileClicked = {
+                    navigationController.navigateTo(Screen.PROFILE)
+                    mainScreenViewModel.setIsEditingProfile(true)
+                },
                 navigationController = navigationController,
-                userName = userModel?.name,
                 getDestination = { destination ->
                     when(destination) {
                         Screen.SUBJECTS -> SubjectsScreen()
                         Screen.CLASSES -> ClassesScreen()
                         Screen.TEACHERS -> TeachersScreen()
+                        Screen.PROFILE -> {
+                            val profileViewModel = ProfileViewModel(
+                                mainScreenUiState.userModel,
+                                DaggerComponentHolder.appComponent.getUserRepository()
+                            )
+
+                            ProfileScreen(
+                                profileViewModel = profileViewModel,
+                                onBackClicked = {
+                                    mainScreenViewModel.setIsEditingProfile(false)
+                                    navigationController.navigateBack()
+                                },
+                                onFinishEditClicked = {
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        val updateUserResult = withContext(Dispatchers.Default) {
+                                            profileViewModel.updateUser()
+                                        }
+                                        if (updateUserResult != null) {
+                                            mainScreenViewModel.updateUserModel(updateUserResult)
+                                        }
+                                    }
+                                },
+                                onDeleteAccount = {
+                                    profileViewModel.deleteUser()
+                                    onDeleteAccount()
+                                }
+                            )
+                        }
                         else -> error("Destination not supported: $destination")
                     }
                 }
@@ -100,7 +156,8 @@ private fun MainScreenContent(
     pageTitle: String = "",
     pageIcon: ImageVector? = null,
     userName: String? = null,
-    userProfilePicture: ImageVector? = null,
+    userProfilePicture: ImageBitmap? = null,
+    onEditProfileClicked: () -> Unit,
     navigationController: NavigationController,
     getDestination: (@Composable (destination: Screen) -> Unit)
 ) {
@@ -139,6 +196,17 @@ private fun MainScreenContent(
                     .weight(1f)
             )
 
+            if (userProfilePicture != null) {
+                Image(
+                    bitmap = userProfilePicture,
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .padding(vertical = 6.dp)
+                )
+            }
+
             if (userName != null) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -172,7 +240,10 @@ private fun MainScreenContent(
                         onDismissRequest = { userNameDropdownExpanded.value = false }
                     ) {
                         DropdownMenuItem(
-                            onClick = {},
+                            onClick = {
+                                onEditProfileClicked()
+                                userNameDropdownExpanded.value = false
+                            },
                         ) {
                             Text(StringResources.EDIT_PROFILE)
                         }
@@ -240,7 +311,7 @@ private fun SideNavigationPanel(
                     tint = White
                 )
                 Text(
-                    text = StringResources.LOGOUT,
+                    text = StringResources.LOGOUT_BUTTON,
                     style = MaterialTheme.typography.button
                 )
             }

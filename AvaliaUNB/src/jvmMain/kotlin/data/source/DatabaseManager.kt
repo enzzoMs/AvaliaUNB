@@ -1,9 +1,8 @@
 package data.source
 
-import kotlinx.coroutines.*
 import java.io.File
-import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.PreparedStatement
 import java.sql.ResultSet
 import javax.inject.Inject
 import javax.inject.Named
@@ -28,11 +27,14 @@ class DatabaseManager @Inject constructor(
         statements.forEach { executeStatement(it) }
     }
 
+    fun prepareStatement(sqlStatement: String): PreparedStatement = databaseConnection.prepareStatement(sqlStatement)
+
     fun executeStatement(sqlStatement: String) {
         databaseConnection.prepareStatement(sqlStatement).execute()
     }
 
     fun executeQuery(sqlQueryStatement: String): ResultSet = databaseConnection.prepareStatement(sqlQueryStatement).executeQuery()
+
 }
 
 

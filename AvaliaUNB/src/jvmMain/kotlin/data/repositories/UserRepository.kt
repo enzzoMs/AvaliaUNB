@@ -21,28 +21,55 @@ class UserRepository @Inject constructor(
 
     fun getUser(userRegistrationNumber: String): UserModel = userDAO.getUser(userRegistrationNumber)
 
-    fun save(user: UserModel): SaveUserResult {
+    fun save(user: UserModel): UserModificationResult {
         val isRegistrationNumberInUse = userDAO.isRegistrationNumberInUse(user.registrationNumber)
         val isEmailInUse = userDAO.isEmailInUse(user.email)
 
         return when {
-            isRegistrationNumberInUse || isEmailInUse -> SaveUserResult.Failure(
+            isRegistrationNumberInUse || isEmailInUse -> UserModificationResult.Failure(
                 registrationNumberAlreadyInUse = isRegistrationNumberInUse,
                 emailAlreadyInUse = isEmailInUse
             )
             else -> {
                 userDAO.insertUser(user)
-                SaveUserResult.Success
+                UserModificationResult.Success
             }
         }
     }
 
-    sealed class SaveUserResult {
-        object Success : SaveUserResult()
+    fun delete(registrationNumber: String) {
+        userDAO.deleteUser(registrationNumber)
+    }
+
+    fun update(oldRegistrationNumber: String, updatedUserModel: UserModel): UserModificationResult {
+        val oldUser = userDAO.getUser(oldRegistrationNumber)
+
+        val registrationNumberModified = oldRegistrationNumber != updatedUserModel.registrationNumber
+        val emailModified = oldUser.email != updatedUserModel.email
+
+        if (registrationNumberModified || emailModified) {
+            val isRegistrationNumberInUse = userDAO.isRegistrationNumberInUse(updatedUserModel.registrationNumber)
+            val isEmailInUse = userDAO.isEmailInUse(updatedUserModel.email)
+
+            if (isRegistrationNumberInUse || isEmailInUse) {
+                return UserModificationResult.Failure(
+                    registrationNumberAlreadyInUse = isRegistrationNumberInUse,
+                    emailAlreadyInUse = isEmailInUse
+                )
+            }
+        }
+
+        userDAO.updateUser(oldRegistrationNumber, updatedUserModel)
+        return UserModificationResult.Success
+    }
+
+
+    sealed class UserModificationResult {
+        object Success : UserModificationResult()
         data class Failure(
             val registrationNumberAlreadyInUse: Boolean = false,
             val emailAlreadyInUse: Boolean = false
-        ) : SaveUserResult()
+        ) : UserModificationResult()
     }
 
     enum class UserRegistrationStatus {

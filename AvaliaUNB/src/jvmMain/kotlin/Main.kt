@@ -7,12 +7,20 @@ import di.DaggerComponentHolder
 import theme.AvaliaUnbTheme
 import ui.screens.entry.EntryScreen
 import ui.screens.main.MainScreen
+import ui.screens.main.viewmodel.MainScreenViewModel
 import ui.screens.splash.SplashScreen
 import utils.navigation.NavigationController
 import utils.navigation.NavigationComponent
 import utils.navigation.Screen
+import javax.swing.UIManager
 
 fun main() = application {
+    try {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+
     Window(onCloseRequest = ::exitApplication) {
         AvaliaUnbTheme {
             AppAvaliaUNB()
@@ -39,13 +47,12 @@ fun AppAvaliaUNB() {
                         navigationController.navigateTo(Screen.MAIN) }
                 )
                 Screen.MAIN -> MainScreen(
-                    mainScreenViewModel = DaggerComponentHolder.appComponent.getMainScreenViewModel(),
+                    mainScreenViewModel = MainScreenViewModel(
+                        userModel =
+                            DaggerComponentHolder.appComponent.getUserRepository().getUser(userRegistrationNumber!!)
+                    ),
                     onLogout = { navigationController.navigateTo(Screen.ENTRY) },
-                    userModel = if (userRegistrationNumber == null) {
-                        null
-                    } else {
-                        DaggerComponentHolder.appComponent.getUserRepository().getUser(userRegistrationNumber!!)
-                    }
+                    onDeleteAccount = { navigationController.navigateTo(Screen.ENTRY) }
                 )
                 else -> error("Destination not supported: $destination")
             }

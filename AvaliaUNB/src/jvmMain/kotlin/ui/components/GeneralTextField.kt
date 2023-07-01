@@ -24,10 +24,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import theme.AntiFlashWhite
 import theme.DimGray
-import theme.Gray
 import theme.UnbGreen
 
 @Composable
@@ -36,7 +34,7 @@ fun GeneralTextField(
     onValueChange: (String) -> Unit,
     error: Boolean = false,
     hintText: String = "",
-    hintTextColor: Color = Gray,
+    hintTextColor: Color = DimGray,
     textStyle: TextStyle = MaterialTheme.typography.body1,
     startIcon: ImageVector? = null,
     endIcon: ImageVector? = null,
@@ -44,6 +42,8 @@ fun GeneralTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     iconTint: Color = DimGray,
     focusedBorderColor: Color = UnbGreen,
+    backgroundColor: Color = AntiFlashWhite,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     var hint by remember { mutableStateOf(hintText) }
@@ -52,6 +52,7 @@ fun GeneralTextField(
     BasicTextField(
         value = value,
         maxLines = 1,
+        enabled = enabled,
         onValueChange = onValueChange,
         visualTransformation = visualTransformation,
         textStyle = textStyle,
@@ -70,7 +71,7 @@ fun GeneralTextField(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .clip(RoundedCornerShape(6.dp))
-                    .background(AntiFlashWhite)
+                    .background(backgroundColor)
                     .padding(vertical = 8.dp, horizontal = 10.dp)
                     .fillMaxWidth()
                     .then(modifier)

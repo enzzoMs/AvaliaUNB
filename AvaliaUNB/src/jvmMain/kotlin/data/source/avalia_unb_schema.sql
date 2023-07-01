@@ -1,6 +1,3 @@
-SELECT 'CREATE DATABASE avalia_unb_db'
-WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'avalia_unb_db');
-
 CREATE SCHEMA IF NOT EXISTS avalia_unb;
 
 --------------------------------

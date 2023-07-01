@@ -3,10 +3,10 @@ package ui.screens.login
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -22,17 +22,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import data.repositories.UserRepository
 import resources.StringResources
-import theme.DimGray
-import theme.Platinum
 import theme.UnbGreen
-import theme.White
 import ui.components.FormField
 import ui.components.GeneralTextField
+import ui.components.PrimaryButton
+import ui.components.SecondaryButton
 import ui.screens.login.viewmodel.LoginViewModel
-import utils.navigation.NavigationController
-import utils.navigation.Screen
 import java.awt.Cursor
 
 
@@ -191,23 +187,13 @@ private fun LoginFormFields(
         }
     )
 
-    Button(
+    PrimaryButton(
+        label = StringResources.LOGIN_BUTTON,
         onClick = onLoginButtonClicked,
-        shape = RoundedCornerShape(4.dp),
-        contentPadding = PaddingValues(vertical = 10.dp),
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = UnbGreen,
-            contentColor = White
-        ),
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 36.dp)
-    ) {
-        Text(
-            text = StringResources.LOGIN_BUTTON,
-            style = MaterialTheme.typography.button
-        )
-    }
+    )
 
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -228,22 +214,12 @@ private fun LoginFormFields(
         )
     }
 
-    Button(
+    SecondaryButton(
+        label = StringResources.LOGIN_WITHOUT_ACCOUNT_BUTTON,
         onClick = {},
-        shape = RoundedCornerShape(4.dp),
-        contentPadding = PaddingValues(vertical = 10.dp),
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = Platinum
-        ),
         modifier = Modifier
             .fillMaxWidth()
-    ) {
-        Text(
-            text = StringResources.LOGIN_WITHOUT_ACCOUNT_BUTTON,
-            style = MaterialTheme.typography.button,
-            color = DimGray
-        )
-    }
+    )
 }
 
 @Composable

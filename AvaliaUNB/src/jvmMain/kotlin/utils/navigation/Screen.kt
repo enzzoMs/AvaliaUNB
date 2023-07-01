@@ -9,5 +9,6 @@ enum class Screen {
     MAIN,
     SUBJECTS,
     CLASSES,
-    TEACHERS
+    TEACHERS,
+    PROFILE
 }

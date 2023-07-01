@@ -3,32 +3,27 @@ package ui.screens.register
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Badge
-import androidx.compose.material.icons.outlined.CollectionsBookmark
+import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.outlined.PersonAdd
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import resources.StringResources
-import theme.*
-import ui.components.FormField
-import ui.components.GeneralTextField
+import theme.AntiFlashWhite
+import theme.DimGray
+import theme.UnbGreen
+import theme.White
+import ui.components.PrimaryButton
+import ui.components.UserFormFields
 import ui.screens.register.viewmodel.RegisterFormViewModel
-
-const val REGISTRATION_NUMBER_FIELD_INDEX = 0
-const val NAME_FIELD_INDEX = 1
-const val EMAIL_FIELD_INDEX = 2
-const val PASSWORD_FIELD_INDEX = 3
 
 @Composable
 fun RegisterFormPanel(
@@ -47,7 +42,7 @@ fun RegisterFormPanel(
                 .verticalScroll(stateVertical)
         ) {
             RegisterFormTitle(onBackClicked)
-            RegisterFormFields(
+            UserFormFields(
                 userRegistrationNumber = registerUiState.registrationNumber,
                 userName = registerUiState.name,
                 userCourse = registerUiState.course ?: "",
@@ -64,6 +59,7 @@ fun RegisterFormPanel(
                     listOf(
                         invalidRegistrationNumber,
                         invalidName,
+                        false,
                         invalidEmail,
                         invalidPassword
                     )
@@ -132,170 +128,28 @@ private fun RegisterFormTitle(
             )
         }
     }
-}
 
-@Composable
-private fun RegisterFormFields(
-    userRegistrationNumber: String,
-    userName: String,
-    userCourse: String,
-    userEmail: String,
-    userPassword: String,
-    onRegistrationNumberChanged: (String) -> Unit,
-    onNameChanged: (String) -> Unit,
-    onCourseChanged: (String) -> Unit,
-    onEmailChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
-    registrationNumberAlreadyInUse: Boolean = false,
-    emailAlreadyInUse: Boolean = false,
-    invalidFields: List<Boolean>
-) {
-    Column(
+    Text(
+        text = StringResources.REGISTER_FORM_TITLE,
+        style = MaterialTheme.typography.h6,
         modifier = Modifier
-            .fillMaxHeight()
             .padding(start = 32.dp, end = 32.dp, top = 40.dp)
-    ) {
-        Text(
-            text = StringResources.REGISTER_FORM_TITLE,
-            style = MaterialTheme.typography.h6
-        )
-        Divider(
-            modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp, top = 14.dp, bottom = 16.dp)
-        )
+    )
+    Divider(
+        modifier = Modifier
+            .padding(start = 40.dp, end = 40.dp, top = 14.dp)
+    )
 
-        // Registration Number Field -----------------------------------------
-        FormField(
-            title = StringResources.REGISTRATION_NUMBER_FIELD_TITLE,
-            error = invalidFields[REGISTRATION_NUMBER_FIELD_INDEX] || registrationNumberAlreadyInUse,
-            errorMessage = if (registrationNumberAlreadyInUse) {
-                StringResources.REGISTRATION_NUMBER_ALREADY_IN_USE
-            } else {
-                StringResources.INVALID_REGISTRATION_NUMBER
-            },
-            textField = {
-                GeneralTextField(
-                    value = userRegistrationNumber,
-                    onValueChange = onRegistrationNumberChanged,
-                    error = invalidFields[REGISTRATION_NUMBER_FIELD_INDEX] || registrationNumberAlreadyInUse,
-                    hintText = StringResources.REGISTRATION_NUMBER_FIELD_HINT,
-                    startIcon = Icons.Outlined.Badge
-                )
-            }
-        )
-
-
-        // Name Field -------------------------------------------------------
-        FormField(
-            title = StringResources.NAME_FIELD_TITLE,
-            error = invalidFields[NAME_FIELD_INDEX],
-            errorMessage = StringResources.REQUIRED_FIELD,
-            modifier = Modifier
-                .padding(top = 22.dp),
-            textField = {
-                GeneralTextField(
-                    value = userName,
-                    onValueChange = onNameChanged,
-                    error = invalidFields[NAME_FIELD_INDEX],
-                    hintText = StringResources.NAME_FIELD_HINT,
-                    startIcon = Icons.Filled.TextFields
-                )
-            }
-        )
-
-        // Course Field -------------------------------------------------------
-        FormField(
-            title = StringResources.COURSE_FIELD_TITLE,
-            optional = true,
-            errorMessage = StringResources.REQUIRED_FIELD,
-            modifier = Modifier
-                .padding(top = 22.dp),
-            textField = {
-                GeneralTextField(
-                    value = userCourse,
-                    onValueChange = onCourseChanged,
-                    hintText = StringResources.COURSE_FIELD_HINT,
-                    startIcon = Icons.Outlined.CollectionsBookmark
-                )
-            }
-        )
-
-        // Email Field -------------------------------------------------------
-        FormField(
-            title = StringResources.EMAIL_FIELD_TITLE,
-            error = invalidFields[EMAIL_FIELD_INDEX] || emailAlreadyInUse,
-            errorMessage = if (emailAlreadyInUse) {
-                StringResources.EMAIL_ALREADY_IN_USE
-            } else {
-                StringResources.REQUIRED_FIELD
-            },
-            modifier = Modifier
-                .padding(top = 22.dp),
-            textField = {
-                GeneralTextField(
-                    value = userEmail,
-                    onValueChange = onEmailChanged,
-                    error = invalidFields[EMAIL_FIELD_INDEX] || emailAlreadyInUse,
-                    hintText = StringResources.EMAIL_FIELD_HINT,
-                    startIcon = Icons.Filled.Email
-                )
-            }
-        )
-
-        // Password Field -------------------------------------------------------
-        FormField(
-            title = StringResources.PASSWORD_FIELD_TITLE,
-            error = invalidFields[PASSWORD_FIELD_INDEX],
-            errorMessage = StringResources.REQUIRED_FIELD,
-            modifier = Modifier
-                .padding(top = 22.dp),
-            textField = {
-                var passwordFieldEndIcon by remember { mutableStateOf(Icons.Filled.VisibilityOff) }
-                var passwordFieldVisualTransformation: VisualTransformation by remember { mutableStateOf(
-                        PasswordVisualTransformation()
-                    )
-                }
-
-                GeneralTextField(
-                    value = userPassword,
-                    onValueChange = onPasswordChanged,
-                    error = invalidFields[PASSWORD_FIELD_INDEX],
-                    hintText = StringResources.PASSWORD_FIELD_HINT,
-                    startIcon = Icons.Filled.Lock,
-                    endIcon = passwordFieldEndIcon,
-                    visualTransformation = passwordFieldVisualTransformation,
-                    onEndIconClicked = {
-                        if (passwordFieldVisualTransformation == VisualTransformation.None) {
-                            passwordFieldVisualTransformation = PasswordVisualTransformation()
-                            passwordFieldEndIcon = Icons.Filled.VisibilityOff
-                        } else {
-                            passwordFieldVisualTransformation = VisualTransformation.None
-                            passwordFieldEndIcon = Icons.Filled.Visibility
-                        }
-                    }
-                )
-            }
-        )
-    }
 }
+
 
 @Composable
 private fun RegisterFormButton(onRegisterButtonClicked: () -> Unit) {
-    Button(
+    PrimaryButton(
+        label = StringResources.REGISTER_BUTTON,
         onClick = onRegisterButtonClicked,
-        shape = RoundedCornerShape(4.dp),
-        contentPadding = PaddingValues(vertical = 11.dp),
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = UnbGreen,
-            contentColor = White
-        ),
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 40.dp, horizontal = 32.dp)
-    ) {
-        Text(
-            text = StringResources.REGISTER_BUTTON,
-            style = MaterialTheme.typography.button
-        )
-    }
+    )
 }

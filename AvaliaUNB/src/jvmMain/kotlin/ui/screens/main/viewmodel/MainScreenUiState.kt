@@ -1,8 +1,12 @@
 package ui.screens.main.viewmodel
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import ui.components.NavigationItem
+import data.models.UserModel
 
 data class MainScreenUiState(
-    val currentSelectedNavItem: NavigationItem? = null
+    val userModel: UserModel,
+    val pageTitle: String = "",
+    val pageIcon: ImageVector? = null,
+    val selectedNavItemIndex: Int? = null,
+    val onEditProfile: Boolean = false
 )

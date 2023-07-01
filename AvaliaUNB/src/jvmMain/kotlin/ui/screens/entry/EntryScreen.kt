@@ -8,10 +8,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import data.models.UserModel
 import di.DaggerComponentHolder
-import ui.screens.login.LoginFormPanel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ui.screens.login.EntrySideCarouselPanel
+import ui.screens.login.LoginFormPanel
 import ui.screens.register.RegisterFormPanel
 import ui.screens.register.RegisterSuccessfulPanel
 import utils.navigation.NavigationComponent
@@ -41,8 +43,10 @@ fun EntryScreen(
                                 loginViewModel = loginViewModel,
                                 onRegisterClicked = { navigationController.navigateTo(Screen.REGISTER_FORM) },
                                 onLoginButtonClicked = {
-                                    if (loginViewModel.login()) {
-                                        onLoginSuccess(loginViewModel.loginUiState.value.registrationNumber)
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        if (loginViewModel.login()) {
+                                            onLoginSuccess(loginViewModel.loginUiState.value.registrationNumber)
+                                        }
                                     }
                                 }
                             )
@@ -54,8 +58,10 @@ fun EntryScreen(
                                 registerFormViewModel = registerViewModel,
                                 onBackClicked = { navigationController.navigateBack() },
                                 onRegisterButtonClicked = {
-                                    if (registerViewModel.registerUser()) {
-                                        navigationController.navigateTo(Screen.REGISTER_SUCCESSFUL)
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        if (registerViewModel.registerUser()) {
+                                            navigationController.navigateTo(Screen.REGISTER_SUCCESSFUL)
+                                        }
                                     }
                                 }
                             )

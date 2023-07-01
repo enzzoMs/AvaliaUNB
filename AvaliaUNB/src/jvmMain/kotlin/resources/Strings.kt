@@ -47,15 +47,29 @@ object StringResources {
     const val REGISTER_SUCCESSFUL_MESSAGE = "Parabéns! Você já está cadastrado."
 
     const val BACK_TO_LOGIN_BUTTON = "VOLTAR PARA LOGIN"
+    const val BACK_BUTTON = "VOLTAR"
 
     const val SUBJECTS = "Disciplinas"
     const val CLASSES = "Turmas"
     const val TEACHERS = "Professores"
+    const val PROFILE = "Perfil"
 
-    const val LOGOUT = "Sair"
+    const val LOGOUT_BUTTON = "Sair"
 
     const val EDIT_PROFILE = "Editar perfil"
 
+    const val EDIT_PROFILE_BUTTON = "EDITAR"
+    const val CANCEL_BUTTON_UPPERCASE = "CANCELAR"
+    const val CANCEL_BUTTON_LOWERCASE = "Cancelar"
+    const val FINISH_BUTTON = "FINALIZAR"
+    const val PICK_PROFILE_PIC_BUTTON = "Escolher imagem"
+    const val PICK_PROFILE_PIC_FILE_CHOOSER = "Escolha uma imagem"
+    const val CONFIRM_BUTTON = "Confirmar"
+    const val DELETE_ACCOUNT_BUTTON = "Excluir Conta"
+
+
+    const val ERROR_UNABLE_TO_LOAD_IMAGE = "Não foi possível carregar a imagem."
+    const val ERROR_FILE_DOES_NOT_EXIST = "O arquivo selecionado não existe."
     const val GENERAL_TEXT_OR = "Ou"
 
 }
