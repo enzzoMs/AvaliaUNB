@@ -1,5 +1,7 @@
 package ui.screens.main
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,8 +51,6 @@ fun MainScreen(
     onLogout: () -> Unit,
     onDeleteAccount: () -> Unit
 ) {
-    val navigationController = remember { NavigationController(startDestination = Screen.SUBJECTS) }
-
     val mainScreenUiState by mainScreenViewModel.mainScreenUiState.collectAsState()
 
     Row {
@@ -67,23 +67,7 @@ fun MainScreen(
                 }
                 else -> mainScreenUiState.selectedNavItemIndex!!
             },
-            onItemClicked = { navItem ->
-                mainScreenViewModel.setIsEditingProfile(false)
-
-                mainScreenViewModel.updatePageInformation(
-                    newTitle = navItem.label,
-                    newIcon = navItem.icon,
-                )
-                mainScreenViewModel.updateSelectedNavIndex(navItem.index)
-                navigationController.navigateTo(
-                    when(navItem.index) {
-                        NAV_ITEM_SUBJECTS_INDEX -> Screen.SUBJECTS
-                        NAV_ITEM_CLASSES_INDEX -> Screen.CLASSES
-                        NAV_ITEM_TEACHERS_INDEX -> Screen.TEACHERS
-                        else -> Screen.SUBJECTS
-                    }
-                )
-            },
+            onItemClicked = { navItem -> mainScreenViewModel.onNavItemClicked(navItem) },
             modifier = Modifier
                 .weight(1f)
         )
@@ -105,13 +89,15 @@ fun MainScreen(
                 userName = mainScreenUiState.userModel.name,
                 userProfilePicture = mainScreenUiState.userModel.profilePicture,
                 onEditProfileClicked = {
-                    navigationController.navigateTo(Screen.PROFILE)
+                    mainScreenViewModel.updateCurrentScreen(Screen.PROFILE)
                     mainScreenViewModel.setIsEditingProfile(true)
                 },
-                navigationController = navigationController,
-                getDestination = { destination ->
-                    when(destination) {
-                        Screen.SUBJECTS -> SubjectsScreen()
+                currentScreen = mainScreenUiState.currentScreen,
+                getScreenContent = { screen ->
+                    when(screen) {
+                        Screen.SUBJECTS -> SubjectsScreen(
+                            subjectsViewModel = DaggerComponentHolder.appComponent.getSubjectsViewModel()
+                        )
                         Screen.CLASSES -> ClassesScreen()
                         Screen.TEACHERS -> TeachersScreen()
                         Screen.PROFILE -> {
@@ -124,7 +110,14 @@ fun MainScreen(
                                 profileViewModel = profileViewModel,
                                 onBackClicked = {
                                     mainScreenViewModel.setIsEditingProfile(false)
-                                    navigationController.navigateBack()
+                                    mainScreenViewModel.updateCurrentScreen(
+                                        when (mainScreenUiState.selectedNavItemIndex) {
+                                            null -> Screen.SUBJECTS
+                                            NAV_ITEM_SUBJECTS_INDEX -> Screen.SUBJECTS
+                                            NAV_ITEM_CLASSES_INDEX -> Screen.CLASSES
+                                            else -> Screen.TEACHERS
+                                        }
+                                    )
                                 },
                                 onFinishEditClicked = {
                                     CoroutineScope(Dispatchers.IO).launch {
@@ -142,7 +135,7 @@ fun MainScreen(
                                 }
                             )
                         }
-                        else -> error("Destination not supported: $destination")
+                        else -> error("Destination not supported: $screen")
                     }
                 }
             )
@@ -158,8 +151,8 @@ private fun MainScreenContent(
     userName: String? = null,
     userProfilePicture: ImageBitmap? = null,
     onEditProfileClicked: () -> Unit,
-    navigationController: NavigationController,
-    getDestination: (@Composable (destination: Screen) -> Unit)
+    currentScreen: Screen,
+    getScreenContent: (@Composable (Screen) -> Unit)
 ) {
     val userNameDropdownExpanded = remember { mutableStateOf(false) }
 
@@ -255,12 +248,7 @@ private fun MainScreenContent(
 
         }
 
-        NavigationComponent(
-            navigationController = navigationController,
-            getDestination = getDestination,
-            modifier = Modifier
-                .weight(1f)
-        )
+        getScreenContent(currentScreen)
     }
 }
 

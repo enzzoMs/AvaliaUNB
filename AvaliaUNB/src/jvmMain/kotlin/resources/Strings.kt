@@ -67,9 +67,15 @@ object StringResources {
     const val CONFIRM_BUTTON = "Confirmar"
     const val DELETE_ACCOUNT_BUTTON = "Excluir Conta"
 
+    const val SEARCH_FIELD_HINT = "Pesquisar"
+
+    const val DEPARTMENT_FIELD_PREFIX = "Departamento:"
+    const val SEMESTER_FIELD_PREFIX = "Semestre:"
 
     const val ERROR_UNABLE_TO_LOAD_IMAGE = "Não foi possível carregar a imagem."
     const val ERROR_FILE_DOES_NOT_EXIST = "O arquivo selecionado não existe."
+
     const val GENERAL_TEXT_OR = "Ou"
+    const val GENERAL_TEXT_ALL = "TODOS"
 
 }
