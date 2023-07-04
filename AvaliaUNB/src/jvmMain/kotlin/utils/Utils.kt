@@ -1,4 +1,4 @@
-package utils.navigation
+package utils
 
 import androidx.compose.ui.graphics.Color
 import kotlin.random.Random

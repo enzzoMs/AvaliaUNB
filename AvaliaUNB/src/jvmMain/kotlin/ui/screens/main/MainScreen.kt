@@ -1,7 +1,5 @@
 package ui.screens.main
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,8 +34,6 @@ import ui.screens.profile.ProfileScreen
 import ui.screens.profile.viewmodel.ProfileViewModel
 import ui.screens.subjects.SubjectsScreen
 import ui.screens.teachers.TeachersScreen
-import utils.navigation.NavigationComponent
-import utils.navigation.NavigationController
 import utils.navigation.Screen
 
 const val NAV_NO_SELECTED_ITEM_INDEX = -1

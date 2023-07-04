@@ -11,20 +11,27 @@ class SubjectDAO @Inject constructor(
 ) {
     fun getAllSubjects(): List<SubjectModel> {
         val queryResult = database.executeQuery(
-            "SELECT disc.*, dept.nome as dept_nome, dept.cor as dept_cor " +
+            "SELECT disc.*, dept.nome AS dept_nome, dept.cor AS dept_cor " +
                     "FROM avalia_unb.disciplina as disc " +
                     "INNER JOIN avalia_unb.departamento as dept " +
-                    "on disc.codigo_departamento = dept.codigo AND disc.semestre = dept.semestre;"
+                    "ON disc.codigo_departamento = dept.codigo " +
+                    "AND disc.ano_semestre = dept.ano_semestre " +
+                    "AND disc.numero_semestre = dept.numero_semestre;"
         )
 
         val subjects = mutableListOf<SubjectModel>()
 
         while (queryResult.next()) {
+            val subjectSemesterYear = queryResult.getString("ano_semestre")
+            val subjectSemesterNumber = queryResult.getString("numero_semestre")
+
+            val subjectSemester = "${subjectSemesterYear}-${subjectSemesterNumber}"
+
             subjects.add(
                 SubjectModel(
                     queryResult.getString("codigo"),
                     queryResult.getString("nome"),
-                    queryResult.getString("semestre"),
+                    subjectSemester,
                     queryResult.getString("dept_nome"),
                     Color(queryResult.getInt("dept_cor"))
                 )

@@ -36,6 +36,14 @@ class MainScreenViewModel(
         }
     }
 
+    fun updateUserModel(newUserModel: UserModel) {
+        _mainScreenUiState.update { mainScreenUiState ->
+            mainScreenUiState.copy(
+                userModel = newUserModel
+            )
+        }
+    }
+
     fun updateCurrentScreen(newScreen: Screen) {
         _mainScreenUiState.update { mainScreenUiState ->
             mainScreenUiState.copy(
