@@ -138,7 +138,7 @@ class DatabaseManager @Inject constructor(
     private fun initializeClassesAndTeachers() {
         val insertClassStatement = prepareStatement(
             "INSERT INTO avalia_unb.turma " +
-                    "(numero, horario, num_horas, vagas_total, vagas_ocupadas, local_aula, nome_professor,  " +
+                    "(codigo_turma, horario, num_horas, vagas_total, vagas_ocupadas, local_aula, nome_professor,  " +
                     "id_disciplina, codigo_departamento) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
         )
@@ -159,22 +159,27 @@ class DatabaseManager @Inject constructor(
             for (line in csvLines) {
                 val lineSplit = line.trim().split(splitCommasIgnoringQuotes)
 
-                val classNumber = lineSplit[0].toInt()
+                val classCode = lineSplit[0]
                 val teacherName = regexExcludeNumberParentheses.find(lineSplit[2])?.value?.trim() ?: ""
                 val numOfHours = regexNumberBetweenParentheses.find(lineSplit[2])?.value?.toInt() ?: 0
 
                 var classSchedule = lineSplit[3].replace(regexTextBetweenParentheses, "").trim()
                 classSchedule = classSchedule.ifEmpty { DEFAULT_CLASS_SCHEDULE }
 
-                val filledSeats = lineSplit[4].toInt()
+                var filledSeats = lineSplit[4].toInt()
 
-                val totalSeats = if (lineSplit[5].isEmpty() && filledSeats == 0) {
-                    DEFAULT_NUMBER_OF_CLASS_SEATS
-                } else if (lineSplit[5].isEmpty()) {
-                    filledSeats
-                } else {
-                    lineSplit[5].toInt()
+                var totalSeats = when {
+                    (lineSplit[5].isEmpty() && filledSeats == 0) -> DEFAULT_NUMBER_OF_CLASS_SEATS
+                    lineSplit[5].isEmpty() -> filledSeats
+                    else -> lineSplit[5].toInt()
                 }
+
+                if (totalSeats < filledSeats) {
+                    val temp = totalSeats
+                    totalSeats = filledSeats
+                    filledSeats = temp
+                }
+
 
                 val location = lineSplit[6].ifEmpty { DEFAULT_CLASS_LOCATION }
                 val subjectCode = lineSplit[7]
@@ -195,7 +200,7 @@ class DatabaseManager @Inject constructor(
 
                 insertTeacherStatement.execute()
 
-                insertClassStatement.setInt(1, classNumber)
+                insertClassStatement.setString(1, classCode)
                 insertClassStatement.setString(2, classSchedule)
                 insertClassStatement.setInt(3, numOfHours)
                 insertClassStatement.setInt(4, totalSeats)
@@ -212,12 +217,14 @@ class DatabaseManager @Inject constructor(
 
     private fun findFreeSubjectId(subjectCode: String, departmentCode: Int, semester: Semester): Int? {
         val freeSubjectIds = executeQuery(
-            "SELECT disc.id " +
-                    "FROM avalia_unb.disciplina as disc LEFT JOIN avalia_unb.turma as turma " +
-                    "ON disc.id = turma.id_disciplina " +
-                    "WHERE disc.codigo = '$subjectCode' AND disc.codigo_departamento = '$departmentCode'" +
-                    "AND disc.ano_semestre = '${semester.year}' AND disc.numero_semestre = ${semester.semester_number} " +
-                    "AND turma.id_disciplina IS NULL"
+            "SELECT id " +
+                    "FROM avalia_unb.disciplina AS disc " +
+                    "WHERE NOT EXISTS (" +
+                    "SELECT 1 " +
+                    "FROM avalia_unb.turma " +
+                    "WHERE turma.id_disciplina = disc.id) " +
+                    "AND disc.codigo = '$subjectCode' AND disc.codigo_departamento = '$departmentCode' " +
+                    "AND disc.ano_semestre = '${semester.year}' AND disc.numero_semestre = ${semester.semester_number};"
         )
 
         return if (freeSubjectIds.next()) freeSubjectIds.getInt("id") else null

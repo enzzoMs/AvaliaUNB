@@ -8,5 +8,6 @@ data class SubjectModel(
     val name: String,
     val semester: String,
     val departmentName: String,
-    val departmentColor: Color = Transparent
+    val departmentColor: Color = Transparent,
+    val numberOfClasses: Int = 0
 )

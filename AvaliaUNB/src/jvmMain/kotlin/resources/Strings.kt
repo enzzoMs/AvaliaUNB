@@ -71,6 +71,7 @@ object StringResources {
 
     const val DEPARTMENT_FIELD_PREFIX = "Departamento:"
     const val SEMESTER_FIELD_PREFIX = "Semestre:"
+    const val NUM_OF_CLASSES_FIELD_PREFIX = "Número de turmas:"
 
     const val ERROR_UNABLE_TO_LOAD_IMAGE = "Não foi possível carregar a imagem."
     const val ERROR_FILE_DOES_NOT_EXIST = "O arquivo selecionado não existe."

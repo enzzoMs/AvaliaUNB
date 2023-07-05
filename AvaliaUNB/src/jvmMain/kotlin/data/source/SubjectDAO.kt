@@ -10,7 +10,7 @@ class SubjectDAO @Inject constructor(
     private val database: DatabaseManager
 ) {
     fun getAllSubjects(): List<SubjectModel> {
-        val queryResult = database.executeQuery(
+        val allSubjectsQueryResult = database.executeQuery(
             "SELECT disc.*, dept.nome AS dept_nome, dept.cor AS dept_cor " +
                     "FROM avalia_unb.disciplina as disc " +
                     "INNER JOIN avalia_unb.departamento as dept " +
@@ -19,21 +19,36 @@ class SubjectDAO @Inject constructor(
                     "AND disc.numero_semestre = dept.numero_semestre;"
         )
 
+        val numberOfClassesQuery = database.prepareStatement(
+            "SELECT id_disciplina, COUNT(*) AS total_turmas " +
+                    "FROM avalia_unb.turma " +
+                    "GROUP BY id_disciplina;"
+        ).executeQuery()
+
+        val subjectNumberOfClassesMap = mutableMapOf<Int, Int>()
+
+        while (numberOfClassesQuery.next()) {
+            val subjectId = numberOfClassesQuery.getInt("id_disciplina")
+            val numberOfClasses = numberOfClassesQuery.getInt("total_turmas")
+            subjectNumberOfClassesMap[subjectId] = numberOfClasses
+        }
+
         val subjects = mutableListOf<SubjectModel>()
 
-        while (queryResult.next()) {
-            val subjectSemesterYear = queryResult.getString("ano_semestre")
-            val subjectSemesterNumber = queryResult.getString("numero_semestre")
+        while (allSubjectsQueryResult.next()) {
+            val subjectSemesterYear = allSubjectsQueryResult.getString("ano_semestre")
+            val subjectSemesterNumber = allSubjectsQueryResult.getString("numero_semestre")
 
             val subjectSemester = "${subjectSemesterYear}-${subjectSemesterNumber}"
 
             subjects.add(
                 SubjectModel(
-                    queryResult.getString("codigo"),
-                    queryResult.getString("nome"),
+                    allSubjectsQueryResult.getString("codigo"),
+                    allSubjectsQueryResult.getString("nome"),
                     subjectSemester,
-                    queryResult.getString("dept_nome"),
-                    Color(queryResult.getInt("dept_cor"))
+                    allSubjectsQueryResult.getString("dept_nome"),
+                    Color(allSubjectsQueryResult.getInt("dept_cor")),
+                    subjectNumberOfClassesMap[allSubjectsQueryResult.getInt("id")] ?: 0
                 )
             )
         }

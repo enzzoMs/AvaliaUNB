@@ -71,12 +71,16 @@ fun SubjectCard(
                 Text(
                     text = subject.departmentName,
                     style = MaterialTheme.typography.body1,
-                    fontWeight = FontWeight.Normal
+                    fontWeight = FontWeight.Normal,
+                    maxLines = 1
                 )
             }
 
             // Subject semester
-            Row {
+            Row(
+                modifier = Modifier
+                    .padding(bottom = 6.dp)
+            ) {
                 Text(
                     text = StringResources.SEMESTER_FIELD_PREFIX,
                     style = MaterialTheme.typography.subtitle1,
@@ -85,6 +89,21 @@ fun SubjectCard(
                 )
                 Text(
                     text = subject.semester,
+                    style = MaterialTheme.typography.body1,
+                    fontWeight = FontWeight.Normal
+                )
+            }
+
+            // Subject number of classes
+            Row {
+                Text(
+                    text = StringResources.NUM_OF_CLASSES_FIELD_PREFIX,
+                    style = MaterialTheme.typography.subtitle1,
+                    modifier = Modifier
+                        .padding(end = 10.dp)
+                )
+                Text(
+                    text = subject.numberOfClasses.toString(),
                     style = MaterialTheme.typography.body1,
                     fontWeight = FontWeight.Normal
                 )

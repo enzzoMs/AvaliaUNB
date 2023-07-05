@@ -76,8 +76,8 @@ CREATE TABLE IF NOT EXISTS avalia_unb.professor(
 
 CREATE TABLE IF NOT EXISTS avalia_unb.turma(
 	id SERIAL NOT NULL,
-	numero INT NOT NULL CHECK (numero >= 0),
-    horario VARCHAR(50) NOT NULL,
+	codigo_turma VARCHAR(20),
+    horario VARCHAR(150) NOT NULL,
     num_horas INT NOT NULL CHECK (num_horas >= 0),
     vagas_total INT NOT NULL CHECK (vagas_total >= 0),
     vagas_ocupadas INT NOT NULL CHECK (vagas_ocupadas >= 0 AND vagas_ocupadas <= vagas_total),
