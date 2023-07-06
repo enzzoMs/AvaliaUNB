@@ -1,11 +1,9 @@
 package di
 
-private const val DATABASE_USER = "postgres"
-private const val DATABASE_PASSWORD = "postgres"
-private const val JDBC_URL = "jdbc:postgresql://localhost:5432/"
+private const val DATABASE_URL = "jdbc:sqlite:src/jvmMain/resources/database/avalia_unb_database.db"
 
 object DaggerComponentHolder {
     val appComponent: AppComponent = DaggerAppComponent.builder().databaseModule(
-        DatabaseModule(DATABASE_USER, DATABASE_PASSWORD, JDBC_URL)
+        DatabaseModule(DATABASE_URL)
     ).build()
 }

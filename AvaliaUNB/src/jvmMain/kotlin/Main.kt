@@ -15,6 +15,8 @@ import utils.navigation.Screen
 import javax.swing.UIManager
 
 fun main() = application {
+    DaggerComponentHolder.appComponent.getDatabaseManager().configureDatabase()
+
     try {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (e: Exception) {
@@ -39,6 +41,7 @@ fun AppAvaliaUNB() {
         getDestination = { destination ->
             when(destination) {
                 Screen.SPLASH -> SplashScreen(
+                    splashViewModel = DaggerComponentHolder.appComponent.getSplashViewModel(),
                     onSplashEnd = { navigationController.navigateTo(Screen.ENTRY) }
                 )
                 Screen.ENTRY -> EntryScreen(

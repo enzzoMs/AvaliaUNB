@@ -5,6 +5,10 @@ object StringResources {
     const val SECOND_PART_APP_TITLE = "UNB"
     const val COMPLETE_APP_TITLE = "AvaliaUNB"
 
+    const val INITIALIZING_DATABASE = "Inicializando Banco de Dados"
+    const val INITIALIZING_DATABASE_DATA = "Inicializando Dados"
+    const val CREATING_DATABASE_SCHEMA = "Criando esquema"
+
     const val PANEL_TEACHERS_CAPTION_TITLE = "AVALIAÇÕES DE PROFESSORES"
     const val PANEL_TEACHERS_CAPTION = "Veja avaliações de outros estudantes e se informe no período de matrículas!"
     const val PANEL_SUBJECTS_CAPTION_TITLE = "AVALIAÇÕES DE DISCIPLINAS"
@@ -49,6 +53,7 @@ object StringResources {
     const val BACK_TO_LOGIN_BUTTON = "VOLTAR PARA LOGIN"
     const val BACK_BUTTON = "VOLTAR"
 
+    const val DEPARTMENTS = "Departamentos"
     const val SUBJECTS = "Disciplinas"
     const val CLASSES = "Turmas"
     const val TEACHERS = "Professores"

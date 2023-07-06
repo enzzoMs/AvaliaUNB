@@ -1,10 +1,14 @@
 package ui.screens.subjects.viewmodel
 
 import data.models.SubjectModel
+import data.repositories.SemesterRepository
 import data.repositories.SubjectRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 import javax.inject.Inject
 
@@ -13,22 +17,37 @@ private const val SEMESTER_2022_2 = "2022-2"
 private const val SEMESTER_2023_1 = "2023-1"
 
 class SubjectsViewModel @Inject constructor(
-    subjectRepository: SubjectRepository
+    private val subjectRepository: SubjectRepository,
+    private val semesterRepository: SemesterRepository
 ) {
-    private val allSubjects = subjectRepository.getAllSubjects()
+    private var allSubjects = listOf<SubjectModel>()
 
     private val _subjectUiState = MutableStateFlow(
         SubjectsUiState(
             subjects = allSubjects,
             departmentNames = allSubjects.map { it.departmentName }.distinct(),
-            semesters = listOf(
-                SEMESTER_2022_1,
-                SEMESTER_2022_2,
-                SEMESTER_2023_1
-            )
+            semesters = semesterRepository.getAllSemesters().map { semesterModel ->
+                "${semesterModel.year}-${semesterModel.semesterNumber}"
+            }
         )
     )
     val subjectUiState = _subjectUiState.asStateFlow()
+
+    init {
+        loadAllSubjects()
+    }
+
+    private fun loadAllSubjects() {
+        CoroutineScope(Dispatchers.IO).launch {
+            allSubjects = subjectRepository.getAllSubjects()
+            _subjectUiState.update { a ->
+                a.copy(
+                    subjects = allSubjects
+                )
+            }
+        }
+    }
+
 
     fun updateSearchSubjectFilter(newSearchFilter: String?) {
         _subjectUiState.update { subjectUiState ->

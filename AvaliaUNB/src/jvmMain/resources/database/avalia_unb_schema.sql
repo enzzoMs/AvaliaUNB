@@ -1,30 +1,28 @@
-CREATE SCHEMA IF NOT EXISTS avalia_unb;
 
 --------------------------------
 -- SEMESTRE
 --------------------------------
 
-CREATE TABLE IF NOT EXISTS avalia_unb.semestre(
-	ano INT NOT NULL CHECK (ano >= 0),
-	numero_semestre INT NOT NULL CHECK (numero_semestre = 1 OR numero_semestre = 2),
-	data_inicio DATE,
-	data_fim DATE,
-	PRIMARY KEY (ano, numero_semestre),
-	CONSTRAINT data_valida CHECK (data_inicio < data_fim)
+CREATE TABLE IF NOT EXISTS semestre(
+	ano INTEGER NOT NULL CHECK (ano >= 0),
+	numero_semestre INTEGER NOT NULL CHECK (numero_semestre = 1 OR numero_semestre = 2),
+	data_inicio TEXT,
+	data_fim TEXT,
+	PRIMARY KEY (ano, numero_semestre)
 );
 
 --------------------------------
 -- ESTUDANTES / USUARIOS 
 --------------------------------
 
-CREATE TABLE IF NOT EXISTS avalia_unb.usuario(
-	matricula CHAR(9) NOT NULL,
-	nome VARCHAR(100) NOT NULL,
-	curso VARCHAR(100),
-	email VARCHAR(100) UNIQUE NOT NULL,
-	senha VARCHAR(100) NOT NULL,
-	foto_de_perfil BYTEA,
-	eh_administrador BOOLEAN DEFAULT false,
+CREATE TABLE IF NOT EXISTS usuario(
+	matricula TEXT NOT NULL CHECK (length(matricula) = 9),
+	nome TEXT NOT NULL,
+	curso TEXT,
+	email TEXT UNIQUE NOT NULL,
+	senha TEXT NOT NULL,
+	foto_de_perfil BLOB,
+	eh_administrador BOOLEAN DEFAULT FALSE,
 	PRIMARY KEY (matricula)
 );
 
@@ -32,60 +30,60 @@ CREATE TABLE IF NOT EXISTS avalia_unb.usuario(
 -- DEPARTAMENTOS
 --------------------------------
 
-CREATE TABLE IF NOT EXISTS avalia_unb.departamento(
-	codigo INT NOT NULL CHECK (codigo >= 0),
-	nome VARCHAR NOT NULL,
-    ano_semestre INT NOT NULL CHECK (ano_semestre >= 0),
-	numero_semestre INT NOT NULL CHECK (numero_semestre = 1 OR numero_semestre = 2),
-	cor INT,
+CREATE TABLE IF NOT EXISTS departamento(
+	codigo INTEGER NOT NULL CHECK (codigo >= 0),
+	nome TEXT NOT NULL,
+    ano_semestre INTEGER NOT NULL CHECK (ano_semestre >= 0),
+	numero_semestre INTEGER NOT NULL CHECK (numero_semestre = 1 OR numero_semestre = 2),
+	cor INTEGER,
 	PRIMARY KEY (codigo, ano_semestre, numero_semestre),
-	FOREIGN KEY (ano_semestre, numero_semestre) REFERENCES avalia_unb.semestre(ano, numero_semestre)
+	FOREIGN KEY (ano_semestre, numero_semestre) REFERENCES semestre(ano, numero_semestre)
 );
 
 --------------------------------
 -- DISCIPLINAS
 --------------------------------
 
-CREATE TABLE IF NOT EXISTS avalia_unb.disciplina(
-    id SERIAL NOT NULL,
-	codigo VARCHAR(50) NOT NULL,
-	nome VARCHAR(250) NOT NULL,
-    ano_semestre INT NOT NULL CHECK (ano_semestre >= 0),
-	numero_semestre INT NOT NULL CHECK (numero_semestre = 1 OR numero_semestre = 2),
-	codigo_departamento INT NOT NULL CHECK (codigo_departamento >= 0),
+CREATE TABLE IF NOT EXISTS disciplina(
+    id INTEGER NOT NULL,
+	codigo TEXT NOT NULL,
+	nome TEXT NOT NULL,
+    ano_semestre INTEGER NOT NULL CHECK (ano_semestre >= 0),
+	numero_semestre INTEGER NOT NULL CHECK (numero_semestre = 1 OR numero_semestre = 2),
+	codigo_departamento INTEGER NOT NULL CHECK (codigo_departamento >= 0),
 	PRIMARY KEY (id),
-	FOREIGN KEY (codigo_departamento, ano_semestre, numero_semestre) REFERENCES avalia_unb.departamento(codigo, ano_semestre, numero_semestre)
+	FOREIGN KEY (codigo_departamento, ano_semestre, numero_semestre) REFERENCES departamento(codigo, ano_semestre, numero_semestre)
 );
 
 --------------------------------
 -- PROFESSORES
 --------------------------------
 
-CREATE TABLE IF NOT EXISTS avalia_unb.professor(
-	nome VARCHAR(150) NOT NULL,
-	codigo_departamento INT NOT NULL CHECK (codigo_departamento >= 0),
-    ano_semestre INT NOT NULL CHECK (ano_semestre >= 0),
-	numero_semestre INT NOT NULL CHECK (numero_semestre = 1 OR numero_semestre = 2),
+CREATE TABLE IF NOT EXISTS professor(
+	nome TEXT NOT NULL,
+	codigo_departamento INTEGER NOT NULL CHECK (codigo_departamento >= 0),
+    ano_semestre INTEGER NOT NULL CHECK (ano_semestre >= 0),
+	numero_semestre INTEGER NOT NULL CHECK (numero_semestre = 1 OR numero_semestre = 2),
 	PRIMARY KEY (nome, codigo_departamento),
-	FOREIGN KEY (codigo_departamento, ano_semestre, numero_semestre) REFERENCES avalia_unb.departamento(codigo, ano_semestre, numero_semestre)
+	FOREIGN KEY (codigo_departamento, ano_semestre, numero_semestre) REFERENCES departamento(codigo, ano_semestre, numero_semestre)
 );
 
 --------------------------------
 -- TURMAS
 --------------------------------
 
-CREATE TABLE IF NOT EXISTS avalia_unb.turma(
-	id SERIAL NOT NULL,
-	codigo_turma VARCHAR(20),
-    horario VARCHAR(150) NOT NULL,
-    num_horas INT NOT NULL CHECK (num_horas >= 0),
-    vagas_total INT NOT NULL CHECK (vagas_total >= 0),
-    vagas_ocupadas INT NOT NULL CHECK (vagas_ocupadas >= 0 AND vagas_ocupadas <= vagas_total),
-    local_aula VARCHAR(100),
-    nome_professor VARCHAR(250) NOT NULL,
-	id_disciplina INT NOT NULL,
-	codigo_departamento INT NOT NULL CHECK (codigo_departamento >= 0),
+CREATE TABLE IF NOT EXISTS turma(
+	id INTEGER NOT NULL,
+	codigo_turma TEXT,
+    horario TEXT NOT NULL,
+    num_horas INTEGER NOT NULL CHECK (num_horas >= 0),
+    vagas_total INTEGER NOT NULL CHECK (vagas_total >= 0),
+    vagas_ocupadas INTEGER NOT NULL CHECK (vagas_ocupadas >= 0 AND vagas_ocupadas <= vagas_total),
+    local_aula TEXT,
+    nome_professor TEXT NOT NULL,
+	id_disciplina INTEGER NOT NULL,
+	codigo_departamento INTEGER NOT NULL CHECK (codigo_departamento >= 0),
 	PRIMARY KEY (id),
-	FOREIGN KEY (nome_professor, codigo_departamento) REFERENCES avalia_unb.professor(nome, codigo_departamento),
-	FOREIGN KEY (id_disciplina) REFERENCES avalia_unb.disciplina(id)
-);
+	FOREIGN KEY (nome_professor, codigo_departamento) REFERENCES professor(nome, codigo_departamento),
+	FOREIGN KEY (id_disciplina) REFERENCES disciplina(id)
+)

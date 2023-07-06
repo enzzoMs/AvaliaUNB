@@ -12,8 +12,8 @@ class SubjectDAO @Inject constructor(
     fun getAllSubjects(): List<SubjectModel> {
         val allSubjectsQueryResult = database.executeQuery(
             "SELECT disc.*, dept.nome AS dept_nome, dept.cor AS dept_cor " +
-                    "FROM avalia_unb.disciplina as disc " +
-                    "INNER JOIN avalia_unb.departamento as dept " +
+                    "FROM disciplina as disc " +
+                    "INNER JOIN departamento as dept " +
                     "ON disc.codigo_departamento = dept.codigo " +
                     "AND disc.ano_semestre = dept.ano_semestre " +
                     "AND disc.numero_semestre = dept.numero_semestre;"
@@ -21,7 +21,7 @@ class SubjectDAO @Inject constructor(
 
         val numberOfClassesQuery = database.prepareStatement(
             "SELECT id_disciplina, COUNT(*) AS total_turmas " +
-                    "FROM avalia_unb.turma " +
+                    "FROM turma " +
                     "GROUP BY id_disciplina;"
         ).executeQuery()
 

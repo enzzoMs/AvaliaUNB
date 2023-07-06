@@ -19,7 +19,8 @@ class UserDAO @Inject constructor(
         ImageIO.write(defaultProfilePic, "png", stream)
         val defaultProfilePicBytes = stream.toByteArray()
 
-        val userInsertStatement = "INSERT INTO avalia_unb.usuario VALUES (?, ?, ?, ?, ?, ?)"
+        val userInsertStatement = "INSERT INTO usuario (matricula, nome, curso, email, senha, foto_de_perfil) " +
+                "VALUES (?, ?, ?, ?, ?, ?)"
 
         val preparedStatement = database.prepareStatement(userInsertStatement)
         user.apply {
@@ -36,7 +37,7 @@ class UserDAO @Inject constructor(
 
     fun updateUser(oldRegistrationNumber: String, updatedUserModel: UserModel) {
         val userUpdateStatement =
-            "UPDATE avalia_unb.usuario " +
+            "UPDATE usuario " +
             "SET matricula = ?, nome = ?, curso = ?, email = ?, " +
             "senha = ?, foto_de_perfil = ? WHERE matricula = '${oldRegistrationNumber}';"
 
@@ -61,13 +62,13 @@ class UserDAO @Inject constructor(
 
     fun deleteUser(registrationNumber: String) {
         database.executeStatement(
-            "DELETE FROM avalia_unb.usuario WHERE matricula = '${registrationNumber}'"
+            "DELETE FROM usuario WHERE matricula = '${registrationNumber}'"
         )
     }
 
     fun getUser(userRegistrationNumber: String): UserModel {
         val queryResult = database.executeQuery(
-            "SELECT * FROM avalia_unb.usuario WHERE matricula = '${userRegistrationNumber}'"
+            "SELECT * FROM usuario WHERE matricula = '${userRegistrationNumber}'"
         )
 
         queryResult.next()
@@ -89,7 +90,7 @@ class UserDAO @Inject constructor(
 
     fun getUserPassword(registrationNumber: String): String {
         val queryResult = database.executeQuery(
-            "SELECT senha FROM avalia_unb.usuario WHERE matricula = '${registrationNumber}'"
+            "SELECT senha FROM usuario WHERE matricula = '${registrationNumber}'"
         )
 
         queryResult.next()
@@ -99,7 +100,7 @@ class UserDAO @Inject constructor(
 
     fun isRegistrationNumberInUse(registrationNumber: String): Boolean {
         val queryResult = database.executeQuery(
-            "SELECT * FROM avalia_unb.usuario WHERE matricula = '${registrationNumber}'"
+            "SELECT * FROM usuario WHERE matricula = '${registrationNumber}'"
         )
 
         return queryResult.next()
@@ -107,7 +108,7 @@ class UserDAO @Inject constructor(
 
     fun isEmailInUse(email: String): Boolean {
         val queryResult = database.executeQuery(
-            "SELECT * FROM avalia_unb.usuario WHERE email = '${email}'"
+            "SELECT * FROM usuario WHERE email = '${email}'"
         )
 
         return queryResult.next()

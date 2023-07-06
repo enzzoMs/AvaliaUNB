@@ -2,22 +2,22 @@ package di
 
 import dagger.Provides
 import dagger.Module
+import data.source.DatabaseManager
+import utils.database.DatabaseUtils
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 class DatabaseModule(
-    private val databaseUser: String,
-    private val databasePassword: String,
-    private val jdbcURL: String
+    private val databaseURL: String,
 ) {
 
-    @Provides @Named("databaseUser")
-    fun provideDatabaseUser() = databaseUser
+    @Provides @Named("databaseURL")
+    fun provideDatabaseURL() = databaseURL
 
-    @Provides @Named("databasePassword")
-    fun provideDatabasePassword() = databasePassword
+    @Provides @Singleton @Named("databaseConfiguration")
+    fun provideDatabaseConfiguration() = DatabaseUtils.getDatabaseConfiguration()
 
-    @Provides @Named("jdbcURL")
-    fun provideJdbcURL() = jdbcURL
-
+    @Provides @Named("databaseLoadingStatus")
+    fun provideDatabaseLoadingStatus(databaseManager: DatabaseManager) = databaseManager.databaseLoadingStatus
 }

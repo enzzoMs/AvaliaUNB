@@ -31,7 +31,7 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(compose.materialIconsExtended)
-                implementation("org.postgresql:postgresql:42.3.1")
+                implementation("org.xerial:sqlite-jdbc:3.34.0")
                 implementation("com.google.dagger:dagger:2.46.1")
                 configurations["kapt"].dependencies.add(project.dependencies.create("com.google.dagger:dagger-compiler:2.46.1"))
             }
