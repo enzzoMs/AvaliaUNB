@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import resources.StringResources
+import utils.resources.ResourcesUtils
 import theme.UnbGreen
 import theme.White
 import ui.components.PrimaryButton
@@ -46,7 +46,7 @@ private fun registerSuccessfulIcon(
             .then(modifier)
     ) {
         Icon(
-            painter = painterResource("images/check_mark_sparkles.svg"),
+            painter = painterResource(ResourcesUtils.ImagePaths.CHECK_MARK_SPARKLES),
             contentDescription = null,
             tint = White,
             modifier = Modifier
@@ -68,7 +68,7 @@ private fun registerSuccessfulMessage(
             .then(modifier)
     ) {
         Text(
-            text = StringResources.REGISTER_SUCCESSFUL_TITLE,
+            text = ResourcesUtils.Strings.REGISTER_SUCCESSFUL_TITLE,
             style = MaterialTheme.typography.h6,
             fontWeight = FontWeight.Bold,
             color = UnbGreen,
@@ -76,7 +76,7 @@ private fun registerSuccessfulMessage(
                 .padding(bottom = 18.dp)
         )
         Text(
-            text = StringResources.REGISTER_SUCCESSFUL_MESSAGE,
+            text = ResourcesUtils.Strings.REGISTER_SUCCESSFUL_MESSAGE,
             style = MaterialTheme.typography.subtitle1,
             modifier = Modifier
                 .padding(bottom = 28.dp)
@@ -88,7 +88,7 @@ private fun registerSuccessfulMessage(
         )
 
         PrimaryButton(
-            label = StringResources.BACK_TO_LOGIN_BUTTON,
+            label = ResourcesUtils.Strings.BACK_TO_LOGIN_BUTTON,
             onClick = onBackClicked,
             modifier = Modifier
                 .fillMaxWidth()

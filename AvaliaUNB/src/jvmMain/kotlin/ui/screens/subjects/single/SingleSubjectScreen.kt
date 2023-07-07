@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.ClassModel
-import resources.StringResources
+import utils.resources.ResourcesUtils
 import theme.DarkAntiFlashWhite
 import theme.DarkCharcoal
 import theme.UnbBlue
@@ -110,7 +110,7 @@ private fun SubjectClasses(
             }
 
             Text(
-                text = StringResources.CLASSES,
+                text = ResourcesUtils.Strings.CLASSES,
                 style = MaterialTheme.typography.h6,
                 fontSize = 21.sp
             )
@@ -159,7 +159,7 @@ private fun BackButton(
                 .weight(1.5f)
         )
         SecondaryButton(
-            label = StringResources.BACK_BUTTON,
+            label = ResourcesUtils.Strings.BACK_BUTTON,
             onClick = onClicked,
             modifier = Modifier
                 .weight(1f)

@@ -18,9 +18,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import data.models.SubjectModel
-import resources.StringResources
 import theme.Gray
 import theme.White
+import utils.resources.ResourcesUtils
 
 @Composable
 fun SubjectCard(
@@ -84,7 +84,7 @@ fun SubjectCard(
 
             // Subject department name
             CardInformation(
-                fieldName = StringResources.DEPARTMENT_FIELD_PREFIX,
+                fieldName = ResourcesUtils.Strings.DEPARTMENT_FIELD_PREFIX,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = subject.departmentName,
                 fieldTextStyle = fieldTextStyle,
@@ -94,7 +94,7 @@ fun SubjectCard(
 
             // Subject semester
             CardInformation(
-                fieldName = StringResources.SEMESTER_FIELD_PREFIX,
+                fieldName = ResourcesUtils.Strings.SEMESTER_FIELD_PREFIX,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = subject.semester,
                 fieldTextStyle = fieldTextStyle,
@@ -104,7 +104,7 @@ fun SubjectCard(
 
             // Subject number of classes
             CardInformation(
-                fieldName = StringResources.NUM_OF_CLASSES_FIELD_PREFIX,
+                fieldName = ResourcesUtils.Strings.NUM_OF_CLASSES_FIELD_PREFIX,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = subject.numberOfClasses.toString(),
                 fieldTextStyle = fieldTextStyle

@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import resources.StringResources
+import utils.resources.ResourcesUtils
 import theme.*
 import ui.components.PrimaryButton
 import ui.components.SecondaryButton
@@ -172,7 +172,7 @@ private fun DeleteAccountButton(
                     .padding(end = 8.dp)
             )
             Text(
-                text = StringResources.DELETE_ACCOUNT_BUTTON,
+                text = ResourcesUtils.Strings.DELETE_ACCOUNT_BUTTON,
                 style = MaterialTheme.typography.button,
                 color = White
             )
@@ -197,7 +197,7 @@ private fun DeleteAccountButton(
                         .padding(start = 24.dp)
                 ) {
                     Text(
-                        text = StringResources.CANCEL_BUTTON_LOWERCASE,
+                        text = ResourcesUtils.Strings.CANCEL_BUTTON_LOWERCASE,
                         style = MaterialTheme.typography.button,
                         color = DimGray
                     )
@@ -221,7 +221,7 @@ private fun DeleteAccountButton(
                         .padding(start = 16.dp)
                 ) {
                     Text(
-                        text = StringResources.CONFIRM_BUTTON,
+                        text = ResourcesUtils.Strings.CONFIRM_BUTTON,
                         style = MaterialTheme.typography.button,
                         color = White
                     )
@@ -310,7 +310,7 @@ private fun UserProfilePicture(
                         .padding(end = 8.dp)
                 )
                 Text(
-                    text = StringResources.PICK_PROFILE_PIC_BUTTON,
+                    text = ResourcesUtils.Strings.PICK_PROFILE_PIC_BUTTON,
                     style = MaterialTheme.typography.button,
                     color = Gray
                 )
@@ -327,7 +327,7 @@ private fun EditAndBackButtons(
 ) {
     Row {
         PrimaryButton(
-            label = StringResources.EDIT_PROFILE_BUTTON,
+            label = ResourcesUtils.Strings.EDIT_PROFILE_BUTTON,
             onClick = onEditClicked,
             modifier = Modifier
                 .weight(1f)
@@ -336,7 +336,7 @@ private fun EditAndBackButtons(
         )
 
         SecondaryButton(
-            label = StringResources.BACK_BUTTON,
+            label = ResourcesUtils.Strings.BACK_BUTTON,
             onClick = onBackClicked,
             modifier = Modifier
                 .weight(1f)
@@ -354,7 +354,7 @@ private fun FinishAndCancelButtons(
 ) {
     Row {
         PrimaryButton(
-            label = StringResources.FINISH_BUTTON,
+            label = ResourcesUtils.Strings.FINISH_BUTTON,
             onClick = onFinishEditClicked,
             modifier = Modifier
                 .weight(1f)
@@ -363,7 +363,7 @@ private fun FinishAndCancelButtons(
         )
 
         SecondaryButton(
-            label = StringResources.CANCEL_BUTTON_UPPERCASE,
+            label = ResourcesUtils.Strings.CANCEL_BUTTON_UPPERCASE,
             onClick = onCancelEditClicked,
             modifier = Modifier
                 .weight(1f)

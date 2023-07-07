@@ -18,7 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import data.models.SubjectModel
-import resources.StringResources
+import utils.resources.ResourcesUtils
 import theme.DarkAntiFlashWhite
 import theme.White
 import ui.components.GeneralDropDownMenu
@@ -76,7 +76,7 @@ private fun SearchAndFilterFields(
             onValueChange = { newSearchFilter -> onSearchSubjectChanged(
                 if (newSearchFilter == "") null else newSearchFilter)
             },
-            hintText = StringResources.SEARCH_FIELD_HINT,
+            hintText = ResourcesUtils.Strings.SEARCH_FIELD_HINT,
             backgroundColor = White,
             startIcon = Icons.Filled.Search,
             modifier = Modifier
@@ -89,17 +89,17 @@ private fun SearchAndFilterFields(
                 .padding(top = 16.dp)
         ) {
             Text(
-                text = StringResources.DEPARTMENT_FIELD_PREFIX,
+                text = ResourcesUtils.Strings.DEPARTMENT_FIELD_PREFIX,
                 style = MaterialTheme.typography.subtitle2,
                 modifier = Modifier
                     .padding(end = 12.dp)
             )
 
             GeneralDropDownMenu(
-                menuItems = listOf(StringResources.GENERAL_TEXT_ALL) + departmentsName,
-                selectedItem = currentSelectedDepartmentFilter ?: StringResources.GENERAL_TEXT_ALL,
+                menuItems = listOf(ResourcesUtils.Strings.GENERAL_TEXT_ALL) + departmentsName,
+                selectedItem = currentSelectedDepartmentFilter ?: ResourcesUtils.Strings.GENERAL_TEXT_ALL,
                 onSelectItem = { newFilter -> onSelectDepartmentFilter(
-                    if (newFilter == StringResources.GENERAL_TEXT_ALL) null else newFilter)
+                    if (newFilter == ResourcesUtils.Strings.GENERAL_TEXT_ALL) null else newFilter)
                 },
                 dropDownMenuMinWidth = 600.dp,
                 dropDownMenuMinHeight = 400.dp,
@@ -108,16 +108,16 @@ private fun SearchAndFilterFields(
             )
 
             Text(
-                text = StringResources.SEMESTER_FIELD_PREFIX,
+                text = ResourcesUtils.Strings.SEMESTER_FIELD_PREFIX,
                 style = MaterialTheme.typography.subtitle2,
                 modifier = Modifier
                     .padding(end = 12.dp, start = 16.dp)
             )
             GeneralDropDownMenu(
-                menuItems = listOf(StringResources.GENERAL_TEXT_ALL) + semesters,
-                selectedItem = currentSelectedSemesterFilter ?: StringResources.GENERAL_TEXT_ALL,
+                menuItems = listOf(ResourcesUtils.Strings.GENERAL_TEXT_ALL) + semesters,
+                selectedItem = currentSelectedSemesterFilter ?: ResourcesUtils.Strings.GENERAL_TEXT_ALL,
                 onSelectItem = {newFilter -> onSelectSemesterFilter(
-                    if (newFilter == StringResources.GENERAL_TEXT_ALL) null else newFilter)
+                    if (newFilter == ResourcesUtils.Strings.GENERAL_TEXT_ALL) null else newFilter)
                 },
                 dropDownMenuMinWidth = 100.dp,
                 dropDownMenuMinHeight = 200.dp,

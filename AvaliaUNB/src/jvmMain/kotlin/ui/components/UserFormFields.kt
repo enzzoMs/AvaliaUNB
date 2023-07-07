@@ -13,9 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import resources.StringResources
 import theme.AntiFlashWhite
 import theme.LightGray
+import utils.resources.ResourcesUtils
 
 
 private const val NUMBER_OF_FIELDS = 5
@@ -54,12 +54,12 @@ fun UserFormFields(
 
         // Registration Number Field -----------------------------------------
         FormField(
-            title = StringResources.REGISTRATION_NUMBER_FIELD_TITLE,
+            title = ResourcesUtils.Strings.REGISTRATION_NUMBER_FIELD_TITLE,
             error = invalidFields[REGISTRATION_NUMBER_FIELD_INDEX] || registrationNumberAlreadyInUse,
             errorMessage = if (registrationNumberAlreadyInUse) {
-                StringResources.REGISTRATION_NUMBER_ALREADY_IN_USE
+                ResourcesUtils.Strings.REGISTRATION_NUMBER_ALREADY_IN_USE
             } else {
-                StringResources.INVALID_REGISTRATION_NUMBER
+                ResourcesUtils.Strings.INVALID_REGISTRATION_NUMBER
             },
             textField = {
                 GeneralTextField(
@@ -67,7 +67,7 @@ fun UserFormFields(
                     onValueChange = onRegistrationNumberChanged,
                     enabled = enabledFields[REGISTRATION_NUMBER_FIELD_INDEX],
                     error = invalidFields[REGISTRATION_NUMBER_FIELD_INDEX] || registrationNumberAlreadyInUse,
-                    hintText = StringResources.REGISTRATION_NUMBER_FIELD_HINT,
+                    hintText = ResourcesUtils.Strings.REGISTRATION_NUMBER_FIELD_HINT,
                     backgroundColor = if (enabledFields[REGISTRATION_NUMBER_FIELD_INDEX]) {
                         backgroundColor
                     } else {
@@ -81,9 +81,9 @@ fun UserFormFields(
 
         // Name Field -------------------------------------------------------
         FormField(
-            title = StringResources.NAME_FIELD_TITLE,
+            title = ResourcesUtils.Strings.NAME_FIELD_TITLE,
             error = invalidFields[NAME_FIELD_INDEX],
-            errorMessage = StringResources.REQUIRED_FIELD,
+            errorMessage = ResourcesUtils.Strings.REQUIRED_FIELD,
             modifier = Modifier
                 .padding(top = 22.dp),
             textField = {
@@ -92,7 +92,7 @@ fun UserFormFields(
                     onValueChange = onNameChanged,
                     enabled = enabledFields[NAME_FIELD_INDEX],
                     error = invalidFields[NAME_FIELD_INDEX],
-                    hintText = StringResources.NAME_FIELD_HINT,
+                    hintText = ResourcesUtils.Strings.NAME_FIELD_HINT,
                     backgroundColor = if (enabledFields[REGISTRATION_NUMBER_FIELD_INDEX]) {
                         backgroundColor
                     } else {
@@ -105,7 +105,7 @@ fun UserFormFields(
 
         // Course Field -------------------------------------------------------
         FormField(
-            title = StringResources.COURSE_FIELD_TITLE,
+            title = ResourcesUtils.Strings.COURSE_FIELD_TITLE,
             optional = true,
             error = invalidFields[COURSE_FIELD_INDEX],
             modifier = Modifier
@@ -116,7 +116,7 @@ fun UserFormFields(
                     onValueChange = onCourseChanged,
                     enabled = enabledFields[COURSE_FIELD_INDEX],
                     error = invalidFields[COURSE_FIELD_INDEX],
-                    hintText = StringResources.COURSE_FIELD_HINT,
+                    hintText = ResourcesUtils.Strings.COURSE_FIELD_HINT,
                     backgroundColor = if (enabledFields[REGISTRATION_NUMBER_FIELD_INDEX]) {
                         backgroundColor
                     } else {
@@ -129,12 +129,12 @@ fun UserFormFields(
 
         // Email Field -------------------------------------------------------
         FormField(
-            title = StringResources.EMAIL_FIELD_TITLE,
+            title = ResourcesUtils.Strings.EMAIL_FIELD_TITLE,
             error = invalidFields[EMAIL_FIELD_INDEX] || emailAlreadyInUse,
             errorMessage = if (emailAlreadyInUse) {
-                StringResources.EMAIL_ALREADY_IN_USE
+                ResourcesUtils.Strings.EMAIL_ALREADY_IN_USE
             } else {
-                StringResources.REQUIRED_FIELD
+                ResourcesUtils.Strings.REQUIRED_FIELD
             },
             modifier = Modifier
                 .padding(top = 22.dp),
@@ -144,7 +144,7 @@ fun UserFormFields(
                     onValueChange = onEmailChanged,
                     enabled = enabledFields[EMAIL_FIELD_INDEX],
                     error = invalidFields[EMAIL_FIELD_INDEX] || emailAlreadyInUse,
-                    hintText = StringResources.EMAIL_FIELD_HINT,
+                    hintText = ResourcesUtils.Strings.EMAIL_FIELD_HINT,
                     backgroundColor = if (enabledFields[REGISTRATION_NUMBER_FIELD_INDEX]) {
                         backgroundColor
                     } else {
@@ -157,9 +157,9 @@ fun UserFormFields(
 
         // Password Field -------------------------------------------------------
         FormField(
-            title = StringResources.PASSWORD_FIELD_TITLE,
+            title = ResourcesUtils.Strings.PASSWORD_FIELD_TITLE,
             error = invalidFields[PASSWORD_FIELD_INDEX],
-            errorMessage = StringResources.REQUIRED_FIELD,
+            errorMessage = ResourcesUtils.Strings.REQUIRED_FIELD,
             modifier = Modifier
                 .padding(top = 22.dp),
             textField = {
@@ -174,7 +174,7 @@ fun UserFormFields(
                     onValueChange = onPasswordChanged,
                     error = invalidFields[PASSWORD_FIELD_INDEX],
                     enabled = enabledFields[PASSWORD_FIELD_INDEX],
-                    hintText = StringResources.PASSWORD_FIELD_HINT,
+                    hintText = ResourcesUtils.Strings.PASSWORD_FIELD_HINT,
                     startIcon = Icons.Filled.Lock,
                     endIcon = passwordFieldEndIcon,
                     backgroundColor = if (enabledFields[REGISTRATION_NUMBER_FIELD_INDEX]) {

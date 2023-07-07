@@ -16,7 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-import resources.StringResources
+import utils.resources.ResourcesUtils
 import theme.AntiFlashWhite
 import theme.DimGray
 import theme.UnbGreen
@@ -130,7 +130,7 @@ private fun RegisterFormTitle(
     }
 
     Text(
-        text = StringResources.REGISTER_FORM_TITLE,
+        text = ResourcesUtils.Strings.REGISTER_FORM_TITLE,
         style = MaterialTheme.typography.h6,
         modifier = Modifier
             .padding(start = 32.dp, end = 32.dp, top = 40.dp)
@@ -146,7 +146,7 @@ private fun RegisterFormTitle(
 @Composable
 private fun RegisterFormButton(onRegisterButtonClicked: () -> Unit) {
     PrimaryButton(
-        label = StringResources.REGISTER_BUTTON,
+        label = ResourcesUtils.Strings.REGISTER_BUTTON,
         onClick = onRegisterButtonClicked,
         modifier = Modifier
             .fillMaxWidth()

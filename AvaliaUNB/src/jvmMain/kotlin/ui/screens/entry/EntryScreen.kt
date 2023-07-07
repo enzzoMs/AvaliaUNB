@@ -12,7 +12,6 @@ import di.DaggerComponentHolder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ui.screens.login.EntrySideCarouselPanel
 import ui.screens.login.LoginFormPanel
 import ui.screens.register.RegisterFormPanel
 import ui.screens.register.RegisterSuccessfulPanel

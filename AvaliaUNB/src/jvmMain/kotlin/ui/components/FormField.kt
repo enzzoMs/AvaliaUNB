@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import resources.StringResources
+import utils.resources.ResourcesUtils
 
 @Composable
 fun FormField(
@@ -37,7 +37,7 @@ fun FormField(
 
         if (optional) {
             Text(
-                text = StringResources.OPTIONAL_FIELD,
+                text = ResourcesUtils.Strings.OPTIONAL_FIELD,
                 style = optionalTextStyle ?: MaterialTheme.typography.subtitle2,
                 fontSize = optionalTextStyle?.fontSize ?: 14.sp,
                 modifier = Modifier

@@ -6,7 +6,7 @@ import data.repositories.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import resources.StringResources
+import utils.resources.ResourcesUtils
 import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.JFileChooser
@@ -126,7 +126,7 @@ class ProfileViewModel(
         val fileChooser = JFileChooser()
         fileChooser.currentDirectory = File(System.getProperty("user.home"))
         fileChooser.isAcceptAllFileFilterUsed = false
-        fileChooser.dialogTitle = StringResources.PICK_PROFILE_PIC_FILE_CHOOSER
+        fileChooser.dialogTitle = ResourcesUtils.Strings.PICK_PROFILE_PIC_FILE_CHOOSER
         fileChooser.fileFilter = FileNameExtensionFilter("Imagens", "png", "jpeg", "bmp")
 
         val fileChooserAnswer = fileChooser.showOpenDialog(null)
@@ -149,7 +149,7 @@ class ProfileViewModel(
                 } catch (e: Exception) {
                     JOptionPane.showMessageDialog(
                         null,
-                        StringResources.ERROR_UNABLE_TO_LOAD_IMAGE,
+                        ResourcesUtils.Strings.ERROR_UNABLE_TO_LOAD_IMAGE,
                         "Erro",
                         JOptionPane.ERROR_MESSAGE)
                 }
@@ -157,7 +157,7 @@ class ProfileViewModel(
             else {
                 JOptionPane.showMessageDialog(
                     null,
-                    StringResources.ERROR_FILE_DOES_NOT_EXIST,
+                    ResourcesUtils.Strings.ERROR_FILE_DOES_NOT_EXIST,
                     "Erro",
                     JOptionPane.ERROR_MESSAGE)
             }

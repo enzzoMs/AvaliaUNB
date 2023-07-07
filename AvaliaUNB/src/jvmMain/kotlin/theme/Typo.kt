@@ -6,11 +6,12 @@ import androidx.compose.ui.text.platform.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import utils.resources.ResourcesUtils
 
 val QuicksandFont = FontFamily(
-    Font("fonts/Quicksand_Bold.ttf", FontWeight.Bold),
-    Font("fonts/Quicksand_SemiBold.ttf", FontWeight.SemiBold),
-    Font("fonts/Quicksand_Regular.ttf", FontWeight.Normal)
+    Font(ResourcesUtils.FontPaths.QUICKSAND_BOLD, FontWeight.Bold),
+    Font(ResourcesUtils.FontPaths.QUICKSAND_SEMI_BOLD, FontWeight.SemiBold),
+    Font(ResourcesUtils.FontPaths.QUICKSAND_REGULAR, FontWeight.Normal)
 )
 
 val Typography = Typography(

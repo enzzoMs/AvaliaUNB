@@ -8,8 +8,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Grade
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -17,16 +15,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.ClassModel
-import resources.StringResources
-import theme.AntiFlashWhite
 import theme.Gray
 import theme.LightGray
 import theme.White
+import utils.resources.ResourcesUtils
 
 @Composable
 fun ClassCard(
@@ -91,7 +89,7 @@ fun ClassCard(
 
             // Class department name
             CardInformation(
-                fieldName = StringResources.DEPARTMENT_FIELD_PREFIX,
+                fieldName = ResourcesUtils.Strings.DEPARTMENT_FIELD_PREFIX,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = classModel.departmentName,
                 fieldTextStyle = fieldTextStyle,
@@ -101,7 +99,7 @@ fun ClassCard(
 
             // Class schedule
             CardInformation(
-                fieldName = StringResources.SCHEDULE_FIELD_PREFIX,
+                fieldName = ResourcesUtils.Strings.SCHEDULE_FIELD_PREFIX,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = classModel.schedule,
                 fieldTextStyle = fieldTextStyle,
@@ -111,7 +109,7 @@ fun ClassCard(
 
             // Class location
             CardInformation(
-                fieldName = StringResources.LOCATION_FIELD_PREFIX,
+                fieldName = ResourcesUtils.Strings.LOCATION_FIELD_PREFIX,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = classModel.location,
                 fieldTextStyle = fieldTextStyle,
@@ -121,7 +119,7 @@ fun ClassCard(
 
             // Class teacher
             CardInformation(
-                fieldName = StringResources.TEACHER_FIELD_PREFIX,
+                fieldName = ResourcesUtils.Strings.TEACHER_FIELD_PREFIX,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = classModel.teacherName,
                 fieldTextStyle = fieldTextStyle,
@@ -131,7 +129,7 @@ fun ClassCard(
 
             // Class filled seats
             CardInformation(
-                fieldName = StringResources.FILLED_SEATS_FIELD_PREFIX,
+                fieldName = ResourcesUtils.Strings.FILLED_SEATS_FIELD_PREFIX,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = "${classModel.filledSeats}/${classModel.totalSeats}",
                 fieldTextStyle = fieldTextStyle,
@@ -141,7 +139,7 @@ fun ClassCard(
 
             // Class semester
             CardInformation(
-                fieldName = StringResources.SEMESTER_FIELD_PREFIX,
+                fieldName = ResourcesUtils.Strings.SEMESTER_FIELD_PREFIX,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = "${classModel.semester.year}-${classModel.semester.semesterNumber}",
                 fieldTextStyle = fieldTextStyle,
@@ -157,16 +155,16 @@ fun ClassCard(
                 .padding(14.dp)
         ) {
             Icon(
-                imageVector = Icons.Filled.Grade,
+                painter = painterResource(ResourcesUtils.ImagePaths.GRADE),
                 contentDescription = null,
                 tint = LightGray,
                 modifier = Modifier
                     .size(60.dp)
-                    .padding(end = 10.dp)
+                    .padding(end = 12.dp, bottom = 5.dp)
             )
             if (classModel.score == null) {
                 Text(
-                    text = StringResources.NO_REVIEW,
+                    text = ResourcesUtils.Strings.NO_REVIEW,
                     style = TextStyle(
                         fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
                         fontWeight = FontWeight.Normal,

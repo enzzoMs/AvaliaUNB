@@ -22,7 +22,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import resources.StringResources
+import utils.resources.ResourcesUtils
 import theme.UnbGreen
 import ui.components.FormField
 import ui.components.GeneralTextField
@@ -82,7 +82,7 @@ private fun LoginFormTitle() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image (
-            painter = painterResource("images/logo_avalia_unb.svg"),
+            painter = painterResource(ResourcesUtils.ImagePaths.APP_LOGO),
             contentDescription = null,
             contentScale = ContentScale.Fit,
             modifier = Modifier
@@ -90,14 +90,14 @@ private fun LoginFormTitle() {
         )
         Text(
             textAlign = TextAlign.Center,
-            text = StringResources.LOGIN_TITLE,
+            text = ResourcesUtils.Strings.LOGIN_TITLE,
             style = MaterialTheme.typography.h4,
             modifier = Modifier
                 .padding(start = 26.dp)
         )
     }
     Text(
-        text = StringResources.LOGIN_SUBTITLE,
+        text = ResourcesUtils.Strings.LOGIN_SUBTITLE,
         textAlign = TextAlign.Justify,
         style = MaterialTheme.typography.subtitle2,
         modifier = Modifier
@@ -119,7 +119,7 @@ private fun LoginFormFields(
 ) {
 
     Text(
-        text = StringResources.LOGIN_FORM_TITLE,
+        text = ResourcesUtils.Strings.LOGIN_FORM_TITLE,
         style = MaterialTheme.typography.h6
     )
 
@@ -130,19 +130,19 @@ private fun LoginFormFields(
 
     // Registration Number Field -------------------------------------------------------
     FormField(
-        title = StringResources.REGISTRATION_NUMBER_FIELD_TITLE,
+        title = ResourcesUtils.Strings.REGISTRATION_NUMBER_FIELD_TITLE,
         error = invalidRegistrationNumber || userNotRegistered,
         errorMessage = if (userNotRegistered) {
-            StringResources.USER_NOT_REGISTERED
+            ResourcesUtils.Strings.USER_NOT_REGISTERED
         } else {
-            StringResources.INVALID_REGISTRATION_NUMBER
+            ResourcesUtils.Strings.INVALID_REGISTRATION_NUMBER
         },
         textField = {
             GeneralTextField(
                 value = userRegistrationNumber,
                 onValueChange = onRegistrationNumberChanged,
                 error = invalidRegistrationNumber || userNotRegistered,
-                hintText = StringResources.REGISTRATION_NUMBER_FIELD_HINT,
+                hintText = ResourcesUtils.Strings.REGISTRATION_NUMBER_FIELD_HINT,
                 startIcon = Icons.Outlined.Badge
             )
         }
@@ -150,12 +150,12 @@ private fun LoginFormFields(
 
     // Password Field -------------------------------------------------------
     FormField(
-        title = StringResources.PASSWORD_FIELD_TITLE,
+        title = ResourcesUtils.Strings.PASSWORD_FIELD_TITLE,
         error = invalidPassword || wrongPassword,
         errorMessage = if (wrongPassword) {
-            StringResources.WRONG_PASSWORD
+            ResourcesUtils.Strings.WRONG_PASSWORD
         } else {
-            StringResources.REQUIRED_FIELD
+            ResourcesUtils.Strings.REQUIRED_FIELD
         },
         modifier = Modifier
             .padding(top = 22.dp),
@@ -170,7 +170,7 @@ private fun LoginFormFields(
                 value = userPassword,
                 onValueChange = onPasswordChanged,
                 error = invalidPassword || wrongPassword,
-                hintText = StringResources.PASSWORD_FIELD_HINT,
+                hintText = ResourcesUtils.Strings.PASSWORD_FIELD_HINT,
                 startIcon = Icons.Filled.Lock,
                 endIcon = passwordFieldEndIcon,
                 visualTransformation = passwordFieldVisualTransformation,
@@ -188,7 +188,7 @@ private fun LoginFormFields(
     )
 
     PrimaryButton(
-        label = StringResources.LOGIN_BUTTON,
+        label = ResourcesUtils.Strings.LOGIN_BUTTON,
         onClick = onLoginButtonClicked,
         modifier = Modifier
             .fillMaxWidth()
@@ -204,7 +204,7 @@ private fun LoginFormFields(
                 .weight(1f)
         )
         Text(
-            text = StringResources.GENERAL_TEXT_OR,
+            text = ResourcesUtils.Strings.GENERAL_TEXT_OR,
             style = MaterialTheme.typography.subtitle2
         )
         Divider(
@@ -215,7 +215,7 @@ private fun LoginFormFields(
     }
 
     SecondaryButton(
-        label = StringResources.LOGIN_WITHOUT_ACCOUNT_BUTTON,
+        label = ResourcesUtils.Strings.LOGIN_WITHOUT_ACCOUNT_BUTTON,
         onClick = {},
         modifier = Modifier
             .fillMaxWidth()
@@ -233,13 +233,13 @@ private fun LoginRegisterText(
             .fillMaxWidth()
     ) {
         Text(
-            text = StringResources.LOGIN_NO_ACCOUNT_QUESTION,
+            text = ResourcesUtils.Strings.LOGIN_NO_ACCOUNT_QUESTION,
             style = MaterialTheme.typography.body2,
             modifier = Modifier
                 .padding(end = 6.dp)
         )
         Text(
-            text = StringResources.LOGIN_NO_ACCOUNT_REGISTER,
+            text = ResourcesUtils.Strings.LOGIN_NO_ACCOUNT_REGISTER,
             style = MaterialTheme.typography.body2,
             color = UnbGreen,
             modifier = Modifier

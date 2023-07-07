@@ -24,7 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import resources.StringResources
+import utils.resources.ResourcesUtils
 import theme.*
 import ui.components.NavigationItem
 import ui.components.NavigationPanelColors
@@ -60,7 +60,7 @@ fun MainScreen(
                 mainScreenUiState.onEditProfile -> NAV_NO_SELECTED_ITEM_INDEX
                 mainScreenUiState.selectedNavItemIndex == null -> {
                     mainScreenViewModel.updatePageInformation(
-                        newTitle = StringResources.SUBJECTS,
+                        newTitle = ResourcesUtils.Strings.SUBJECTS,
                         newIcon = Icons.Outlined.School
                     )
                     NAV_ITEM_SUBJECTS_INDEX
@@ -77,7 +77,7 @@ fun MainScreen(
         ) {
             MainScreenContent(
                 pageTitle = if (mainScreenUiState.onEditProfile) {
-                    StringResources.PROFILE
+                    ResourcesUtils.Strings.PROFILE
                 } else {
                     mainScreenUiState.pageTitle
                 },
@@ -252,7 +252,7 @@ private fun MainScreenContent(
                                 userNameDropdownExpanded.value = false
                             },
                         ) {
-                            Text(StringResources.EDIT_PROFILE)
+                            Text(ResourcesUtils.Strings.EDIT_PROFILE)
                         }
                     }
                 }
@@ -283,7 +283,7 @@ private fun SideNavigationPanel(
                     .padding(vertical = 28.dp, horizontal = 16.dp)
             ) {
                 Text(
-                    text = StringResources.COMPLETE_APP_TITLE,
+                    text = ResourcesUtils.Strings.COMPLETE_APP_TITLE,
                     style = MaterialTheme.typography.h4,
                     color = White,
                     modifier = Modifier
@@ -313,7 +313,7 @@ private fun SideNavigationPanel(
                     tint = White
                 )
                 Text(
-                    text = StringResources.LOGOUT_BUTTON,
+                    text = ResourcesUtils.Strings.LOGOUT_BUTTON,
                     style = MaterialTheme.typography.button
                 )
             }
@@ -327,9 +327,9 @@ private fun SideNavigationPanel(
             selectedIndicatorColor = White
         ),
         navItems = listOf(
-            NavigationItem(StringResources.SUBJECTS, Icons.Outlined.School, NAV_ITEM_SUBJECTS_INDEX),
-            NavigationItem(StringResources.CLASSES, Icons.Outlined.CollectionsBookmark, NAV_ITEM_CLASSES_INDEX),
-            NavigationItem(StringResources.TEACHERS, Icons.Outlined.Group, NAV_ITEM_TEACHERS_INDEX),
+            NavigationItem(ResourcesUtils.Strings.SUBJECTS, Icons.Outlined.School, NAV_ITEM_SUBJECTS_INDEX),
+            NavigationItem(ResourcesUtils.Strings.CLASSES, Icons.Outlined.CollectionsBookmark, NAV_ITEM_CLASSES_INDEX),
+            NavigationItem(ResourcesUtils.Strings.TEACHERS, Icons.Outlined.Group, NAV_ITEM_TEACHERS_INDEX),
         ),
         modifier = modifier
     )

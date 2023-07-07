@@ -32,7 +32,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import resources.StringResources
+import utils.resources.ResourcesUtils
 import theme.DimGray
 import theme.Gray
 import theme.UnbBlue
@@ -97,7 +97,7 @@ fun SplashScreen(
                                     fontSize = 56.sp
                                 )
                             ) {
-                                append(StringResources.FIRST_PART_APP_TITLE)
+                                append(ResourcesUtils.Strings.FIRST_PART_APP_TITLE)
                             }
 
                             withStyle(
@@ -107,7 +107,7 @@ fun SplashScreen(
                                     fontSize = 56.sp
                                 )
                             ) {
-                                append(StringResources.SECOND_PART_APP_TITLE)
+                                append(ResourcesUtils.Strings.SECOND_PART_APP_TITLE)
                             }
                         }
                     )
@@ -137,7 +137,7 @@ private fun LoadDatabaseStatus(
     ) {
         // Initializing database schema
         Text(
-            text = StringResources.INITIALIZING_DATABASE,
+            text = ResourcesUtils.Strings.INITIALIZING_DATABASE,
             style = MaterialTheme.typography.h4,
             fontSize = 26.sp,
             color = DimGray
@@ -148,7 +148,7 @@ private fun LoadDatabaseStatus(
                 .padding(top = 20.dp)
         ) {
             Text(
-                text = StringResources.CREATING_DATABASE_SCHEMA,
+                text = ResourcesUtils.Strings.CREATING_DATABASE_SCHEMA,
                 style = MaterialTheme.typography.h6,
                 color = Gray
             )
@@ -174,7 +174,7 @@ private fun LoadDatabaseStatus(
         // Initializing database data
         if (initializeDatabaseData) {
             Text(
-                text = StringResources.INITIALIZING_DATABASE_DATA,
+                text = ResourcesUtils.Strings.INITIALIZING_DATABASE_DATA,
                 style = MaterialTheme.typography.h4,
                 fontSize = 26.sp,
                 color = DimGray,
@@ -215,15 +215,15 @@ private fun SemesterDataLoadingStatus(
         )
 
         ItemLoadingStatus(
-            itemLabel = StringResources.DEPARTMENTS,
+            itemLabel = ResourcesUtils.Strings.DEPARTMENTS,
             itemStatus = departmentStatus
         )
         ItemLoadingStatus(
-            itemLabel = StringResources.SUBJECTS,
+            itemLabel = ResourcesUtils.Strings.SUBJECTS,
             itemStatus = subjectsStatus
         )
         ItemLoadingStatus(
-            itemLabel = StringResources.CLASSES,
+            itemLabel = ResourcesUtils.Strings.CLASSES,
             itemStatus = classesStatus
         )
     }
