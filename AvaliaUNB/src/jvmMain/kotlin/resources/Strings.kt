@@ -78,8 +78,15 @@ object StringResources {
     const val SEMESTER_FIELD_PREFIX = "Semestre:"
     const val NUM_OF_CLASSES_FIELD_PREFIX = "Número de turmas:"
 
+    const val SCHEDULE_FIELD_PREFIX = "Hórario:"
+    const val LOCATION_FIELD_PREFIX = "Local:"
+    const val TEACHER_FIELD_PREFIX = "Professor:"
+    const val FILLED_SEATS_FIELD_PREFIX = "Vagas ocupadas:"
+
     const val ERROR_UNABLE_TO_LOAD_IMAGE = "Não foi possível carregar a imagem."
     const val ERROR_FILE_DOES_NOT_EXIST = "O arquivo selecionado não existe."
+
+    const val NO_REVIEW = "Nenhuma\nanálise"
 
     const val GENERAL_TEXT_OR = "Ou"
     const val GENERAL_TEXT_ALL = "TODOS"

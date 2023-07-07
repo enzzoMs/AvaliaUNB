@@ -1,4 +1,4 @@
-package ui.screens.subjects.viewmodel
+package ui.screens.subjects.all.viewmodel
 
 import data.models.SubjectModel
 import data.repositories.SemesterRepository
@@ -12,13 +12,9 @@ import kotlinx.coroutines.launch
 
 import javax.inject.Inject
 
-private const val SEMESTER_2022_1 = "2022-1"
-private const val SEMESTER_2022_2 = "2022-2"
-private const val SEMESTER_2023_1 = "2023-1"
-
 class SubjectsViewModel @Inject constructor(
     private val subjectRepository: SubjectRepository,
-    private val semesterRepository: SemesterRepository
+    semesterRepository: SemesterRepository
 ) {
     private var allSubjects = listOf<SubjectModel>()
 
@@ -40,9 +36,10 @@ class SubjectsViewModel @Inject constructor(
     private fun loadAllSubjects() {
         CoroutineScope(Dispatchers.IO).launch {
             allSubjects = subjectRepository.getAllSubjects()
-            _subjectUiState.update { a ->
-                a.copy(
-                    subjects = allSubjects
+            _subjectUiState.update { subjectUiState ->
+                subjectUiState.copy(
+                    subjects = allSubjects,
+                    departmentNames = allSubjects.map { it.departmentName }.distinct()
                 )
             }
         }

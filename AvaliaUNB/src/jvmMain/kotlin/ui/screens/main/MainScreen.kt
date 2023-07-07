@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import data.models.SubjectModel
 import di.DaggerComponentHolder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +33,9 @@ import ui.screens.classes.ClassesScreen
 import ui.screens.main.viewmodel.MainScreenViewModel
 import ui.screens.profile.ProfileScreen
 import ui.screens.profile.viewmodel.ProfileViewModel
-import ui.screens.subjects.SubjectsScreen
+import ui.screens.subjects.single.SingleSubjectScreen
+import ui.screens.subjects.all.SubjectsScreen
+import ui.screens.subjects.single.viewmodel.SingleSubjectViewModel
 import ui.screens.teachers.TeachersScreen
 import utils.navigation.Screen
 
@@ -48,6 +51,7 @@ fun MainScreen(
     onDeleteAccount: () -> Unit
 ) {
     val mainScreenUiState by mainScreenViewModel.mainScreenUiState.collectAsState()
+    var selectedSubject by remember { mutableStateOf<SubjectModel?>(null) }
 
     Row {
         SideNavigationPanel(
@@ -92,7 +96,21 @@ fun MainScreen(
                 getScreenContent = { screen ->
                     when(screen) {
                         Screen.SUBJECTS -> SubjectsScreen(
-                            subjectsViewModel = DaggerComponentHolder.appComponent.getSubjectsViewModel()
+                            subjectsViewModel = DaggerComponentHolder.appComponent.getSubjectsViewModel(),
+                            onSubjectClicked = { subjectModel ->
+                                selectedSubject = subjectModel
+                                mainScreenViewModel.updateCurrentScreen(Screen.SINGLE_SUBJECT)
+                            }
+                        )
+                        Screen.SINGLE_SUBJECT -> SingleSubjectScreen(
+                            singleSubjectViewModel = SingleSubjectViewModel(
+                               subjectModel = selectedSubject!!,
+                               subjectRepository = DaggerComponentHolder.appComponent.getSubjectRepository()
+                            ),
+                            onBackClicked = {
+                                mainScreenViewModel.updateCurrentScreen(Screen.SUBJECTS)
+                                selectedSubject = null
+                            }
                         )
                         Screen.CLASSES -> ClassesScreen()
                         Screen.TEACHERS -> TeachersScreen()

@@ -1,6 +1,8 @@
 package data.source
 
 import androidx.compose.ui.graphics.Color
+import data.models.ClassModel
+import data.models.SemesterModel
 import data.models.SubjectModel
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -11,12 +13,12 @@ class SubjectDAO @Inject constructor(
 ) {
     fun getAllSubjects(): List<SubjectModel> {
         val allSubjectsQueryResult = database.executeQuery(
-            "SELECT disc.*, dept.nome AS dept_nome, dept.cor AS dept_cor " +
-                    "FROM disciplina as disc " +
-                    "INNER JOIN departamento as dept " +
-                    "ON disc.codigo_departamento = dept.codigo " +
-                    "AND disc.ano_semestre = dept.ano_semestre " +
-                    "AND disc.numero_semestre = dept.numero_semestre;"
+    "SELECT disc.*, dept.nome AS dept_nome, dept.cor AS dept_cor " +
+            "FROM disciplina as disc " +
+            "INNER JOIN departamento as dept " +
+            "ON disc.codigo_departamento = dept.codigo " +
+            "AND disc.ano_semestre = dept.ano_semestre " +
+            "AND disc.numero_semestre = dept.numero_semestre;"
         )
 
         val numberOfClassesQuery = database.prepareStatement(
@@ -43,6 +45,7 @@ class SubjectDAO @Inject constructor(
 
             subjects.add(
                 SubjectModel(
+                    allSubjectsQueryResult.getInt("id"),
                     allSubjectsQueryResult.getString("codigo"),
                     allSubjectsQueryResult.getString("nome"),
                     subjectSemester,
@@ -54,5 +57,51 @@ class SubjectDAO @Inject constructor(
         }
 
         return subjects.toList()
+    }
+
+    fun getSubjectClasses(subjectId: Int): List<ClassModel> {
+        val subjectClassesQuery = database.executeQuery(
+            "SELECT turma.*, semestre.*, disciplina.nome AS disc_nome, " +
+            "departamento.cor AS dept_cor, departamento.nome AS dept_nome " +
+            "FROM turma " +
+            "INNER JOIN disciplina ON turma.id_disciplina = disciplina.id " +
+            "INNER JOIN departamento " +
+            "ON disciplina.codigo_departamento = departamento.codigo AND " +
+            "disciplina.numero_semestre = departamento.numero_semestre AND " +
+            "disciplina.ano_semestre = departamento.ano_semestre " +
+            "INNER JOIN semestre " +
+            "ON semestre.ano = disciplina.ano_semestre AND " +
+            "semestre.numero_semestre = disciplina.numero_semestre " +
+            "WHERE turma.id_disciplina = $subjectId;"
+        )
+
+        val subjectClasses = mutableListOf<ClassModel>()
+
+        while (subjectClassesQuery.next()) {
+            subjectClasses.add(
+                ClassModel(
+                    subjectClassesQuery.getString("disc_nome"),
+                    subjectClassesQuery.getString("dept_nome"),
+                    subjectClassesQuery.getString("codigo_turma"),
+                    subjectClassesQuery.getString("horario"),
+                    subjectClassesQuery.getInt("num_horas"),
+                    subjectClassesQuery.getInt("vagas_ocupadas"),
+                    subjectClassesQuery.getInt("vagas_total"),
+                    subjectClassesQuery.getString("local_aula"),
+                    subjectClassesQuery.getString("nome_professor"),
+                    SemesterModel(
+                        subjectClassesQuery.getInt("ano"),
+                        subjectClassesQuery.getInt("numero_semestre"),
+                        subjectClassesQuery.getString("data_inicio"),
+                        subjectClassesQuery.getString("data_fim"),
+                    ),
+                    Color(subjectClassesQuery.getInt("dept_cor")),
+                    subjectClassesQuery.getObject("pontuacao") as Int?
+                )
+            )
+        }
+
+        return subjectClasses.toList()
+
     }
 }

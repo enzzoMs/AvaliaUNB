@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS turma(
     vagas_total INTEGER NOT NULL CHECK (vagas_total >= 0),
     vagas_ocupadas INTEGER NOT NULL CHECK (vagas_ocupadas >= 0 AND vagas_ocupadas <= vagas_total),
     local_aula TEXT,
+    pontuacao INTEGER CHECK (pontuacao IS NULL OR (pontuacao >= 0 AND pontuacao <= 5)),
     nome_professor TEXT NOT NULL,
 	id_disciplina INTEGER NOT NULL,
 	codigo_departamento INTEGER NOT NULL CHECK (codigo_departamento >= 0),

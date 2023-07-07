@@ -1,4 +1,4 @@
-package ui.screens.subjects.viewmodel
+package ui.screens.subjects.all.viewmodel
 
 import data.models.SubjectModel
 

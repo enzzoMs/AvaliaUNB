@@ -1,5 +1,6 @@
 package data.repositories
 
+import data.models.ClassModel
 import data.models.SubjectModel
 import data.source.SubjectDAO
 import kotlinx.coroutines.CoroutineScope
@@ -19,4 +20,7 @@ class SubjectRepository @Inject constructor(
         }
         return allSubjectsDeferred.await()
     }
+
+    fun getSubjectClasses(subjectModel: SubjectModel): List<ClassModel> = subjectDAO.getSubjectClasses(subjectModel.id)
+
 }

@@ -8,6 +8,7 @@ enum class Screen {
     REGISTER_SUCCESSFUL,
     MAIN,
     SUBJECTS,
+    SINGLE_SUBJECT,
     CLASSES,
     TEACHERS,
     PROFILE

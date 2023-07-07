@@ -1,4 +1,4 @@
-package ui.screens.subjects
+package ui.screens.subjects.all
 
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
@@ -24,11 +24,12 @@ import theme.White
 import ui.components.GeneralDropDownMenu
 import ui.components.GeneralTextField
 import ui.components.SubjectCard
-import ui.screens.subjects.viewmodel.SubjectsViewModel
+import ui.screens.subjects.all.viewmodel.SubjectsViewModel
 
 @Composable
 fun SubjectsScreen(
-    subjectsViewModel: SubjectsViewModel
+    subjectsViewModel: SubjectsViewModel,
+    onSubjectClicked: (SubjectModel) -> Unit = {}
 ) {
     val subjectUiState by subjectsViewModel.subjectUiState.collectAsState()
 
@@ -50,6 +51,7 @@ fun SubjectsScreen(
         )
         SubjectsLists(
             subjects = subjectUiState.subjects,
+            onSubjectClicked = onSubjectClicked,
             modifier = Modifier
                 .padding(top = 30.dp)
                 .fillMaxWidth()
@@ -130,6 +132,7 @@ private fun SearchAndFilterFields(
 @Composable
 private fun SubjectsLists(
     subjects: List<SubjectModel>,
+    onSubjectClicked: (SubjectModel) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Box (
@@ -143,7 +146,11 @@ private fun SubjectsLists(
                 .padding(end = 10.dp)
         ) {
             items(subjects) { subject ->
-                SubjectCard(subject)
+                SubjectCard(
+                    subject = subject,
+                    clickable = true,
+                    onClick = onSubjectClicked
+                )
             }
         }
 

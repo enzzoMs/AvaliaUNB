@@ -40,8 +40,8 @@ class DatabaseManager @Inject constructor(
         DatabaseLoadingStatus(
         semestersLoadingStatus = buildList {
             if (databaseConfiguration.loadDataForSemester2022_1) add(SemesterLoadingStatus(PrePopulatedSemester.PRE_POPULATED_SEMESTER_2022_1))
-            if (databaseConfiguration.loadDataForSemester2022_2) add(SemesterLoadingStatus(PrePopulatedSemester.PrePopulatedSEMESTER_2022_2))
-            if (databaseConfiguration.loadDataForSemester2023_1) add(SemesterLoadingStatus(PrePopulatedSemester.PrePopulatedSEMESTER_2023_1))
+            if (databaseConfiguration.loadDataForSemester2022_2) add(SemesterLoadingStatus(PrePopulatedSemester.PRE_POPULATED_SEMESTER_2022_2))
+            if (databaseConfiguration.loadDataForSemester2023_1) add(SemesterLoadingStatus(PrePopulatedSemester.PRE_POPULATED_SEMESTER_2023_1))
         })
     )
     val databaseLoadingStatus = _databaseLoadingStatus.asStateFlow()
