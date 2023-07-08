@@ -10,6 +10,7 @@ enum class Screen {
     SUBJECTS,
     SINGLE_SUBJECT,
     CLASSES,
+    SINGLE_CLASS,
     TEACHERS,
     PROFILE
 }

@@ -61,7 +61,7 @@ class SubjectDAO @Inject constructor(
 
     fun getSubjectClasses(subjectId: Int): List<ClassModel> {
         val subjectClassesQuery = database.executeQuery(
-            "SELECT turma.*, semestre.*, disciplina.nome AS disc_nome, " +
+            "SELECT turma.*, semestre.*, disciplina.nome AS disc_nome, disciplina.codigo AS disc_cod, " +
             "departamento.cor AS dept_cor, departamento.nome AS dept_nome " +
             "FROM turma " +
             "INNER JOIN disciplina ON turma.id_disciplina = disciplina.id " +
@@ -81,6 +81,7 @@ class SubjectDAO @Inject constructor(
             subjectClasses.add(
                 ClassModel(
                     subjectClassesQuery.getString("disc_nome"),
+                    subjectClassesQuery.getString("disc_cod"),
                     subjectClassesQuery.getString("dept_nome"),
                     subjectClassesQuery.getString("codigo_turma"),
                     subjectClassesQuery.getString("horario"),

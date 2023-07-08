@@ -25,7 +25,6 @@ import javax.inject.Singleton
 private const val DEPT_COLOR_TRANSPARENCY_VALUE = 100
 private const val DEFAULT_NUMBER_OF_CLASS_SEATS = 50
 private const val DEFAULT_CLASS_LOCATION = "Local a definir."
-private const val DEFAULT_CLASS_SCHEDULE = "Horário a definir."
 
 @Singleton
 class DatabaseManager @Inject constructor(
@@ -258,8 +257,9 @@ class DatabaseManager @Inject constructor(
             val teacherName = regexExcludeNumberParentheses.find(lineSplit[2])?.value?.trim() ?: ""
             val numOfHours = regexNumberBetweenParentheses.find(lineSplit[2])?.value?.toInt() ?: 0
 
-            var classSchedule = lineSplit[3].replace(regexTextBetweenParentheses, "").trim()
-            classSchedule = classSchedule.ifEmpty { DEFAULT_CLASS_SCHEDULE }
+            var classSchedule: String? = lineSplit[3].replace(regexTextBetweenParentheses, "").trim()
+            classSchedule = classSchedule!!.replace("\"", "").split(",").first()
+            classSchedule = classSchedule.ifEmpty { null }
 
             var filledSeats = lineSplit[4].toInt()
 
@@ -275,8 +275,7 @@ class DatabaseManager @Inject constructor(
                 filledSeats = temp
             }
 
-
-            val location = lineSplit[6].ifEmpty { DEFAULT_CLASS_LOCATION }
+            val location = lineSplit[6].replace(regexTextBetweenParentheses, "").trim().ifEmpty { DEFAULT_CLASS_LOCATION }
             val subjectCode = lineSplit[7]
             val departmentCode = lineSplit[8].toInt()
 

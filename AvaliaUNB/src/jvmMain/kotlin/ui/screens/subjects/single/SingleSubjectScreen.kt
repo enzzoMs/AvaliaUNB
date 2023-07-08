@@ -20,11 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.ClassModel
-import utils.resources.ResourcesUtils
 import theme.DarkAntiFlashWhite
 import theme.DarkCharcoal
 import theme.UnbBlue
@@ -33,11 +31,13 @@ import ui.components.ClassCard
 import ui.components.SecondaryButton
 import ui.components.SubjectCard
 import ui.screens.subjects.single.viewmodel.SingleSubjectViewModel
+import utils.resources.ResourcesUtils
 
 @Composable
 fun SingleSubjectScreen(
     singleSubjectViewModel: SingleSubjectViewModel,
-    onBackClicked: () -> Unit = {}
+    onBackClicked: () -> Unit = {},
+    onClassClicked: (ClassModel) -> Unit = {}
 ) {
     val singleSubjectUiState by singleSubjectViewModel.singleSubjectUiState.collectAsState()
 
@@ -51,27 +51,16 @@ fun SingleSubjectScreen(
             subject = singleSubjectUiState.subjectModel,
             backgroundColor = DarkAntiFlashWhite,
             subjectTitleTextStyle = TextStyle(
-                fontFamily = MaterialTheme.typography.h4.fontFamily,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 21.sp,
+                fontFamily = MaterialTheme.typography.subtitle1.fontFamily,
+                fontWeight = MaterialTheme.typography.subtitle1.fontWeight,
+                fontSize = 20.sp,
                 color = DarkCharcoal
             ),
-            fieldNameTextStyle = TextStyle(
-                fontFamily = MaterialTheme.typography.h4.fontFamily,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 18.sp,
-                color = DarkCharcoal
-            ),
-            fieldTextStyle = TextStyle(
-                fontFamily = MaterialTheme.typography.body1.fontFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = 18.sp,
-                color = DarkCharcoal
-            )
         )
         SubjectClasses(
             classes = singleSubjectUiState.subjectClasses,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            onClassClicked = onClassClicked
         )
         BackButton(
             onClicked = onBackClicked,
@@ -84,7 +73,8 @@ fun SingleSubjectScreen(
 @Composable
 private fun SubjectClasses(
     classes: List<ClassModel>,
-    modifier: Modifier = Modifier
+    onClassClicked: (ClassModel) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = Modifier
@@ -111,8 +101,8 @@ private fun SubjectClasses(
 
             Text(
                 text = ResourcesUtils.Strings.CLASSES,
-                style = MaterialTheme.typography.h6,
-                fontSize = 21.sp
+                style = MaterialTheme.typography.subtitle1,
+                fontSize = 20.sp
             )
         }
 
@@ -129,7 +119,11 @@ private fun SubjectClasses(
                     .padding(end = 10.dp)
             ) {
                 items(classes) { subjectClass ->
-                    ClassCard(subjectClass)
+                    ClassCard(
+                        classModel = subjectClass,
+                        clickable = true,
+                        onClick = onClassClicked
+                    )
                 }
             }
 

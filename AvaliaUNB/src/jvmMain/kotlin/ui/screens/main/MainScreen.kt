@@ -29,7 +29,9 @@ import theme.*
 import ui.components.NavigationItem
 import ui.components.NavigationPanelColors
 import ui.components.SideNavigationPanel
-import ui.screens.classes.ClassesScreen
+import ui.screens.classes.all.ClassesScreen
+import ui.screens.classes.single.SingleClassScreen
+import ui.screens.classes.single.viewmodel.SingleClassViewModel
 import ui.screens.main.viewmodel.MainScreenViewModel
 import ui.screens.profile.ProfileScreen
 import ui.screens.profile.viewmodel.ProfileViewModel
@@ -51,7 +53,6 @@ fun MainScreen(
     onDeleteAccount: () -> Unit
 ) {
     val mainScreenUiState by mainScreenViewModel.mainScreenUiState.collectAsState()
-    var selectedSubject by remember { mutableStateOf<SubjectModel?>(null) }
 
     Row {
         SideNavigationPanel(
@@ -67,7 +68,8 @@ fun MainScreen(
                 }
                 else -> mainScreenUiState.selectedNavItemIndex!!
             },
-            onItemClicked = { navItem -> mainScreenViewModel.onNavItemClicked(navItem) },
+            navItems = mainScreenUiState.navItems,
+            onItemClicked = { navItem -> mainScreenViewModel.selectNavItem(navItem) },
             modifier = Modifier
                 .weight(1f)
         )
@@ -98,21 +100,28 @@ fun MainScreen(
                         Screen.SUBJECTS -> SubjectsScreen(
                             subjectsViewModel = DaggerComponentHolder.appComponent.getSubjectsViewModel(),
                             onSubjectClicked = { subjectModel ->
-                                selectedSubject = subjectModel
+                                mainScreenViewModel.setSubjectSelection(subjectModel)
                                 mainScreenViewModel.updateCurrentScreen(Screen.SINGLE_SUBJECT)
                             }
                         )
                         Screen.SINGLE_SUBJECT -> SingleSubjectScreen(
                             singleSubjectViewModel = SingleSubjectViewModel(
-                               subjectModel = selectedSubject!!,
+                               subjectModel = mainScreenUiState.selectedSubject!!,
                                subjectRepository = DaggerComponentHolder.appComponent.getSubjectRepository()
                             ),
                             onBackClicked = {
                                 mainScreenViewModel.updateCurrentScreen(Screen.SUBJECTS)
-                                selectedSubject = null
+                                mainScreenViewModel.setSubjectSelection(null)
+                            },
+                            onClassClicked = { classModel ->
+                                mainScreenViewModel.updateCurrentScreen(Screen.SINGLE_CLASS)
+                                mainScreenViewModel.setClassSelection(classModel)
                             }
                         )
                         Screen.CLASSES -> ClassesScreen()
+                        Screen.SINGLE_CLASS -> SingleClassScreen(
+                            singleClassViewModel = SingleClassViewModel(mainScreenUiState.selectedClass!!)
+                        )
                         Screen.TEACHERS -> TeachersScreen()
                         Screen.PROFILE -> {
                             val profileViewModel = ProfileViewModel(
@@ -271,6 +280,7 @@ private fun SideNavigationPanel(
     onLogoutClicked: () -> Unit,
     onItemClicked: (NavigationItem) -> Unit,
     selectedNavIndex: Int = 0,
+    navItems: List<NavigationItem>,
     modifier: Modifier = Modifier
 ) {
     SideNavigationPanel(
@@ -326,11 +336,7 @@ private fun SideNavigationPanel(
             unSelectedTextColor = ShadowBlue,
             selectedIndicatorColor = White
         ),
-        navItems = listOf(
-            NavigationItem(ResourcesUtils.Strings.SUBJECTS, Icons.Outlined.School, NAV_ITEM_SUBJECTS_INDEX),
-            NavigationItem(ResourcesUtils.Strings.CLASSES, Icons.Outlined.CollectionsBookmark, NAV_ITEM_CLASSES_INDEX),
-            NavigationItem(ResourcesUtils.Strings.TEACHERS, Icons.Outlined.Group, NAV_ITEM_TEACHERS_INDEX),
-        ),
+        navItems = navItems,
         modifier = modifier
     )
 }

@@ -34,6 +34,7 @@ fun ClassCard(
     subjectTitleTextStyle: TextStyle = MaterialTheme.typography.subtitle1,
     fieldNameTextStyle: TextStyle = MaterialTheme.typography.subtitle1,
     fieldTextStyle: TextStyle = MaterialTheme.typography.body1,
+    showScore: Boolean = true,
     clickable: Boolean = false,
     onClick: (ClassModel) -> Unit = {}
 ) {
@@ -101,7 +102,7 @@ fun ClassCard(
             CardInformation(
                 fieldName = ResourcesUtils.Strings.SCHEDULE_FIELD_PREFIX,
                 fieldNameTextStyle = fieldNameTextStyle,
-                fieldText = classModel.schedule,
+                fieldText = classModel.schedule ?: ResourcesUtils.Strings.DEFAULT_CLASS_SCHEDULE,
                 fieldTextStyle = fieldTextStyle,
                 modifier = Modifier
                     .padding(bottom = 6.dp)
@@ -148,31 +149,34 @@ fun ClassCard(
             )
         }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(14.dp)
-        ) {
-            Icon(
-                painter = painterResource(ResourcesUtils.ImagePaths.GRADE),
-                contentDescription = null,
-                tint = LightGray,
+        if (showScore) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .size(60.dp)
-                    .padding(end = 12.dp, bottom = 5.dp)
-            )
-            if (classModel.score == null) {
-                Text(
-                    text = ResourcesUtils.Strings.NO_REVIEW,
-                    style = TextStyle(
-                        fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 18.sp,
-                        color = Gray
-                    )
+                    .align(Alignment.BottomEnd)
+                    .padding(14.dp)
+            ) {
+                Icon(
+                    painter = painterResource(ResourcesUtils.ImagePaths.GRADE),
+                    contentDescription = null,
+                    tint = LightGray,
+                    modifier = Modifier
+                        .size(60.dp)
+                        .padding(end = 12.dp, bottom = 5.dp)
                 )
+                if (classModel.score == null) {
+                    Text(
+                        text = ResourcesUtils.Strings.NO_REVIEW,
+                        style = TextStyle(
+                            fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 18.sp,
+                            color = Gray
+                        )
+                    )
+                }
             }
         }
+
     }
 }

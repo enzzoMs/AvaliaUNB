@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS professor(
 CREATE TABLE IF NOT EXISTS turma(
 	id INTEGER NOT NULL,
 	codigo_turma TEXT,
-    horario TEXT NOT NULL,
+    horario TEXT,
     num_horas INTEGER NOT NULL CHECK (num_horas >= 0),
     vagas_total INTEGER NOT NULL CHECK (vagas_total >= 0),
     vagas_ocupadas INTEGER NOT NULL CHECK (vagas_ocupadas >= 0 AND vagas_ocupadas <= vagas_total),

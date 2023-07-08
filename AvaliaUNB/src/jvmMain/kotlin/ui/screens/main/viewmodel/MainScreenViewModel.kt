@@ -1,6 +1,12 @@
 package ui.screens.main.viewmodel
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CollectionsBookmark
+import androidx.compose.material.icons.outlined.Group
+import androidx.compose.material.icons.outlined.School
 import androidx.compose.ui.graphics.vector.ImageVector
+import data.models.ClassModel
+import data.models.SubjectModel
 import data.models.UserModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -10,28 +16,77 @@ import ui.screens.main.NAV_ITEM_CLASSES_INDEX
 import ui.screens.main.NAV_ITEM_SUBJECTS_INDEX
 import ui.screens.main.NAV_ITEM_TEACHERS_INDEX
 import utils.navigation.Screen
+import utils.resources.ResourcesUtils
 
 class MainScreenViewModel(
     userModel: UserModel
 ) {
+    private val navItemSubjects = NavigationItem(
+        ResourcesUtils.Strings.SUBJECTS, Icons.Outlined.School, NAV_ITEM_SUBJECTS_INDEX
+    )
+    private val navItemClasses = NavigationItem(
+        ResourcesUtils.Strings.CLASSES, Icons.Outlined.CollectionsBookmark, NAV_ITEM_CLASSES_INDEX
+    )
+    private val navItemTeachers = NavigationItem(
+        ResourcesUtils.Strings.TEACHERS, Icons.Outlined.Group, NAV_ITEM_TEACHERS_INDEX
+    )
+
     private val _mainScreenUiState = MutableStateFlow(
-        MainScreenUiState(userModel = userModel, currentScreen = Screen.SUBJECTS)
+        MainScreenUiState(
+            userModel = userModel,
+            currentScreen = Screen.SUBJECTS,
+            navItems = listOf(navItemSubjects, navItemClasses, navItemTeachers)
+        )
     )
     val mainScreenUiState = _mainScreenUiState.asStateFlow()
 
-    fun onNavItemClicked(navItem: NavigationItem) {
+    fun selectNavItem(navItem: NavigationItem) {
         _mainScreenUiState.update { mainScreenUiState ->
             mainScreenUiState.copy(
                 onEditProfile = false,
                 pageTitle = navItem.label,
                 pageIcon = navItem.icon,
-                selectedNavItemIndex = navItem.index,
-                currentScreen = when(navItem.index) {
-                    NAV_ITEM_SUBJECTS_INDEX -> Screen.SUBJECTS
-                    NAV_ITEM_CLASSES_INDEX -> Screen.CLASSES
-                    NAV_ITEM_TEACHERS_INDEX -> Screen.TEACHERS
-                    else -> Screen.SUBJECTS
-                }
+                selectedNavItemIndex = navItem.index
+            )
+        }
+        updateCurrentScreen(when(navItem.index) {
+            NAV_ITEM_SUBJECTS_INDEX -> Screen.SUBJECTS
+            NAV_ITEM_CLASSES_INDEX -> Screen.CLASSES
+            NAV_ITEM_TEACHERS_INDEX -> Screen.TEACHERS
+            else -> Screen.SUBJECTS
+        })
+    }
+
+    fun updateCurrentScreen(newScreen: Screen) {
+        _mainScreenUiState.update { mainScreenUiState ->
+            mainScreenUiState.copy(
+                currentScreen = newScreen,
+            )
+        }
+
+        if (newScreen == Screen.SINGLE_CLASS) {
+            _mainScreenUiState.update { mainScreenUiState ->
+                mainScreenUiState.copy(
+                    pageTitle = navItemClasses.label,
+                    pageIcon = navItemClasses.icon,
+                    selectedNavItemIndex = navItemClasses.index
+                )
+            }
+        }
+    }
+
+    fun setSubjectSelection(subjectModel: SubjectModel?) {
+        _mainScreenUiState.update { mainScreenUiState ->
+            mainScreenUiState.copy(
+                selectedSubject = subjectModel
+            )
+        }
+    }
+
+    fun setClassSelection(classModel: ClassModel?) {
+        _mainScreenUiState.update { mainScreenUiState ->
+            mainScreenUiState.copy(
+                selectedClass = classModel
             )
         }
     }
@@ -40,14 +95,6 @@ class MainScreenViewModel(
         _mainScreenUiState.update { mainScreenUiState ->
             mainScreenUiState.copy(
                 userModel = newUserModel
-            )
-        }
-    }
-
-    fun updateCurrentScreen(newScreen: Screen) {
-        _mainScreenUiState.update { mainScreenUiState ->
-            mainScreenUiState.copy(
-                currentScreen = newScreen
             )
         }
     }

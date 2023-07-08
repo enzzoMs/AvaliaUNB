@@ -1,6 +1,9 @@
 package utils
 
 import androidx.compose.ui.graphics.Color
+import utils.schedule.ClassDaySchedule
+import utils.schedule.ScheduleShifts
+import utils.schedule.ClassScheduleDays
 import kotlin.random.Random
 
 private const val MAX_COLOR_COMPONENT_VALUE = 256
@@ -18,5 +21,30 @@ object Utils {
         val green = Random.nextInt(MAX_COLOR_COMPONENT_VALUE)
         val blue = Random.nextInt(MAX_COLOR_COMPONENT_VALUE)
         return Color(red, green, blue, transparencyValue)
+    }
+
+    fun decodeSchedule(schedule: String): List<ClassDaySchedule> {
+        val classSchedule = mutableListOf<ClassDaySchedule>()
+
+        val regexSpaces = Regex("\\s+")
+        val scheduleShifts = schedule.replace(regexSpaces, " ").trim().split(" ")
+        println(schedule.trim().count { char -> char == ' '})
+
+        for (shift in scheduleShifts) {
+
+            val (scheduleDays, scheduleCodes) = shift.split("M", "T", "N")
+            val shiftCode = shift.find { it in "MTN" }
+
+            for (dayNumber in scheduleDays) {
+                classSchedule.add(ClassDaySchedule(
+                    day = ClassScheduleDays.values()[dayNumber.digitToInt() - 2],
+                    shift = ScheduleShifts.values().find { it.code == shiftCode }!!,
+                    scheduleCodes = scheduleCodes.map { it.digitToInt() }
+                ))
+            }
+
+        }
+
+        return classSchedule.toList()
     }
 }

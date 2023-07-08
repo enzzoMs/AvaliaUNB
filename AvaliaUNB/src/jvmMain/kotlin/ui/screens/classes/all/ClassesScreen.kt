@@ -1,4 +1,4 @@
-package ui.screens.classes
+package ui.screens.classes.all
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

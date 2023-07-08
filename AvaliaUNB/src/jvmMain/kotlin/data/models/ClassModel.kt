@@ -4,9 +4,10 @@ import androidx.compose.ui.graphics.Color
 
 data class ClassModel(
     val subjectName: String,
+    val subjectCode: String,
     val departmentName: String,
     val code: String,
-    val schedule: String,
+    val schedule: String?,
     val numOfHours: Int,
     val filledSeats: Int,
     val totalSeats: Int,
