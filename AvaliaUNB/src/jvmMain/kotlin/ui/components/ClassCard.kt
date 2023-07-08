@@ -166,7 +166,7 @@ fun ClassCard(
                 )
                 if (classModel.score == null) {
                     Text(
-                        text = ResourcesUtils.Strings.NO_REVIEW,
+                        text = ResourcesUtils.Strings.NO_REVIEW_MULTILINE,
                         style = TextStyle(
                             fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
                             fontWeight = FontWeight.Normal,

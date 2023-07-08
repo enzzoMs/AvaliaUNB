@@ -8,7 +8,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.Badge
+import androidx.compose.material.icons.outlined.Logout
+import androidx.compose.material.icons.outlined.School
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,13 +20,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import data.models.SubjectModel
 import di.DaggerComponentHolder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import utils.resources.ResourcesUtils
 import theme.*
 import ui.components.NavigationItem
 import ui.components.NavigationPanelColors
@@ -35,11 +35,12 @@ import ui.screens.classes.single.viewmodel.SingleClassViewModel
 import ui.screens.main.viewmodel.MainScreenViewModel
 import ui.screens.profile.ProfileScreen
 import ui.screens.profile.viewmodel.ProfileViewModel
-import ui.screens.subjects.single.SingleSubjectScreen
 import ui.screens.subjects.all.SubjectsScreen
+import ui.screens.subjects.single.SingleSubjectScreen
 import ui.screens.subjects.single.viewmodel.SingleSubjectViewModel
 import ui.screens.teachers.TeachersScreen
 import utils.navigation.Screen
+import utils.resources.ResourcesUtils
 
 const val NAV_NO_SELECTED_ITEM_INDEX = -1
 const val NAV_ITEM_SUBJECTS_INDEX = 0
@@ -69,7 +70,17 @@ fun MainScreen(
                 else -> mainScreenUiState.selectedNavItemIndex!!
             },
             navItems = mainScreenUiState.navItems,
-            onItemClicked = { navItem -> mainScreenViewModel.selectNavItem(navItem) },
+            onItemClicked = { navItem ->
+                mainScreenViewModel.updateCurrentScreen(
+                    when(navItem.index) {
+                        NAV_ITEM_SUBJECTS_INDEX -> Screen.SUBJECTS
+                        NAV_ITEM_CLASSES_INDEX -> Screen.CLASSES
+                        NAV_ITEM_TEACHERS_INDEX -> Screen.TEACHERS
+                        else -> Screen.SUBJECTS
+                    }
+                )
+
+            },
             modifier = Modifier
                 .weight(1f)
         )
@@ -120,7 +131,21 @@ fun MainScreen(
                         )
                         Screen.CLASSES -> ClassesScreen()
                         Screen.SINGLE_CLASS -> SingleClassScreen(
-                            singleClassViewModel = SingleClassViewModel(mainScreenUiState.selectedClass!!)
+                            singleClassViewModel = SingleClassViewModel(
+                                classModel = mainScreenUiState.selectedClass!!,
+                                classRepository = DaggerComponentHolder.appComponent.getClassRepository()
+                            ),
+                            onBackClicked = {
+                                mainScreenViewModel.updateCurrentScreen(
+                                    if (mainScreenUiState.selectedSubject != null) {
+                                        Screen.SINGLE_SUBJECT
+                                    } else {
+                                        Screen.SUBJECTS
+                                    }
+                                )
+
+                                mainScreenViewModel.setClassSelection(null)
+                            }
                         )
                         Screen.TEACHERS -> TeachersScreen()
                         Screen.PROFILE -> {

@@ -1,6 +1,8 @@
 package data.source
 
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.toAwtImage
+import androidx.compose.ui.graphics.toComposeImageBitmap
 import data.source.loading.DatabaseLoadingStatus
 import data.source.loading.LoadingStatus
 import data.source.loading.SemesterLoadingStatus
@@ -14,10 +16,13 @@ import utils.Utils
 import utils.database.DatabaseConfiguration
 import utils.database.DatabaseUtils
 import utils.database.PrePopulatedSemester
+import utils.resources.ResourcesUtils
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.ResultSet
+import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -239,7 +244,8 @@ class DatabaseManager @Inject constructor(
         )
 
         val insertTeacherStatement = prepareStatement(
-            "INSERT INTO professor VALUES (?, ?, ?, ?) " +
+            "INSERT INTO professor (nome, codigo_departamento, ano_semestre, numero_semestre, foto_de_perfil) " +
+                    "VALUES (?, ?, ?, ?, ?) " +
                     "ON CONFLICT (nome, codigo_departamento) DO NOTHING "
         )
 
@@ -287,10 +293,16 @@ class DatabaseManager @Inject constructor(
                 )
             }
 
+            val defaultProfilePic = ImageIO.read(File(ResourcesUtils.ImagePaths.PERSON)).toComposeImageBitmap().toAwtImage()
+            val stream = ByteArrayOutputStream()
+            ImageIO.write(defaultProfilePic, "png", stream)
+            val defaultProfilePicBytes = stream.toByteArray()
+
             insertTeacherStatement.setString(1, teacherName)
             insertTeacherStatement.setInt(2, departmentCode)
             insertTeacherStatement.setInt(3, prePopulatedSemester.year)
             insertTeacherStatement.setInt(4, prePopulatedSemester.semester_number)
+            insertTeacherStatement.setBytes(5, defaultProfilePicBytes)
 
             insertTeacherStatement.execute()
 

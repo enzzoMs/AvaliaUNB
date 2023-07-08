@@ -114,7 +114,9 @@ private fun ScheduleWeekDay(
         )
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .background(White)
         ) {
             val scheduleCodesByShift = listOf(
                 SCHEDULE_MORNING_CODES to ScheduleShifts.MORNING,

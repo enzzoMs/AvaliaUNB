@@ -6,6 +6,7 @@ data class ClassModel(
     val subjectName: String,
     val subjectCode: String,
     val departmentName: String,
+    val departmentCode: String,
     val code: String,
     val schedule: String?,
     val numOfHours: Int,

@@ -64,6 +64,8 @@ CREATE TABLE IF NOT EXISTS professor(
 	codigo_departamento INTEGER NOT NULL CHECK (codigo_departamento >= 0),
     ano_semestre INTEGER NOT NULL CHECK (ano_semestre >= 0),
 	numero_semestre INTEGER NOT NULL CHECK (numero_semestre = 1 OR numero_semestre = 2),
+	foto_de_perfil BLOB,
+	pontuacao INTEGER CHECK (pontuacao IS NULL OR (pontuacao >= 0 AND pontuacao <= 5)),
 	PRIMARY KEY (nome, codigo_departamento),
 	FOREIGN KEY (codigo_departamento, ano_semestre, numero_semestre) REFERENCES departamento(codigo, ano_semestre, numero_semestre)
 );

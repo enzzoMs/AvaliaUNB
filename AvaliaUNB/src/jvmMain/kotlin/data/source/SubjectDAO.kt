@@ -83,6 +83,7 @@ class SubjectDAO @Inject constructor(
                     subjectClassesQuery.getString("disc_nome"),
                     subjectClassesQuery.getString("disc_cod"),
                     subjectClassesQuery.getString("dept_nome"),
+                    subjectClassesQuery.getString("codigo_departamento"),
                     subjectClassesQuery.getString("codigo_turma"),
                     subjectClassesQuery.getString("horario"),
                     subjectClassesQuery.getInt("num_horas"),

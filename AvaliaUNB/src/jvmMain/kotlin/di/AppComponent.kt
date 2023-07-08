@@ -1,5 +1,6 @@
 package di
 import dagger.Component
+import data.repositories.ClassRepository
 import data.repositories.SubjectRepository
 import data.repositories.UserRepository
 import data.source.DatabaseManager
@@ -25,5 +26,7 @@ interface AppComponent {
     fun getUserRepository(): UserRepository
 
     fun getSubjectRepository(): SubjectRepository
+
+    fun getClassRepository(): ClassRepository
 
 }

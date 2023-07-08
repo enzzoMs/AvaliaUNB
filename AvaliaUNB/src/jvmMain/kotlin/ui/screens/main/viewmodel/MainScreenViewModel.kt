@@ -40,7 +40,7 @@ class MainScreenViewModel(
     )
     val mainScreenUiState = _mainScreenUiState.asStateFlow()
 
-    fun selectNavItem(navItem: NavigationItem) {
+    private fun selectNavItem(navItem: NavigationItem) {
         _mainScreenUiState.update { mainScreenUiState ->
             mainScreenUiState.copy(
                 onEditProfile = false,
@@ -49,12 +49,6 @@ class MainScreenViewModel(
                 selectedNavItemIndex = navItem.index
             )
         }
-        updateCurrentScreen(when(navItem.index) {
-            NAV_ITEM_SUBJECTS_INDEX -> Screen.SUBJECTS
-            NAV_ITEM_CLASSES_INDEX -> Screen.CLASSES
-            NAV_ITEM_TEACHERS_INDEX -> Screen.TEACHERS
-            else -> Screen.SUBJECTS
-        })
     }
 
     fun updateCurrentScreen(newScreen: Screen) {
@@ -64,14 +58,11 @@ class MainScreenViewModel(
             )
         }
 
-        if (newScreen == Screen.SINGLE_CLASS) {
-            _mainScreenUiState.update { mainScreenUiState ->
-                mainScreenUiState.copy(
-                    pageTitle = navItemClasses.label,
-                    pageIcon = navItemClasses.icon,
-                    selectedNavItemIndex = navItemClasses.index
-                )
-            }
+        when (newScreen) {
+            Screen.SINGLE_CLASS, Screen.CLASSES -> selectNavItem(navItemClasses)
+            Screen.SINGLE_SUBJECT, Screen.SUBJECTS -> selectNavItem(navItemSubjects)
+            Screen.TEACHERS -> selectNavItem(navItemTeachers)
+            else -> {}
         }
     }
 

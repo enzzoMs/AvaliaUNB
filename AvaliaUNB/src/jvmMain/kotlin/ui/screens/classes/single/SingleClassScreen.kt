@@ -9,26 +9,32 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Alarm
+import androidx.compose.material.icons.outlined.Group
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import theme.DarkAntiFlashWhite
-import theme.DarkCharcoal
-import theme.UnbBlue
-import theme.White
+import data.models.TeacherModel
+import theme.*
+import ui.components.CardInformation
 import ui.components.ClassCard
 import ui.components.ClassWeeklySchedule
 import ui.components.SecondaryButton
 import ui.screens.classes.single.viewmodel.SingleClassViewModel
 import utils.resources.ResourcesUtils
+import java.io.StringReader
 
 @Composable
 fun SingleClassScreen(
-    singleClassViewModel: SingleClassViewModel
+    singleClassViewModel: SingleClassViewModel,
+    onBackClicked: () -> Unit
 ) {
     val singleClassUiState by singleClassViewModel.singleClassUiState.collectAsState()
 
@@ -57,6 +63,19 @@ fun SingleClassScreen(
             ClassSchedule(
                 schedule = singleClassUiState.classModel.schedule,
                 classSubjectCode = singleClassUiState.classModel.subjectCode
+            )
+
+            TeacherInformation(singleClassUiState.teacherModel)
+
+            Spacer(
+                modifier = Modifier
+                    .weight(1f)
+            )
+
+            BackButton(
+                onClicked = onBackClicked,
+                modifier = Modifier
+                    .padding(end = 14.dp, bottom = 24.dp)
             )
         }
 
@@ -120,7 +139,9 @@ private fun ClassSchedule(
                 )
                 SecondaryButton(
                     label = ResourcesUtils.Strings.SEE_DETAILS,
-                    onClick = { seeDetails = !seeDetails }
+                    onClick = { seeDetails = !seeDetails },
+                    modifier = Modifier
+                        .padding(end = 16.dp)
                 )
             }
         }
@@ -130,5 +151,136 @@ private fun ClassSchedule(
                 ClassWeeklySchedule(schedule, classSubjectCode)
             }
         }
+    }
+}
+
+@Composable
+private fun TeacherInformation(
+    teacherModel: TeacherModel,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = Modifier
+            .padding(start = 14.dp, end = 14.dp, bottom = 14.dp, top = 20.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(bottom = 16.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .clip(RoundedCornerShape(percent = 15))
+                    .background(UnbBlue)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Group,
+                    contentDescription = null,
+                    tint = White,
+                    modifier = Modifier
+                        .padding(5.dp)
+                )
+            }
+            Text(
+                text = ResourcesUtils.Strings.TEACHER,
+                style = MaterialTheme.typography.subtitle1,
+                fontSize = 20.sp
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(10.dp))
+                .background(White)
+                .then(modifier)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    bitmap = teacherModel.profilePicture,
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .size(145.dp)
+                )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(16.dp)
+                ) {
+                    CardInformation(
+                        fieldName = ResourcesUtils.Strings.NAME_FIELD_PREFIX,
+                        fieldNameTextStyle = MaterialTheme.typography.subtitle1,
+                        fieldText = teacherModel.name,
+                        fieldTextStyle = MaterialTheme.typography.body1,
+                        modifier = Modifier
+                            .padding(bottom = 6.dp)
+                    )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = ResourcesUtils.Strings.SCORE_FIELD_PREFIX,
+                            style = MaterialTheme.typography.subtitle1,
+                            modifier = Modifier
+                                .padding(end = 10.dp)
+                        )
+                        Icon(
+                            painter = painterResource(ResourcesUtils.ImagePaths.GRADE),
+                            contentDescription = null,
+                            tint = LightGray,
+                            modifier = Modifier
+                                .size(35.dp)
+                                .padding(end = 12.dp, bottom = 5.dp)
+                        )
+                        Text(
+                            text = ResourcesUtils.Strings.NO_REVIEW,
+                            style = TextStyle(
+                                fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
+                                fontSize = 18.sp,
+                                color = Gray
+                            ),
+                            fontWeight = FontWeight.Normal,
+                            maxLines = 1
+                        )
+                    }
+
+                    Row {
+                        Spacer(
+                            modifier = Modifier
+                                .weight(1f)
+                        )
+                        SecondaryButton(
+                            label = ResourcesUtils.Strings.SEE_TEACHER_DETAILS,
+                            onClick = {}
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BackButton(
+    onClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+    ) {
+        Spacer(
+            modifier = Modifier
+                .weight(1.5f)
+        )
+        SecondaryButton(
+            label = ResourcesUtils.Strings.BACK_BUTTON,
+            onClick = onClicked,
+            modifier = Modifier
+                .weight(1f)
+        )
     }
 }

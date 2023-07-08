@@ -93,16 +93,22 @@ object ResourcesUtils {
         const val DEPARTMENT_FIELD_PREFIX = "Departamento:"
         const val SEMESTER_FIELD_PREFIX = "Semestre:"
         const val NUM_OF_CLASSES_FIELD_PREFIX = "Número de turmas:"
+        const val NAME_FIELD_PREFIX = "Nome:"
 
         const val SCHEDULE_FIELD_PREFIX = "Hórario:"
         const val LOCATION_FIELD_PREFIX = "Local:"
         const val TEACHER_FIELD_PREFIX = "Professor:"
         const val FILLED_SEATS_FIELD_PREFIX = "Vagas ocupadas:"
+        const val SCORE_FIELD_PREFIX = "Pontuação:"
 
         const val ERROR_UNABLE_TO_LOAD_IMAGE = "Não foi possível carregar a imagem."
         const val ERROR_FILE_DOES_NOT_EXIST = "O arquivo selecionado não existe."
 
-        const val NO_REVIEW = "Nenhuma\nanálise"
+        const val NO_REVIEW_MULTILINE = "Nenhuma\nanálise"
+        const val NO_REVIEW = "Nenhuma análise"
+
+        const val TEACHER = "Professor"
+        const val SEE_TEACHER_DETAILS = "Ver professor"
 
         const val SEE_DETAILS = "Ver detalhes"
 
