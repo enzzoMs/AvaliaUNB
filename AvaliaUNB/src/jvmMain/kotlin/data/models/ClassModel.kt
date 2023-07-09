@@ -17,5 +17,6 @@ data class ClassModel(
     val teacherName: String,
     val semester: SemesterModel,
     val departmentColor: Color = Color.Transparent,
-    val score: Int?
+    val score: Double?,
+    val numOfReviews: Int = 0
 )

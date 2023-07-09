@@ -133,7 +133,9 @@ fun MainScreen(
                         Screen.SINGLE_CLASS -> SingleClassScreen(
                             singleClassViewModel = SingleClassViewModel(
                                 classModel = mainScreenUiState.selectedClass!!,
-                                classRepository = DaggerComponentHolder.appComponent.getClassRepository()
+                                classRepository = DaggerComponentHolder.appComponent.getClassRepository(),
+                                reviewRepository = DaggerComponentHolder.appComponent.getReviewRepository(),
+                                user = mainScreenUiState.userModel
                             ),
                             onBackClicked = {
                                 mainScreenViewModel.updateCurrentScreen(

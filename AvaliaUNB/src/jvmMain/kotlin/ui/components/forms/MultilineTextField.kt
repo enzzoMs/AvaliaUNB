@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import theme.DimGray
 import theme.LightSilver
 import theme.UnbGreen
@@ -23,6 +24,7 @@ fun MultilineTextField(
     value: String,
     onValueChange: (String) -> Unit,
     error: Boolean = false,
+    errorMessage: String? = null,
     textFieldHeight: Dp = 100.dp,
     maxNumberOfCharacters: Int? = null,
     showCharacterCount: Boolean = true,
@@ -40,11 +42,19 @@ fun MultilineTextField(
     var textValue by remember { mutableStateOf(value) }
 
     Column {
-        if (showCharacterCount) {
-            Row(
-                modifier = Modifier
-                    .padding(10.dp)
-            ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(bottom = 10.dp, top = 10.dp, end = 10.dp)
+        ) {
+            if (error && errorMessage != null) {
+                Text(
+                    text = errorMessage,
+                    color = MaterialTheme.colors.error,
+                    fontSize = 15.sp
+                )
+            }
+            if (showCharacterCount) {
                 Spacer(
                     modifier = Modifier
                         .weight(1f)
@@ -59,7 +69,6 @@ fun MultilineTextField(
                 )
             }
         }
-
 
         Box(
             modifier = Modifier

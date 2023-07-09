@@ -21,9 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.ClassModel
-import theme.Gray
-import theme.LightGray
-import theme.White
+import theme.*
 import ui.components.cards.CardInformation
 import utils.resources.ResourcesUtils
 
@@ -160,7 +158,7 @@ fun ClassCard(
                 Icon(
                     painter = painterResource(ResourcesUtils.ImagePaths.GRADE),
                     contentDescription = null,
-                    tint = LightGray,
+                    tint = if (classModel.score == null) LightGray else AmericanOrange,
                     modifier = Modifier
                         .size(60.dp)
                         .padding(end = 12.dp, bottom = 5.dp)
@@ -175,6 +173,21 @@ fun ClassCard(
                             color = Gray
                         )
                     )
+                } else {
+                    Column {
+                        Text(
+                            text = String.format("%.1f", classModel.score),
+                            style = MaterialTheme.typography.h4,
+                            modifier = Modifier
+                                .padding(bottom = 6.dp)
+                        )
+                        Text(
+                            text = "${classModel.numOfReviews} análises",
+                            style = MaterialTheme.typography.subtitle2,
+                            modifier = Modifier
+                                .padding(bottom = 12.dp)
+                        )
+                    }
                 }
             }
         }

@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS professor(
     ano_semestre INTEGER NOT NULL CHECK (ano_semestre >= 0),
 	numero_semestre INTEGER NOT NULL CHECK (numero_semestre = 1 OR numero_semestre = 2),
 	foto_de_perfil BLOB,
-	pontuacao INTEGER CHECK (pontuacao IS NULL OR (pontuacao >= 0 AND pontuacao <= 5)),
+	pontuacao REAL CHECK (pontuacao IS NULL OR (pontuacao >= 0 AND pontuacao <= 5)),
 	PRIMARY KEY (nome, codigo_departamento),
 	FOREIGN KEY (codigo_departamento, ano_semestre, numero_semestre) REFERENCES departamento(codigo, ano_semestre, numero_semestre)
 );
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS turma(
     vagas_total INTEGER NOT NULL CHECK (vagas_total >= 0),
     vagas_ocupadas INTEGER NOT NULL CHECK (vagas_ocupadas >= 0 AND vagas_ocupadas <= vagas_total),
     local_aula TEXT,
-    pontuacao INTEGER CHECK (pontuacao IS NULL OR (pontuacao >= 0 AND pontuacao <= 5)),
+    pontuacao REAL CHECK (pontuacao IS NULL OR (pontuacao >= 0 AND pontuacao <= 5)),
     nome_professor TEXT NOT NULL,
 	id_disciplina INTEGER NOT NULL,
 	codigo_departamento INTEGER NOT NULL CHECK (codigo_departamento >= 0),
@@ -119,4 +119,24 @@ CREATE TABLE IF NOT EXISTS avaliacao_professor(
 	PRIMARY KEY (id_avaliacao),
 	FOREIGN KEY (id_avaliacao) REFERENCES avaliacao(id),
 	FOREIGN KEY (nome_professor, codigo_departamento) REFERENCES professor(nome, codigo_departamento)
-)
+);
+
+--------------------------------
+-- TRIGGERS
+--------------------------------
+
+-- atualizar_pontuacao (avaliacao + disciplina) -> Esse trigger atualiza a pontuacao da turma toda vez que uma
+-- avalicao for inserida
+
+CREATE TRIGGER IF NOT EXISTS atualizar_pontuacao_turma
+AFTER INSERT ON avaliacao_turma
+BEGIN
+    UPDATE turma
+    SET pontuacao = (
+        SELECT AVG(pontuacao)
+        FROM avaliacao
+        INNER JOIN avaliacao_turma ON avaliacao.id = avaliacao_turma.id_avaliacao
+        WHERE avaliacao_turma.id_turma = turma.id
+    )
+    WHERE turma.id = NEW.id_turma;
+END

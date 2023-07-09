@@ -9,7 +9,8 @@ import javax.inject.Singleton
 
 @Singleton
 class SubjectDAO @Inject constructor(
-    private val database: DatabaseManager
+    private val database: DatabaseManager,
+    private val classDAO: ClassDAO
 ) {
     fun getAllSubjects(): List<SubjectModel> {
         val allSubjectsQueryResult = database.executeQuery(
@@ -99,7 +100,8 @@ class SubjectDAO @Inject constructor(
                         subjectClassesQuery.getString("data_fim"),
                     ),
                     Color(subjectClassesQuery.getInt("dept_cor")),
-                    subjectClassesQuery.getObject("pontuacao") as Int?
+                    subjectClassesQuery.getObject("pontuacao") as Double?,
+                    classDAO.getClassReviews(subjectClassesQuery.getInt("id")).size
                 )
             )
         }

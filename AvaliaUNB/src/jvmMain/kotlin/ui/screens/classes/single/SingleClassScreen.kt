@@ -27,8 +27,9 @@ import theme.*
 import ui.components.buttons.SecondaryButton
 import ui.components.cards.CardInformation
 import ui.components.cards.ClassCard
-import ui.components.forms.ReviewForm
+import ui.components.review.ReviewForm
 import ui.components.review.RatingInformation
+import ui.components.review.ReviewList
 import ui.components.schedule.ClassWeeklySchedule
 import ui.screens.classes.single.viewmodel.SingleClassViewModel
 import utils.resources.ResourcesUtils
@@ -43,7 +44,7 @@ fun SingleClassScreen(
     Box {
         val stateVertical = rememberScrollState()
 
-        Column(
+        Column (
             modifier = Modifier
                 .fillMaxSize()
                 .background(DarkAntiFlashWhite)
@@ -74,7 +75,14 @@ fun SingleClassScreen(
                 classReviews = singleClassUiState.reviews
             )
 
-            Reviews()
+            Reviews(
+                reviewComment = singleClassUiState.reviewComment,
+                onCommentChanged = { singleClassViewModel.updateReviewComment(it) },
+                error = singleClassUiState.userAlreadyMadeReview,
+                onPublishClicked = { comment, rating -> singleClassViewModel.publishReview(comment, rating) },
+                classReviews = singleClassUiState.reviews,
+                isLoading = singleClassUiState.isReviewsLoading
+            )
 
             Spacer(
                 modifier = Modifier
@@ -275,7 +283,7 @@ private fun TeacherInformation(
 
 @Composable
 private fun Rating(
-    score: Int?,
+    score: Double?,
     classReviews: List<ClassReviewModel>
 ) {
     Column(
@@ -317,12 +325,30 @@ private fun Rating(
 
 @Composable
 private fun Reviews(
+    reviewComment: String,
+    onCommentChanged: (String) -> Unit,
+    error: Boolean,
+    onPublishClicked: (String, Int) -> Unit,
+    classReviews: List<ClassReviewModel>,
+    isLoading: Boolean
 ) {
     Column(
         modifier = Modifier
             .padding(horizontal = 14.dp, vertical = 20.dp)
     ) {
-        ReviewForm()
+        ReviewForm(
+            value = reviewComment,
+            onValueChanged = onCommentChanged,
+            errorMessage = ResourcesUtils.Strings.FIELD_ERROR_REVIEW_ALREADY_MADE,
+            error = error,
+            onPublishClicked = onPublishClicked,
+        )
+        ReviewList(
+            reviews = classReviews,
+            isLoading = isLoading,
+            modifier = Modifier
+                .padding(top = 16.dp)
+        )
     }
 }
 

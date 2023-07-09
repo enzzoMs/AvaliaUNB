@@ -14,6 +14,7 @@ object ResourcesUtils {
         const val RATING_SUBJECTS = "images/rating_subjects.svg"
         const val STUDENTS_TALKING = "images/students_talking.svg"
         const val GRADE = "images/grade.svg"
+        const val REVIEWS = "images/reviews.svg"
     }
 
     object Strings {
@@ -106,6 +107,7 @@ object ResourcesUtils {
 
         const val NO_REVIEW_MULTILINE = "Nenhuma\nanálise"
         const val NO_REVIEW = "Nenhuma análise"
+        const val NO_REVIEW_PUBLISHED = "Nenhuma análise publicada"
         const val RATINGS = "Avaliações"
 
         const val TEACHER = "Professor"
@@ -118,6 +120,12 @@ object ResourcesUtils {
         const val REVIEW_FORM_HINT = "Insira sua análise"
 
         const val DEFAULT_CLASS_SCHEDULE = "Horário a definir."
+
+        const val PUBLISHED = "publicou:"
+
+        const val LOADING = "Carregando..."
+
+        const val FIELD_ERROR_REVIEW_ALREADY_MADE = "* Usuário já fez uma avaliação"
 
         const val SCORE = "Nota:"
         val STAR_RATINGS = listOf("⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐")

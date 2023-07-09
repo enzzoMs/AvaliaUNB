@@ -1,7 +1,7 @@
 package ui.components.review
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -15,15 +15,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.ReviewModel
-import theme.DimGray
-import theme.LightGray
+import theme.*
 import utils.resources.ResourcesUtils
 
-private val SCORE_RANGE = 1..5
+private val SCORE_RANGE = 5 downTo 1
 
 @Composable
 fun RatingInformation(
-    score: Int?,
+    score: Double?,
     reviews: List<ReviewModel>,
     modifier: Modifier = Modifier
 ) {
@@ -34,7 +33,7 @@ fun RatingInformation(
         Icon(
             painter = painterResource(ResourcesUtils.ImagePaths.GRADE),
             contentDescription = null,
-            tint = LightGray,
+            tint = if (score == null) LightGray else AmericanOrange,
             modifier = Modifier
                 .size(60.dp)
                 .padding(end = 12.dp, bottom = 5.dp)
@@ -48,6 +47,21 @@ fun RatingInformation(
                     color = DimGray
                 )
             )
+        } else {
+            Column {
+                Text(
+                    text = String.format("%.1f", score),
+                    style = MaterialTheme.typography.h4,
+                    modifier = Modifier
+                        .padding(bottom = 4.dp)
+                )
+                Text(
+                    text = "${reviews.size} análises",
+                    style = MaterialTheme.typography.subtitle2,
+                    modifier = Modifier
+                        .padding(bottom = 12.dp)
+                )
+            }
         }
 
         ReviewsInformation(
@@ -81,34 +95,52 @@ private fun ReviewsInformation(
                 Text(
                     text = "$score ⭐",
                     style = MaterialTheme.typography.subtitle2,
-                    fontSize = 18.sp
+                    fontSize = 18.sp,
+                    color = if (reviews.isEmpty()) Gray else AmericanOrange
                 )
             }
         }
 
-        Column {
+        Column(
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(end = 10.dp)
+                .weight(1f)
+        ) {
             for (score in SCORE_RANGE) {
                 val totalNumberOfReviews = reviews.size
-                val scoreNumberOfReviews = reviews.filter { it.score == score }.size
+                val scoreNumberOfReviews = reviews.filter { it.rating == score }.size
 
-                Row(
-                   verticalAlignment = Alignment.CenterVertically
-                ) {
-                    LinearProgressIndicator(
-                        progress = if (totalNumberOfReviews != 0) (scoreNumberOfReviews/totalNumberOfReviews).toFloat() else 0f,
-                        backgroundColor = LightGray,
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .weight(1f)
-                            .padding(end = 10.dp)
-                    )
-                    Text(
-                        text = scoreNumberOfReviews.toString(),
-                        style = MaterialTheme.typography.subtitle2,
-                        color = LightGray,
-                        fontSize = 18.sp
-                    )
-                }
+                LinearProgressIndicator(
+                    progress = if (totalNumberOfReviews != 0) {
+                        (scoreNumberOfReviews.toFloat()/totalNumberOfReviews.toFloat())
+                    } else {
+                        0f
+                    },
+                    backgroundColor = LightGray,
+                    color = AmericanOrange,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(percent = 50))
+                        .padding(vertical = 10.dp)
+                )
+            }
+        }
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(end = 10.dp)
+        ) {
+            for (score in SCORE_RANGE) {
+                val scoreNumberOfReviews = reviews.filter { it.rating == score }.size
+
+                Text(
+                    text = scoreNumberOfReviews.toString(),
+                    style = MaterialTheme.typography.subtitle2,
+                    color = Silver,
+                    fontSize = 18.sp
+                )
             }
         }
     }
