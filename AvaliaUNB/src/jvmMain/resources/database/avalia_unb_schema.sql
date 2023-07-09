@@ -89,4 +89,34 @@ CREATE TABLE IF NOT EXISTS turma(
 	PRIMARY KEY (id),
 	FOREIGN KEY (nome_professor, codigo_departamento) REFERENCES professor(nome, codigo_departamento),
 	FOREIGN KEY (id_disciplina) REFERENCES disciplina(id)
+);
+
+--------------------------------
+-- AVALIACOES
+--------------------------------
+
+CREATE TABLE IF NOT EXISTS avaliacao(
+	id INTEGER NOT NULL,
+	comentario TEXT,
+	pontuacao INTEGER NOT NULL CHECK (pontuacao >= 0 AND pontuacao <= 5),
+	matricula_aluno TEXT NOT NULL CHECK (length(matricula_aluno) = 9),
+	PRIMARY KEY (id),
+	FOREIGN KEY (matricula_aluno) REFERENCES usuario(matricula)
+);
+
+CREATE TABLE IF NOT EXISTS avaliacao_turma(
+	id_avaliacao INTEGER NOT NULL,
+	id_turma INTEGER NOT NULL,
+	PRIMARY KEY (id_avaliacao),
+	FOREIGN KEY (id_avaliacao) REFERENCES avaliacao(id),
+	FOREIGN KEY (id_turma) REFERENCES turma(id)
+);
+
+CREATE TABLE IF NOT EXISTS avaliacao_professor(
+	id_avaliacao INTEGER NOT NULL,
+	nome_professor TEXT,
+	codigo_departamento INTEGER NOT NULL CHECK (codigo_departamento >= 0),
+	PRIMARY KEY (id_avaliacao),
+	FOREIGN KEY (id_avaliacao) REFERENCES avaliacao(id),
+	FOREIGN KEY (nome_professor, codigo_departamento) REFERENCES professor(nome, codigo_departamento)
 )

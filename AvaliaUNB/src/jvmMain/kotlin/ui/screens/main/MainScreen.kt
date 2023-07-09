@@ -26,9 +26,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import theme.*
-import ui.components.NavigationItem
-import ui.components.NavigationPanelColors
-import ui.components.SideNavigationPanel
+import ui.components.navigation.NavigationItem
+import ui.components.navigation.NavigationPanelColors
+import ui.components.navigation.SideNavigationPanel
 import ui.screens.classes.all.ClassesScreen
 import ui.screens.classes.single.SingleClassScreen
 import ui.screens.classes.single.viewmodel.SingleClassViewModel

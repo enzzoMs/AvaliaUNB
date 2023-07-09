@@ -22,9 +22,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import utils.resources.ResourcesUtils
 import theme.*
-import ui.components.PrimaryButton
-import ui.components.SecondaryButton
-import ui.components.UserFormFields
+import ui.components.buttons.PrimaryButton
+import ui.components.buttons.SecondaryButton
+import ui.components.forms.UserFormFields
 import ui.screens.profile.viewmodel.ProfileViewModel
 
 private const val NUMBER_OF_FIELDS = 5

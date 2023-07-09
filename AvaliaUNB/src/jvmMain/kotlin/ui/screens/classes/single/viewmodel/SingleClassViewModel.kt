@@ -13,7 +13,8 @@ class SingleClassViewModel(
     private val _singleClassUiState = MutableStateFlow(
         SingleClassUiState(
             classModel = classModel,
-            classRepository.getClassTeacher(classModel)
+            classRepository.getClassTeacher(classModel),
+            classRepository.getClassReviews(classModel)
         )
     )
 

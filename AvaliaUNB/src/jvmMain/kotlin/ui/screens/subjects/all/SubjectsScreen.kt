@@ -21,9 +21,9 @@ import data.models.SubjectModel
 import utils.resources.ResourcesUtils
 import theme.DarkAntiFlashWhite
 import theme.White
-import ui.components.GeneralDropDownMenu
-import ui.components.GeneralTextField
-import ui.components.SubjectCard
+import ui.components.forms.GeneralDropDownMenu
+import ui.components.forms.GeneralTextField
+import ui.components.cards.SubjectCard
 import ui.screens.subjects.all.viewmodel.SubjectsViewModel
 
 @Composable

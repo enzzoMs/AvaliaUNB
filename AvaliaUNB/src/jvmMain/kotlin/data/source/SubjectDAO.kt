@@ -80,6 +80,7 @@ class SubjectDAO @Inject constructor(
         while (subjectClassesQuery.next()) {
             subjectClasses.add(
                 ClassModel(
+                    subjectClassesQuery.getInt("id"),
                     subjectClassesQuery.getString("disc_nome"),
                     subjectClassesQuery.getString("disc_cod"),
                     subjectClassesQuery.getString("dept_nome"),

@@ -106,13 +106,21 @@ object ResourcesUtils {
 
         const val NO_REVIEW_MULTILINE = "Nenhuma\nanálise"
         const val NO_REVIEW = "Nenhuma análise"
+        const val RATINGS = "Avaliações"
 
         const val TEACHER = "Professor"
         const val SEE_TEACHER_DETAILS = "Ver professor"
 
         const val SEE_DETAILS = "Ver detalhes"
 
+        const val PUBLISH = "Publicar"
+
+        const val REVIEW_FORM_HINT = "Insira sua análise"
+
         const val DEFAULT_CLASS_SCHEDULE = "Horário a definir."
+
+        const val SCORE = "Nota:"
+        val STAR_RATINGS = listOf("⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐")
 
         const val SCHEDULES = "Horários"
         val SCHEDULES_LIST = listOf(

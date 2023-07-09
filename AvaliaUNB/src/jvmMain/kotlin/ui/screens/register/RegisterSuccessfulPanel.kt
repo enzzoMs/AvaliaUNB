@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import utils.resources.ResourcesUtils
 import theme.UnbGreen
 import theme.White
-import ui.components.PrimaryButton
+import ui.components.buttons.PrimaryButton
 
 
 @Composable

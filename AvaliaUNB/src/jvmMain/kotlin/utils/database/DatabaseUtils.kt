@@ -31,13 +31,13 @@ object DatabaseUtils {
             load(propertiesFile.inputStream())
         }
 
-        val reloadDatabase = databaseProperties.getProperty("inicializar_banco_de_dados").toBoolean()
+        val reloadDatabase = databaseProperties.getProperty("reiniciar_banco_de_dados").toBoolean()
 
-        databaseProperties.setProperty("inicializar_banco_de_dados", "false")
+        databaseProperties.setProperty("reiniciar_banco_de_dados", "false")
         databaseProperties.store(propertiesFile.outputStream(), null)
 
         return DatabaseConfiguration(
-            initializeDatabase = reloadDatabase,
+            reloadDatabase = reloadDatabase,
             loadDataForSemester2022_1 = databaseProperties.getProperty("incluir_dados_2022_1").toBoolean(),
             loadDataForSemester2022_2 = databaseProperties.getProperty("incluir_dados_2022_2").toBoolean(),
             loadDataForSemester2023_1 = databaseProperties.getProperty("incluir_dados_2023_1").toBoolean()

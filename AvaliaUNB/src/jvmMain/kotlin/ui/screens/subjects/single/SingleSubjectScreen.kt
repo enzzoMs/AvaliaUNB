@@ -27,9 +27,9 @@ import theme.DarkAntiFlashWhite
 import theme.DarkCharcoal
 import theme.UnbBlue
 import theme.White
-import ui.components.ClassCard
-import ui.components.SecondaryButton
-import ui.components.SubjectCard
+import ui.components.cards.ClassCard
+import ui.components.buttons.SecondaryButton
+import ui.components.cards.SubjectCard
 import ui.screens.subjects.single.viewmodel.SingleSubjectViewModel
 import utils.resources.ResourcesUtils
 

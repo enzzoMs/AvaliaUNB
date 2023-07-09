@@ -11,7 +11,7 @@ import data.models.UserModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import ui.components.NavigationItem
+import ui.components.navigation.NavigationItem
 import ui.screens.main.NAV_ITEM_CLASSES_INDEX
 import ui.screens.main.NAV_ITEM_SUBJECTS_INDEX
 import ui.screens.main.NAV_ITEM_TEACHERS_INDEX

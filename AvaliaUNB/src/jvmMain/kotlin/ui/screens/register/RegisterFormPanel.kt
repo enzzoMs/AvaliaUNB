@@ -21,8 +21,8 @@ import theme.AntiFlashWhite
 import theme.DimGray
 import theme.UnbGreen
 import theme.White
-import ui.components.PrimaryButton
-import ui.components.UserFormFields
+import ui.components.buttons.PrimaryButton
+import ui.components.forms.UserFormFields
 import ui.screens.register.viewmodel.RegisterFormViewModel
 
 @Composable

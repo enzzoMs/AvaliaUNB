@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import data.models.ClassModel
 import data.models.SubjectModel
 import data.models.UserModel
-import ui.components.NavigationItem
+import ui.components.navigation.NavigationItem
 import utils.navigation.Screen
 
 data class MainScreenUiState(

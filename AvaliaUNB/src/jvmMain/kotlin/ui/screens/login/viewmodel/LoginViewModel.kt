@@ -56,7 +56,7 @@ class LoginViewModel @Inject constructor(
 
     fun updateRegistrationNumber(newRegistrationNumber: String) {
         _loginUiState.update { loginUiState ->
-            val registrationNumber =  newRegistrationNumber.filter { char -> char.isDigit() }
+            val registrationNumber = newRegistrationNumber.filter { char -> char.isDigit() }
 
             if (registrationNumber.length <= REGISTRATION_NUMBER_LENGTH) {
                 loginUiState.copy(

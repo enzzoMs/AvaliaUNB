@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import utils.resources.ResourcesUtils
-import ui.components.AutoSlidingImageCarousel
+import ui.components.carousel.AutoSlidingImageCarousel
 
 const val LOGIN_CAROUSEL_SLIDE_DURATION_MS = 6000L
 

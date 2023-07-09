@@ -37,7 +37,7 @@ import theme.DimGray
 import theme.Gray
 import theme.UnbBlue
 import theme.UnbGreen
-import ui.components.AnimatedSplashScreen
+import ui.components.splash.AnimatedSplashScreen
 import ui.screens.splash.viewmodel.SplashViewModel
 import utils.database.PrePopulatedSemester
 

@@ -3,6 +3,7 @@ package data.models
 import androidx.compose.ui.graphics.Color
 
 data class ClassModel(
+    val id: Int,
     val subjectName: String,
     val subjectCode: String,
     val departmentName: String,

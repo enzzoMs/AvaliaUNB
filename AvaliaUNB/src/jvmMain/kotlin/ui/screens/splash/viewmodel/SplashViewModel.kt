@@ -16,7 +16,7 @@ class SplashViewModel @Inject constructor(
 ) {
     private val _splashUiState = MutableStateFlow(
             SplashUiState(
-                reloadDatabase = databaseConfiguration.initializeDatabase,
+                reloadDatabase = databaseConfiguration.reloadDatabase,
                 initializeData = databaseConfiguration.run {
                     loadDataForSemester2022_1 || loadDataForSemester2022_2 || loadDataForSemester2023_1
                 },

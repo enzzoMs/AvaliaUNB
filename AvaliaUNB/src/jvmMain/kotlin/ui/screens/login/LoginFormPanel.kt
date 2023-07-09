@@ -24,10 +24,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import utils.resources.ResourcesUtils
 import theme.UnbGreen
-import ui.components.FormField
-import ui.components.GeneralTextField
-import ui.components.PrimaryButton
-import ui.components.SecondaryButton
+import ui.components.forms.FormField
+import ui.components.forms.GeneralTextField
+import ui.components.buttons.PrimaryButton
+import ui.components.buttons.SecondaryButton
 import ui.screens.login.viewmodel.LoginViewModel
 import java.awt.Cursor
 

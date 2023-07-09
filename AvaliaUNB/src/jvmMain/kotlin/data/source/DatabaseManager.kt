@@ -53,7 +53,7 @@ class DatabaseManager @Inject constructor(
 
     fun configureDatabase() {
         CoroutineScope(Dispatchers.IO).launch {
-            if (databaseConfiguration.initializeDatabase) {
+            if (databaseConfiguration.reloadDatabase) {
                 initializeDatabase()
             } else {
                 _databaseLoadingStatus.update { databaseLoadingStatus ->
