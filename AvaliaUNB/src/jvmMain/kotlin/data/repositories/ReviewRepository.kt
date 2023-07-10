@@ -13,21 +13,23 @@ import javax.inject.Singleton
 class ReviewRepository @Inject constructor(
     private val reviewDAO: ReviewDAO
 ) {
-    fun insetReview(reviewModel: ReviewModel): ReviewInsertionResult {
+    fun insertReview(reviewModel: ReviewModel): ReviewInsertionResult {
         val userMadeReview = reviewDAO.userMadeReview(reviewModel.userRegistrationNumber, reviewModel.classId)
 
         return when {
             userMadeReview -> ReviewInsertionResult.ReviewAlreadyMade
             else -> {
-                CoroutineScope(Dispatchers.IO).launch {
-                    when(reviewModel) {
-                        is ClassReviewModel -> reviewDAO.insertClassReview(reviewModel)
-                    }
+                when(reviewModel) {
+                    is ClassReviewModel -> reviewDAO.insertClassReview(reviewModel)
                 }
                 ReviewInsertionResult.Success
             }
         }
     }
+
+    fun updateReview(review: ClassReviewModel) = reviewDAO.updateClassReview(review)
+
+    fun deleteReview(reviewId: Int) = reviewDAO.deleteReview(reviewId)
 
     enum class ReviewInsertionResult {
         Success,

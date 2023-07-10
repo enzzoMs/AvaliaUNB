@@ -93,11 +93,11 @@ class DatabaseManager @Inject constructor(
             )
         }
 
-        val findSemicolonIfNotAfterLetter = Regex("(?<![A-z]);")
+        val splitDatabaseSchemaBySemicolon = Regex("(?<![a-z])(?<!([a-z]\\)));")
 
         val databaseSchema = File(DatabaseUtils.getSchemaPath()).readText()
 
-        val statements = databaseSchema.split(findSemicolonIfNotAfterLetter)
+        val statements = databaseSchema.split(splitDatabaseSchemaBySemicolon)
 
         statements.forEach { executeStatement(it)  }
 

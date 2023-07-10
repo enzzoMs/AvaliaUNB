@@ -13,18 +13,21 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import data.models.ReviewModel
-import theme.*
+import theme.LightGray
+import theme.MediumGray
+import theme.SilverChalice
 import utils.resources.ResourcesUtils
 
 @Composable
 fun ReviewList(
     reviews: List<ReviewModel>,
     isLoading: Boolean = false,
+    onEditClicked: (ReviewModel, Int, String) -> Unit = { _: ReviewModel, _: Int, _: String -> },
+    onRemoveClicked: (ReviewModel) -> Unit = {},
+    decideShowEditRemoveButtons: (ReviewModel) -> Boolean,
     modifier: Modifier = Modifier
 ) {
     when {
@@ -87,7 +90,12 @@ fun ReviewList(
                         .padding(end = 10.dp)
                 ) {
                     items(reviews) { review ->
-                        ReviewCard(review)
+                        ReviewCard(
+                            review = review,
+                            showEditAndRemove = decideShowEditRemoveButtons(review),
+                            onEditClicked = onEditClicked,
+                            onRemoveClicked = onRemoveClicked
+                        )
                     }
                 }
 

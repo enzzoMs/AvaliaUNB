@@ -125,10 +125,10 @@ CREATE TABLE IF NOT EXISTS avaliacao_professor(
 -- TRIGGERS
 --------------------------------
 
--- atualizar_pontuacao (avaliacao + disciplina) -> Esse trigger atualiza a pontuacao da turma toda vez que uma
--- avalicao for inserida
+-- Esses triggers atualizam a pontuacao da turma toda vez que uma
+-- avalicao for inserida/removida/modificada
 
-CREATE TRIGGER IF NOT EXISTS atualizar_pontuacao_turma
+CREATE TRIGGER IF NOT EXISTS analise_inserida_atualizar_turma
 AFTER INSERT ON avaliacao_turma
 BEGIN
     UPDATE turma
@@ -139,4 +139,33 @@ BEGIN
         WHERE avaliacao_turma.id_turma = turma.id
     )
     WHERE turma.id = NEW.id_turma;
+END;
+
+CREATE TRIGGER IF NOT EXISTS analise_removida_atualizar_turma
+AFTER DELETE ON avaliacao_turma
+BEGIN
+    UPDATE turma
+    SET pontuacao = (
+        SELECT AVG(pontuacao)
+        FROM avaliacao
+        INNER JOIN avaliacao_turma ON avaliacao.id = avaliacao_turma.id_avaliacao
+        WHERE avaliacao_turma.id_turma = turma.id
+    )
+    WHERE turma.id = OLD.id_turma;
+END;
+
+CREATE TRIGGER IF NOT EXISTS analise_modificada_atualizar_pontuacao
+AFTER UPDATE ON avaliacao
+BEGIN
+    UPDATE turma
+    SET pontuacao = (
+        SELECT AVG(pontuacao)
+        FROM avaliacao
+        INNER JOIN avaliacao_turma ON avaliacao.id = avaliacao_turma.id_avaliacao
+        WHERE avaliacao_turma.id_turma = turma.id
+    )
+    WHERE turma.id IN (
+        SELECT id_turma
+        FROM avaliacao_turma
+        WHERE id_avaliacao = NEW.id);
 END

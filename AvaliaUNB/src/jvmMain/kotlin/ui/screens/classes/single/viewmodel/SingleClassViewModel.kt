@@ -2,6 +2,7 @@ package ui.screens.classes.single.viewmodel
 
 import data.models.ClassModel
 import data.models.ClassReviewModel
+import data.models.ReviewModel
 import data.models.UserModel
 import data.repositories.ClassRepository
 import data.repositories.ReviewRepository
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.*
 
 class SingleClassViewModel(
     private val classModel: ClassModel,
@@ -36,7 +38,7 @@ class SingleClassViewModel(
 
     private fun loadAllReviews() {
         CoroutineScope(Dispatchers.IO).launch {
-            val allReviews = classRepository.getClassReviews(classModel)
+            val allReviews = classRepository.getClassReviews(classModel).reversed()
 
             _singleClassUiState.update { singleClassUiState ->
                 singleClassUiState.copy(
@@ -46,6 +48,8 @@ class SingleClassViewModel(
             }
         }
     }
+
+    fun reviewBelongsToUser(review: ReviewModel): Boolean = review.userRegistrationNumber == user.registrationNumber
 
     fun updateReviewComment(newComment: String) {
         _singleClassUiState.update { singleClassUiState ->
@@ -58,6 +62,7 @@ class SingleClassViewModel(
 
     fun publishReview(comment: String, rating: Int) {
         val reviewModel = ClassReviewModel(
+            id = UUID.randomUUID().hashCode(),
             comment = comment,
             rating = rating,
             userProfilePicture = user.profilePicture,
@@ -66,7 +71,7 @@ class SingleClassViewModel(
             classId = _singleClassUiState.value.classModel.id
         )
 
-        val insertionResult = reviewRepository.insetReview(reviewModel)
+        val insertionResult = reviewRepository.insertReview(reviewModel)
 
         when (insertionResult) {
             ReviewInsertionResult.ReviewAlreadyMade -> {
@@ -87,6 +92,38 @@ class SingleClassViewModel(
                     )
                 }
             }
+        }
+    }
+
+    fun editReview(oldReviewModel: ReviewModel, newRating: Int, newComment: String) {
+        val newReview = (oldReviewModel as ClassReviewModel).copy(
+            rating = newRating,
+            comment = newComment
+        )
+
+        reviewRepository.updateReview(newReview)
+
+        _singleClassUiState.update { singleClassUiState ->
+            singleClassUiState.copy(
+                reviews = singleClassUiState.reviews.map { if (it == oldReviewModel) newReview else it },
+                classModel = classModel.copy(
+                    score = classRepository.getClassScore(classModel.id)
+                )
+            )
+        }
+    }
+
+    fun deleteReview(review: ClassReviewModel) {
+        reviewRepository.deleteReview(review.id)
+
+        _singleClassUiState.update { singleClassUiState ->
+            singleClassUiState.copy(
+                reviews = singleClassUiState.reviews.filter { it != review },
+                classModel = classModel.copy(
+                    score = classRepository.getClassScore(classModel.id)
+                ),
+                userAlreadyMadeReview = false
+            )
         }
     }
 }

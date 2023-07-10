@@ -61,6 +61,7 @@ class ClassDAO @Inject constructor(
 
             classReviews.add(
                 ClassReviewModel(
+                    reviewsQueryResult.getInt("id"),
                     reviewsQueryResult.getString("comentario"),
                     reviewsQueryResult.getInt("pontuacao"),
                     reviewsQueryResult.getInt("id_turma"),

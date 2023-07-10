@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.ClassReviewModel
+import data.models.ReviewModel
 import data.models.TeacherModel
 import theme.*
 import ui.components.buttons.SecondaryButton
@@ -81,7 +82,16 @@ fun SingleClassScreen(
                 error = singleClassUiState.userAlreadyMadeReview,
                 onPublishClicked = { comment, rating -> singleClassViewModel.publishReview(comment, rating) },
                 classReviews = singleClassUiState.reviews,
-                isLoading = singleClassUiState.isReviewsLoading
+                isLoading = singleClassUiState.isReviewsLoading,
+                decideShowEditRemoveButtons = { reviewModel ->
+                    singleClassViewModel.reviewBelongsToUser(reviewModel)
+                },
+                onRemoveClicked = { reviewModel ->
+                    singleClassViewModel.deleteReview(reviewModel as ClassReviewModel)
+                },
+                onEditClicked = { oldReviewModel, newRating, newComment ->
+                    singleClassViewModel.editReview(oldReviewModel, newRating, newComment)
+                }
             )
 
             Spacer(
@@ -328,7 +338,10 @@ private fun Reviews(
     reviewComment: String,
     onCommentChanged: (String) -> Unit,
     error: Boolean,
+    onEditClicked: (ReviewModel, Int, String) -> Unit = { _: ReviewModel, _: Int, _: String -> },
+    onRemoveClicked: (ReviewModel) -> Unit = {},
     onPublishClicked: (String, Int) -> Unit,
+    decideShowEditRemoveButtons: (ReviewModel) -> Boolean,
     classReviews: List<ClassReviewModel>,
     isLoading: Boolean
 ) {
@@ -346,6 +359,9 @@ private fun Reviews(
         ReviewList(
             reviews = classReviews,
             isLoading = isLoading,
+            decideShowEditRemoveButtons = decideShowEditRemoveButtons,
+            onRemoveClicked = onRemoveClicked,
+            onEditClicked = onEditClicked,
             modifier = Modifier
                 .padding(top = 16.dp)
         )

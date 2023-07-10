@@ -3,22 +3,22 @@ package data.source
 import data.models.ClassReviewModel
 import javax.inject.Inject
 import javax.inject.Singleton
-import javax.swing.text.StyledEditorKit.BoldAction
 
 @Singleton
 class ReviewDAO @Inject constructor(
     private val database: DatabaseManager
 ) {
     fun insertClassReview(reviewModel: ClassReviewModel) {
-        val reviewInsertStatement = "INSERT INTO avaliacao (comentario, pontuacao, matricula_aluno) " +
-                "VALUES (?, ?, ?)"
+        val reviewInsertStatement = "INSERT INTO avaliacao (id, comentario, pontuacao, matricula_aluno) " +
+                "VALUES (?, ?, ?, ?)"
 
         val reviewPreparedStatement = database.prepareStatement(reviewInsertStatement)
 
         reviewModel.apply {
-            reviewPreparedStatement.setString(1, comment)
-            reviewPreparedStatement.setInt(2, rating)
-            reviewPreparedStatement.setString(3, userRegistrationNumber)
+            reviewPreparedStatement.setInt(1, reviewModel.id)
+            reviewPreparedStatement.setString(2, comment)
+            reviewPreparedStatement.setInt(3, rating)
+            reviewPreparedStatement.setString(4, userRegistrationNumber)
         }
 
         reviewPreparedStatement.execute()
@@ -28,11 +28,8 @@ class ReviewDAO @Inject constructor(
 
         val classReviewPreparedStatement = database.prepareStatement(classReviewInsertStatement)
 
-        val generatedKeys = reviewPreparedStatement.generatedKeys
-        generatedKeys.next()
-
         reviewModel.apply {
-            classReviewPreparedStatement.setInt(1, generatedKeys.getInt(1))
+            classReviewPreparedStatement.setInt(1, reviewModel.id)
             classReviewPreparedStatement.setInt(2, classId)
         }
 
@@ -49,8 +46,26 @@ class ReviewDAO @Inject constructor(
         return reviewQueryResult.next()
     }
 
+    fun updateClassReview(review: ClassReviewModel) {
+        database.executeStatement(
+    "UPDATE avaliacao " +
+            "SET comentario = '${review.comment}', pontuacao = '${review.rating}' " +
+            "WHERE id = '${review.id}'"
+        )
+    }
+
     /*
     fun insertTeacherReview(reviewModel: ) {
 
     }*/
+
+    fun deleteReview(reviewId: Int) {
+        database.executeStatement(
+            "DELETE FROM avaliacao WHERE id = $reviewId"
+        )
+
+        database.executeStatement(
+            "DELETE FROM avaliacao_turma WHERE id_avaliacao = $reviewId"
+        )
+    }
 }
