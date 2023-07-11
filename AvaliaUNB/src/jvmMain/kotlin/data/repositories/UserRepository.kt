@@ -47,16 +47,14 @@ class UserRepository @Inject constructor(
         val registrationNumberModified = oldRegistrationNumber != updatedUserModel.registrationNumber
         val emailModified = oldUser.email != updatedUserModel.email
 
-        if (registrationNumberModified || emailModified) {
-            val isRegistrationNumberInUse = userDAO.isRegistrationNumberInUse(updatedUserModel.registrationNumber)
-            val isEmailInUse = userDAO.isEmailInUse(updatedUserModel.email)
+        val isRegistrationNumberInUse = registrationNumberModified && userDAO.isRegistrationNumberInUse(updatedUserModel.registrationNumber)
+        val isEmailInUse = emailModified && userDAO.isEmailInUse(updatedUserModel.email)
 
-            if (isRegistrationNumberInUse || isEmailInUse) {
-                return UserModificationResult.Failure(
-                    registrationNumberAlreadyInUse = isRegistrationNumberInUse,
-                    emailAlreadyInUse = isEmailInUse
-                )
-            }
+        if (isRegistrationNumberInUse || isEmailInUse) {
+            return UserModificationResult.Failure(
+                registrationNumberAlreadyInUse = isRegistrationNumberInUse,
+                emailAlreadyInUse = isEmailInUse
+            )
         }
 
         userDAO.updateUser(oldRegistrationNumber, updatedUserModel)

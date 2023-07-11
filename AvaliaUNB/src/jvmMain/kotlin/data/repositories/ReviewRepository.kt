@@ -15,7 +15,8 @@ class ReviewRepository @Inject constructor(
     fun insertReview(reviewModel: ReviewModel): ReviewInsertionResult {
         return when(reviewModel) {
             is ClassReviewModel -> {
-                val userMadeReview = reviewDAO.userMadeReview(reviewModel.userRegistrationNumber, reviewModel.id)
+                val userMadeReview = reviewDAO.userMadeReview(reviewModel.userRegistrationNumber, reviewModel.classId)
+
                 if (userMadeReview) {
                     ReviewInsertionResult.ReviewAlreadyMade
                 } else {
@@ -29,6 +30,7 @@ class ReviewRepository @Inject constructor(
                     reviewModel.teacherName,
                     reviewModel.departmentCode
                 )
+
                 if (userMadeReview) {
                     ReviewInsertionResult.ReviewAlreadyMade
                 } else {

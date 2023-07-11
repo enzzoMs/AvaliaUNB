@@ -48,7 +48,9 @@ fun ProfileScreen(
                 .verticalScroll(stateVertical)
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .weight(1f)
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -110,11 +112,6 @@ fun ProfileScreen(
                     )
                 }
             }
-
-            Spacer(
-                modifier = Modifier
-                    .weight(1f)
-            )
 
             if (profileUiState.isEditingFields) {
                 FinishAndCancelButtons(
