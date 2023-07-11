@@ -7,6 +7,7 @@ import androidx.compose.material.icons.outlined.School
 import androidx.compose.ui.graphics.vector.ImageVector
 import data.models.ClassModel
 import data.models.SubjectModel
+import data.models.TeacherModel
 import data.models.UserModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -61,7 +62,7 @@ class MainScreenViewModel(
         when (newScreen) {
             Screen.SINGLE_CLASS, Screen.CLASSES -> selectNavItem(navItemClasses)
             Screen.SINGLE_SUBJECT, Screen.SUBJECTS -> selectNavItem(navItemSubjects)
-            Screen.TEACHERS -> selectNavItem(navItemTeachers)
+            Screen.TEACHERS, Screen.SINGLE_TEACHER -> selectNavItem(navItemTeachers)
             else -> {}
         }
     }
@@ -78,6 +79,14 @@ class MainScreenViewModel(
         _mainScreenUiState.update { mainScreenUiState ->
             mainScreenUiState.copy(
                 selectedClass = classModel
+            )
+        }
+    }
+
+    fun setTeacherSelection(teacherModel: TeacherModel?) {
+        _mainScreenUiState.update { mainScreenUiState ->
+            mainScreenUiState.copy(
+                selectedTeacher = teacherModel
             )
         }
     }

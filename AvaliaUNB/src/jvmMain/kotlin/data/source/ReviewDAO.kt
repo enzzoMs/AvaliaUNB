@@ -1,6 +1,8 @@
 package data.source
 
 import data.models.ClassReviewModel
+import data.models.ReviewModel
+import data.models.TeacherReviewModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,6 +38,37 @@ class ReviewDAO @Inject constructor(
         classReviewPreparedStatement.execute()
     }
 
+    fun insertTeacherReview(reviewModel: TeacherReviewModel) {
+        val reviewInsertStatement = "INSERT INTO avaliacao (id, comentario, pontuacao, matricula_aluno) " +
+                "VALUES (?, ?, ?, ?)"
+
+        val reviewPreparedStatement = database.prepareStatement(reviewInsertStatement)
+
+        reviewModel.apply {
+            reviewPreparedStatement.setInt(1, reviewModel.id)
+            reviewPreparedStatement.setString(2, comment)
+            reviewPreparedStatement.setInt(3, rating)
+            reviewPreparedStatement.setString(4, userRegistrationNumber)
+        }
+
+        reviewPreparedStatement.execute()
+
+        val teacherReviewInsertStatement = "INSERT INTO avaliacao_professor " +
+                "(id_avaliacao, nome_professor, codigo_departamento) " +
+                "VALUES (?, ?, ?)"
+
+        val teacherReviewPreparedStatement = database.prepareStatement(teacherReviewInsertStatement)
+
+        reviewModel.apply {
+            teacherReviewPreparedStatement.setInt(1, reviewModel.id)
+            teacherReviewPreparedStatement.setString(2, reviewModel.teacherName)
+            teacherReviewPreparedStatement.setInt(3, reviewModel.departmentCode)
+
+        }
+
+        teacherReviewPreparedStatement.execute()
+    }
+
     fun userMadeReview(userRegistrationNumber: String, classId: Int): Boolean {
         val reviewQueryResult = database.executeQuery(
             "SELECT * FROM avaliacao " +
@@ -46,18 +79,25 @@ class ReviewDAO @Inject constructor(
         return reviewQueryResult.next()
     }
 
-    fun updateClassReview(review: ClassReviewModel) {
+    fun userMadeReview(userRegistrationNumber: String, teacherName: String, departmentCode: Int): Boolean {
+        val reviewQueryResult = database.executeQuery(
+            "SELECT * FROM avaliacao " +
+                    "INNER JOIN avaliacao_professor ON avaliacao.id = avaliacao_professor.id_avaliacao " +
+                    "WHERE avaliacao_professor.nome_professor = '$teacherName' AND " +
+                    "avaliacao_professor.codigo_departamento = $departmentCode AND " +
+                    "avaliacao.matricula_aluno = $userRegistrationNumber"
+        )
+
+        return reviewQueryResult.next()
+    }
+
+    fun updateReview(review: ReviewModel) {
         database.executeStatement(
     "UPDATE avaliacao " +
             "SET comentario = '${review.comment}', pontuacao = '${review.rating}' " +
             "WHERE id = '${review.id}'"
         )
     }
-
-    /*
-    fun insertTeacherReview(reviewModel: ) {
-
-    }*/
 
     fun deleteReview(reviewId: Int) {
         database.executeStatement(
@@ -66,6 +106,10 @@ class ReviewDAO @Inject constructor(
 
         database.executeStatement(
             "DELETE FROM avaliacao_turma WHERE id_avaliacao = $reviewId"
+        )
+
+        database.executeStatement(
+            "DELETE FROM avaliacao_professor WHERE id_avaliacao = $reviewId"
         )
     }
 }

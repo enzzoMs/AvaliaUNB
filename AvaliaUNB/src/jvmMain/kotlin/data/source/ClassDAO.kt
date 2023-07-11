@@ -11,11 +11,18 @@ import javax.inject.Singleton
 @Singleton
 class ClassDAO @Inject constructor(
     private val database: DatabaseManager,
+    private val teacherDAO: TeacherDAO
 ) {
     fun getClassTeacher(classModel: ClassModel): TeacherModel {
         val classTeacherQueryResult = database.executeQuery(
-            "SELECT * FROM professor " +
-                    "WHERE nome = '${classModel.teacherName}' AND codigo_departamento = '${classModel.departmentCode}';"
+            "SELECT professor.*, departamento.nome AS dept_nome " +
+                    "FROM professor " +
+                    "INNER JOIN departamento " +
+                    "ON professor.codigo_departamento = departamento.codigo AND " +
+                    "professor.ano_semestre = departamento.ano_semestre AND " +
+                    "professor.numero_semestre = departamento.numero_semestre " +
+                    "WHERE professor.nome = '${classModel.teacherName}' AND " +
+                    "professor.codigo_departamento = '${classModel.departmentCode}';"
         )
 
         classTeacherQueryResult.next()
@@ -24,9 +31,21 @@ class ClassDAO @Inject constructor(
         val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
         val profilePic = bufferedProfilePicImage.toComposeImageBitmap()
 
+        val teacherSemesterYear = classTeacherQueryResult.getString("ano_semestre")
+        val teacherSemesterNumber = classTeacherQueryResult.getString("numero_semestre")
+
+        val teacherSemester = "${teacherSemesterYear}-${teacherSemesterNumber}"
+
         return TeacherModel(
             classTeacherQueryResult.getString("nome"),
-            classTeacherQueryResult.getObject("pontuacao") as Float?,
+            classTeacherQueryResult.getString("dept_nome"),
+            classTeacherQueryResult.getInt("codigo_departamento"),
+            teacherSemester,
+            classTeacherQueryResult.getObject("pontuacao") as Double?,
+            teacherDAO.getTeacherReviews(
+                classTeacherQueryResult.getString("nome"),
+                classTeacherQueryResult.getInt("codigo_departamento")
+            ).size,
             profilePic
         )
     }
@@ -64,10 +83,10 @@ class ClassDAO @Inject constructor(
                     reviewsQueryResult.getInt("id"),
                     reviewsQueryResult.getString("comentario"),
                     reviewsQueryResult.getInt("pontuacao"),
-                    reviewsQueryResult.getInt("id_turma"),
                     profilePic,
                     reviewsQueryResult.getString("usuario_nome"),
-                    reviewsQueryResult.getString("matricula")
+                    reviewsQueryResult.getString("matricula"),
+                    reviewsQueryResult.getInt("id_turma"),
                 )
             )
         }

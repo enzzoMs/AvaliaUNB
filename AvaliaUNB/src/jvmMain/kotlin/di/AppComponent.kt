@@ -1,10 +1,7 @@
 package di
 import dagger.Component
 import dagger.Provides
-import data.repositories.ClassRepository
-import data.repositories.ReviewRepository
-import data.repositories.SubjectRepository
-import data.repositories.UserRepository
+import data.repositories.*
 import data.source.DatabaseManager
 import ui.screens.login.viewmodel.LoginViewModel
 import ui.screens.register.viewmodel.RegisterFormViewModel
@@ -33,4 +30,5 @@ interface AppComponent {
 
     fun getReviewRepository(): ReviewRepository
 
+    fun getTeacherRepository(): TeacherRepository
 }

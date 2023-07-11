@@ -38,6 +38,7 @@ import utils.resources.ResourcesUtils
 @Composable
 fun SingleClassScreen(
     singleClassViewModel: SingleClassViewModel,
+    onSeeTeacherDetailsClicked: (TeacherModel) -> Unit,
     onBackClicked: () -> Unit
 ) {
     val singleClassUiState by singleClassViewModel.singleClassUiState.collectAsState()
@@ -69,7 +70,10 @@ fun SingleClassScreen(
                 classSubjectCode = singleClassUiState.classModel.subjectCode
             )
 
-            TeacherInformation(singleClassUiState.teacherModel)
+            TeacherInformation(
+                teacherModel = singleClassUiState.teacherModel,
+                onSeeTeacherDetailsClicked = onSeeTeacherDetailsClicked
+            )
 
             Rating(
                 score = singleClassUiState.classModel.score,
@@ -184,6 +188,7 @@ private fun ClassSchedule(
 @Composable
 private fun TeacherInformation(
     teacherModel: TeacherModel,
+    onSeeTeacherDetailsClicked: (TeacherModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -258,21 +263,39 @@ private fun TeacherInformation(
                         Icon(
                             painter = painterResource(ResourcesUtils.ImagePaths.GRADE),
                             contentDescription = null,
-                            tint = LightGray,
+                            tint = if (teacherModel.score == null) LightGray else AmericanOrange,
                             modifier = Modifier
                                 .size(35.dp)
                                 .padding(end = 12.dp, bottom = 5.dp)
                         )
-                        Text(
-                            text = ResourcesUtils.Strings.NO_REVIEW,
-                            style = TextStyle(
-                                fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
-                                fontSize = 18.sp,
-                                color = Gray
-                            ),
-                            fontWeight = FontWeight.Normal,
-                            maxLines = 1
-                        )
+                        if (teacherModel.score == null) {
+                            Text(
+                                text = ResourcesUtils.Strings.NO_REVIEW,
+                                style = TextStyle(
+                                    fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
+                                    fontSize = 18.sp,
+                                    color = Gray
+                                ),
+                                fontWeight = FontWeight.Normal,
+                                maxLines = 1
+                            )
+                        } else {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = String.format("%.1f", teacherModel.score),
+                                    style = MaterialTheme.typography.h6
+                                )
+                                Text(
+                                    text = " -  ${teacherModel.numOfReviews} análises",
+                                    style = MaterialTheme.typography.subtitle2,
+                                    fontSize = 18.sp,
+                                    modifier = Modifier
+                                        .padding(start = 6.dp)
+                                )
+                            }
+                        }
                     }
 
                     Row {
@@ -282,7 +305,7 @@ private fun TeacherInformation(
                         )
                         SecondaryButton(
                             label = ResourcesUtils.Strings.SEE_TEACHER_DETAILS,
-                            onClick = {}
+                            onClick = { onSeeTeacherDetailsClicked(teacherModel) }
                         )
                     }
                 }

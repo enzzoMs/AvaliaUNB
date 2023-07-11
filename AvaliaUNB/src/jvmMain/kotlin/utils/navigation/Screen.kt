@@ -12,5 +12,6 @@ enum class Screen {
     CLASSES,
     SINGLE_CLASS,
     TEACHERS,
+    SINGLE_TEACHER,
     PROFILE
 }

@@ -125,8 +125,10 @@ CREATE TABLE IF NOT EXISTS avaliacao_professor(
 -- TRIGGERS
 --------------------------------
 
--- Esses triggers atualizam a pontuacao da turma toda vez que uma
+-- Esses triggers atualizam a pontuacao da turma e professor toda vez que uma
 -- avalicao for inserida/removida/modificada
+
+-- TURMAS -------------------------------------------------------
 
 CREATE TRIGGER IF NOT EXISTS analise_inserida_atualizar_turma
 AFTER INSERT ON avaliacao_turma
@@ -154,6 +156,38 @@ BEGIN
     WHERE turma.id = OLD.id_turma;
 END;
 
+-- PROFESSORES -------------------------------------------------------
+
+CREATE TRIGGER IF NOT EXISTS analise_inserida_atualizar_professor
+AFTER INSERT ON avaliacao_professor
+BEGIN
+    UPDATE professor
+    SET pontuacao = (
+        SELECT AVG(pontuacao)
+        FROM avaliacao
+        INNER JOIN avaliacao_professor ON avaliacao.id = avaliacao_professor.id_avaliacao
+        WHERE avaliacao_professor.nome_professor = professor.nome AND
+        avaliacao_professor.codigo_departamento = professor.codigo_departamento
+    )
+    WHERE professor.nome = NEW.nome_professor AND professor.codigo_departamento = NEW.codigo_departamento;
+END;
+
+CREATE TRIGGER IF NOT EXISTS analise_removida_atualizar_professor
+AFTER DELETE ON avaliacao_professor
+BEGIN
+    UPDATE professor
+    SET pontuacao = (
+        SELECT AVG(pontuacao)
+        FROM avaliacao
+        INNER JOIN avaliacao_professor ON avaliacao.id = avaliacao_professor.id_avaliacao
+        WHERE avaliacao_professor.nome_professor = professor.nome AND
+        avaliacao_professor.codigo_departamento = professor.codigo_departamento
+    )
+    WHERE professor.nome = OLD.nome_professor AND professor.codigo_departamento = OLD.codigo_departamento;
+END;
+
+-- AMBOS -------------------------------------------------------
+
 CREATE TRIGGER IF NOT EXISTS analise_modificada_atualizar_pontuacao
 AFTER UPDATE ON avaliacao
 BEGIN
@@ -168,4 +202,17 @@ BEGIN
         SELECT id_turma
         FROM avaliacao_turma
         WHERE id_avaliacao = NEW.id);
+
+    UPDATE professor
+        SET pontuacao = (
+            SELECT AVG(pontuacao)
+            FROM avaliacao
+            INNER JOIN avaliacao_professor ON avaliacao.id = avaliacao_professor.id_avaliacao
+            WHERE avaliacao_professor.nome_professor = professor.nome AND
+            avaliacao_professor.codigo_departamento = professor.codigo_departamento
+        )
+        WHERE (professor.nome, professor.codigo_departamento) IN (
+            SELECT professor.nome, professor.codigo_departamento
+            FROM avaliacao_professor
+            WHERE id_avaliacao = NEW.id);
 END

@@ -9,5 +9,4 @@ interface ReviewModel {
     val userProfilePicture: ImageBitmap
     val userName: String
     val userRegistrationNumber: String
-    val classId: Int
 }

@@ -38,7 +38,9 @@ import ui.screens.profile.viewmodel.ProfileViewModel
 import ui.screens.subjects.all.SubjectsScreen
 import ui.screens.subjects.single.SingleSubjectScreen
 import ui.screens.subjects.single.viewmodel.SingleSubjectViewModel
-import ui.screens.teachers.TeachersScreen
+import ui.screens.teachers.all.TeachersScreen
+import ui.screens.teachers.single.SingleTeacherScreen
+import ui.screens.teachers.single.viewmodel.SingleTeacherViewModel
 import utils.navigation.Screen
 import utils.resources.ResourcesUtils
 
@@ -147,9 +149,32 @@ fun MainScreen(
                                 )
 
                                 mainScreenViewModel.setClassSelection(null)
+                            },
+                            onSeeTeacherDetailsClicked = { teacherModel ->
+                                mainScreenViewModel.updateCurrentScreen(Screen.SINGLE_TEACHER)
+                                mainScreenViewModel.setTeacherSelection(teacherModel)
                             }
                         )
                         Screen.TEACHERS -> TeachersScreen()
+                        Screen.SINGLE_TEACHER -> SingleTeacherScreen(
+                            singleTeacherViewModel = SingleTeacherViewModel(
+                                teacherModel = mainScreenUiState.selectedTeacher!!,
+                                teacherRepository = DaggerComponentHolder.appComponent.getTeacherRepository(),
+                                reviewRepository = DaggerComponentHolder.appComponent.getReviewRepository(),
+                                user = mainScreenUiState.userModel
+                            ),
+                            onBackClicked = {
+                                mainScreenViewModel.updateCurrentScreen(
+                                    if (mainScreenUiState.selectedClass != null) {
+                                        Screen.SINGLE_CLASS
+                                    } else {
+                                        Screen.TEACHERS
+                                    }
+                                )
+
+                                mainScreenViewModel.setTeacherSelection(null)
+                            }
+                        )
                         Screen.PROFILE -> {
                             val profileViewModel = ProfileViewModel(
                                 mainScreenUiState.userModel,
