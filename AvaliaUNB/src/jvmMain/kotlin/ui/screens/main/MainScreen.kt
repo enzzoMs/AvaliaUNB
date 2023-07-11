@@ -30,7 +30,6 @@ import ui.components.navigation.NavigationItem
 import ui.components.navigation.NavigationPanelColors
 import ui.components.navigation.SideNavigationPanel
 import ui.screens.classes.all.ClassesScreen
-import ui.screens.classes.all.viewmodel.ClassesViewModel
 import ui.screens.classes.single.SingleClassScreen
 import ui.screens.classes.single.viewmodel.SingleClassViewModel
 import ui.screens.main.viewmodel.MainScreenViewModel
@@ -74,6 +73,8 @@ fun MainScreen(
             },
             navItems = mainScreenUiState.navItems,
             onItemClicked = { navItem ->
+                mainScreenViewModel.clearItemsSelection()
+
                 mainScreenViewModel.updateCurrentScreen(
                     when(navItem.index) {
                         NAV_ITEM_SUBJECTS_INDEX -> Screen.SUBJECTS
@@ -133,7 +134,11 @@ fun MainScreen(
                             }
                         )
                         Screen.CLASSES -> ClassesScreen(
-                            classesViewModel = DaggerComponentHolder.appComponent.getClassesViewModel()
+                            classesViewModel = DaggerComponentHolder.appComponent.getClassesViewModel(),
+                            onClassClicked = { classModel ->
+                                mainScreenViewModel.updateCurrentScreen(Screen.SINGLE_CLASS)
+                                mainScreenViewModel.setClassSelection(classModel)
+                            }
                         )
                         Screen.SINGLE_CLASS -> SingleClassScreen(
                             singleClassViewModel = SingleClassViewModel(
@@ -147,7 +152,7 @@ fun MainScreen(
                                     if (mainScreenUiState.selectedSubject != null) {
                                         Screen.SINGLE_SUBJECT
                                     } else {
-                                        Screen.SUBJECTS
+                                        Screen.CLASSES
                                     }
                                 )
 
@@ -158,7 +163,13 @@ fun MainScreen(
                                 mainScreenViewModel.setTeacherSelection(teacherModel)
                             }
                         )
-                        Screen.TEACHERS -> TeachersScreen()
+                        Screen.TEACHERS -> TeachersScreen(
+                            teachersViewModel = DaggerComponentHolder.appComponent.getTeachersViewModel(),
+                            onTeacherClicked = { teacherModel ->
+                                mainScreenViewModel.updateCurrentScreen(Screen.SINGLE_TEACHER)
+                                mainScreenViewModel.setTeacherSelection(teacherModel)
+                            }
+                        )
                         Screen.SINGLE_TEACHER -> SingleTeacherScreen(
                             singleTeacherViewModel = SingleTeacherViewModel(
                                 teacherModel = mainScreenUiState.selectedTeacher!!,

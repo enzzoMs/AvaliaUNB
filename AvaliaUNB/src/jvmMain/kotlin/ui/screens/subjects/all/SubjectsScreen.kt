@@ -53,7 +53,7 @@ fun SubjectsScreen(
         if (subjectUiState.isSubjectsLoading) {
             Loading()
         } else {
-            SubjectsLists(
+            SubjectsList(
                 subjects = subjectUiState.subjects,
                 onSubjectClicked = onSubjectClicked,
                 modifier = Modifier
@@ -133,7 +133,7 @@ private fun SearchAndFilterFields(
 }
 
 @Composable
-private fun SubjectsLists(
+private fun SubjectsList(
     subjects: List<SubjectModel>,
     onSubjectClicked: (SubjectModel) -> Unit = {},
     modifier: Modifier = Modifier

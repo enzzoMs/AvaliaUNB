@@ -1,6 +1,7 @@
 package data.source
 
 import androidx.compose.ui.graphics.toComposeImageBitmap
+import data.models.TeacherModel
 import data.models.TeacherReviewModel
 import javax.imageio.ImageIO
 import javax.inject.Inject
@@ -10,6 +11,45 @@ import javax.inject.Singleton
 class TeacherDAO @Inject constructor(
     private val database: DatabaseManager
 ) {
+
+    fun getAllTeachers(): List<TeacherModel> {
+        val allTeachersQueryResult = database.executeQuery(
+            "SELECT professor.*, departamento.nome AS dept_nome " +
+                    "FROM professor " +
+                    "INNER JOIN departamento ON professor.codigo_departamento = departamento.codigo;"
+        )
+
+        val teachers = mutableListOf<TeacherModel>()
+
+        while (allTeachersQueryResult.next()) {
+            val profilePicBytes = allTeachersQueryResult.getBytes("foto_de_perfil")
+            val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
+            val profilePic = bufferedProfilePicImage.toComposeImageBitmap()
+
+            val teacherSemesterYear = allTeachersQueryResult.getString("ano_semestre")
+            val teacherSemesterNumber = allTeachersQueryResult.getString("numero_semestre")
+
+            val teacherSemester = "${teacherSemesterYear}-${teacherSemesterNumber}"
+
+            teachers.add(
+                TeacherModel(
+                    allTeachersQueryResult.getString("nome"),
+                    allTeachersQueryResult.getString("dept_nome"),
+                    allTeachersQueryResult.getInt("codigo_departamento"),
+                    teacherSemester,
+                    allTeachersQueryResult.getObject("pontuacao") as Double?,
+                    getTeacherReviews(
+                        allTeachersQueryResult.getString("nome"),
+                        allTeachersQueryResult.getInt("codigo_departamento")
+                    ).size,
+                    profilePic,
+                )
+            )
+        }
+
+        return teachers.toList()
+    }
+
     fun getTeacherReviews(teacherName: String, departmentCode: Int): List<TeacherReviewModel> {
         val reviewsQueryResult = database.executeQuery(
             "SELECT avaliacao_professor.*, avaliacao.*, usuario.nome AS usuario_nome, " +

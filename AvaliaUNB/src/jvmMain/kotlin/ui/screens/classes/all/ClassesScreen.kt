@@ -56,7 +56,7 @@ fun ClassesScreen(
         if (classesUiState.isClassesLoading) {
             Loading()
         } else {
-            ClassesLists(
+            ClassesList(
                 classes = classesUiState.classes,
                 onClassClicked = onClassClicked,
                 modifier = Modifier
@@ -163,7 +163,7 @@ private fun SearchAndFilterFields(
 }
 
 @Composable
-private fun ClassesLists(
+private fun ClassesList(
     classes: List<ClassModel>,
     onClassClicked: (ClassModel) -> Unit = {},
     modifier: Modifier = Modifier

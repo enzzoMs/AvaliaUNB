@@ -23,6 +23,13 @@ class TeacherRepository @Inject constructor(
         return allReviewsDeferred.await()
     }
 
+    suspend fun getAllTeachers(): List<TeacherModel> {
+        val allTeachersDeferred = CoroutineScope(Dispatchers.IO).async {
+            teacherDAO.getAllTeachers()
+        }
+        return allTeachersDeferred.await()
+    }
+
     fun getTeacherScore(teacherName: String, departmentCode: Int): Double? {
         return teacherDAO.getTeacherScore(teacherName, departmentCode)
     }

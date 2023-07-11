@@ -67,6 +67,16 @@ class MainScreenViewModel(
         }
     }
 
+    fun clearItemsSelection() {
+        _mainScreenUiState.update { mainScreenUiState ->
+            mainScreenUiState.copy(
+                selectedSubject = null,
+                selectedClass = null,
+                selectedTeacher = null
+            )
+        }
+    }
+
     fun setSubjectSelection(subjectModel: SubjectModel?) {
         _mainScreenUiState.update { mainScreenUiState ->
             mainScreenUiState.copy(

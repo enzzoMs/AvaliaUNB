@@ -43,6 +43,7 @@ fun TeacherCard(
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(10.dp))
+            .padding(14.dp)
             .background(backgroundColor)
             .then(
                 if (clickable) {

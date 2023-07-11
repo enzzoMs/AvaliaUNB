@@ -2,7 +2,6 @@ package data.repositories
 
 import data.models.ClassReviewModel
 import data.models.ReviewModel
-import data.models.TeacherModel
 import data.models.TeacherReviewModel
 import data.source.ReviewDAO
 import javax.inject.Inject

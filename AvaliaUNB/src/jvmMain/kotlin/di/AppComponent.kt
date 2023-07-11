@@ -8,6 +8,7 @@ import ui.screens.login.viewmodel.LoginViewModel
 import ui.screens.register.viewmodel.RegisterFormViewModel
 import ui.screens.splash.viewmodel.SplashViewModel
 import ui.screens.subjects.all.viewmodel.SubjectsViewModel
+import ui.screens.teachers.all.viewmodel.TeachersViewModel
 import javax.inject.Singleton
 
 @Singleton @Component(modules = [DatabaseModule::class])
@@ -24,6 +25,8 @@ interface AppComponent {
     fun getSplashViewModel(): SplashViewModel
 
     fun getClassesViewModel(): ClassesViewModel
+
+    fun getTeachersViewModel(): TeachersViewModel
 
     fun getUserRepository(): UserRepository
 
