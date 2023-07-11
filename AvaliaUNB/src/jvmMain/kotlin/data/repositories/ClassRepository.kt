@@ -26,5 +26,12 @@ class ClassRepository @Inject constructor(
         return allReviewsDeferred.await()
     }
 
+    suspend fun getAllClasses(): List<ClassModel> {
+        val allClassesDeferred = CoroutineScope(Dispatchers.IO).async {
+            classDAO.getAllClasses()
+        }
+        return allClassesDeferred.await()
+    }
+
     fun getClassScore(classId: Int): Double? = classDAO.getClassScore(classId)
 }

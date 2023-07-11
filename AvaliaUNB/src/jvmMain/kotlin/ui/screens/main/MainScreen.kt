@@ -30,6 +30,7 @@ import ui.components.navigation.NavigationItem
 import ui.components.navigation.NavigationPanelColors
 import ui.components.navigation.SideNavigationPanel
 import ui.screens.classes.all.ClassesScreen
+import ui.screens.classes.all.viewmodel.ClassesViewModel
 import ui.screens.classes.single.SingleClassScreen
 import ui.screens.classes.single.viewmodel.SingleClassViewModel
 import ui.screens.main.viewmodel.MainScreenViewModel
@@ -131,7 +132,9 @@ fun MainScreen(
                                 mainScreenViewModel.setClassSelection(classModel)
                             }
                         )
-                        Screen.CLASSES -> ClassesScreen()
+                        Screen.CLASSES -> ClassesScreen(
+                            classesViewModel = DaggerComponentHolder.appComponent.getClassesViewModel()
+                        )
                         Screen.SINGLE_CLASS -> SingleClassScreen(
                             singleClassViewModel = SingleClassViewModel(
                                 classModel = mainScreenUiState.selectedClass!!,

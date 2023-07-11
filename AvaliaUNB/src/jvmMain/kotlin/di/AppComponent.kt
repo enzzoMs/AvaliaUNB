@@ -3,6 +3,7 @@ import dagger.Component
 import dagger.Provides
 import data.repositories.*
 import data.source.DatabaseManager
+import ui.screens.classes.all.viewmodel.ClassesViewModel
 import ui.screens.login.viewmodel.LoginViewModel
 import ui.screens.register.viewmodel.RegisterFormViewModel
 import ui.screens.splash.viewmodel.SplashViewModel
@@ -21,6 +22,8 @@ interface AppComponent {
     fun getSubjectsViewModel(): SubjectsViewModel
 
     fun getSplashViewModel(): SplashViewModel
+
+    fun getClassesViewModel(): ClassesViewModel
 
     fun getUserRepository(): UserRepository
 

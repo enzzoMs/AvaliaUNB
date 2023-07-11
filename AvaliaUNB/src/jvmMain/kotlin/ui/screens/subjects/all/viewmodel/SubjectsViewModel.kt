@@ -6,6 +6,7 @@ import data.repositories.SubjectRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -17,19 +18,26 @@ class SubjectsViewModel @Inject constructor(
     semesterRepository: SemesterRepository
 ) {
     private var allSubjects = listOf<SubjectModel>()
-
-    private val _subjectUiState = MutableStateFlow(
-        SubjectsUiState(
-            subjects = allSubjects,
-            departmentNames = allSubjects.map { it.departmentName }.distinct(),
-            semesters = semesterRepository.getAllSemesters().map { semesterModel ->
-                "${semesterModel.year}-${semesterModel.semesterNumber}"
-            }
-        )
-    )
-    val subjectUiState = _subjectUiState.asStateFlow()
+    private val _subjectUiState: MutableStateFlow<SubjectsUiState>
+    val subjectUiState: StateFlow<SubjectsUiState>
 
     init {
+        val semesters = semesterRepository.getAllSemesters().map { semesterModel ->
+            "${semesterModel.year}-${semesterModel.semesterNumber}"
+        }
+
+        _subjectUiState = MutableStateFlow(
+            SubjectsUiState(
+                subjects = allSubjects,
+                isSubjectsLoading = true,
+                departmentNames = allSubjects.map { it.departmentName }.distinct(),
+                semesters = semesters,
+                semesterFilter = semesters.first()
+            )
+        )
+
+        subjectUiState = _subjectUiState.asStateFlow()
+
         loadAllSubjects()
     }
 
@@ -39,7 +47,8 @@ class SubjectsViewModel @Inject constructor(
             _subjectUiState.update { subjectUiState ->
                 subjectUiState.copy(
                     subjects = allSubjects,
-                    departmentNames = allSubjects.map { it.departmentName }.distinct()
+                    departmentNames = allSubjects.map { it.departmentName }.distinct(),
+                    isSubjectsLoading = false
                 )
             }
         }
@@ -50,7 +59,7 @@ class SubjectsViewModel @Inject constructor(
         _subjectUiState.update { subjectUiState ->
             subjectUiState.copy(
                 searchSubjectFilter = newSearchFilter,
-                subjects = filterSubjects(newSearchFilter, subjectUiState.departmentFilter, subjectUiState.semesterFilter)
+                subjects = filterSubjects(searchSubjectFilter = newSearchFilter)
             )
         }
     }
@@ -59,28 +68,30 @@ class SubjectsViewModel @Inject constructor(
         _subjectUiState.update { subjectUiState ->
             subjectUiState.copy(
                 departmentFilter = newDeptFilter,
-                subjects = filterSubjects(subjectUiState.searchSubjectFilter, newDeptFilter, subjectUiState.semesterFilter)
+                subjects = filterSubjects(deptFilter = newDeptFilter)
             )
         }
     }
 
-    fun updateSemesterFilter(newSemesterFilter: String?) {
+    fun updateSemesterFilter(newSemesterFilter: String) {
         _subjectUiState.update { subjectUiState ->
             subjectUiState.copy(
                 semesterFilter = newSemesterFilter,
-                subjects = filterSubjects(
-                    subjectUiState.searchSubjectFilter, subjectUiState.departmentFilter, newSemesterFilter
-                )
+                subjects = filterSubjects(semesterFilter = newSemesterFilter)
             )
         }
     }
 
 
-    private fun filterSubjects(searchSubjectFilter: String?, deptFilter: String?, semesterFilter: String?): List<SubjectModel> {
+    private fun filterSubjects(
+        searchSubjectFilter: String? = _subjectUiState.value.searchSubjectFilter,
+        deptFilter: String? = _subjectUiState.value.departmentFilter,
+        semesterFilter: String = _subjectUiState.value.semesterFilter
+    ): List<SubjectModel> {
         return allSubjects.filter { subject ->
             (searchSubjectFilter == null || subject.name.contains(searchSubjectFilter, ignoreCase = true))
                     && (deptFilter == null || subject.departmentName == deptFilter)
-                    && (semesterFilter == null || subject.semester == semesterFilter)
+                    && (subject.semester == semesterFilter)
         }
     }
 }

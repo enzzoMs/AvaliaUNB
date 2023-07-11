@@ -19,6 +19,7 @@ import data.models.ReviewModel
 import theme.LightGray
 import theme.MediumGray
 import theme.SilverChalice
+import ui.components.loading.Loading
 import utils.resources.ResourcesUtils
 
 @Composable
@@ -32,25 +33,7 @@ fun ReviewList(
 ) {
     when {
         isLoading -> {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 80.dp)
-            ) {
-                CircularProgressIndicator(
-                    color = LightGray,
-                    strokeWidth = 3.dp,
-                    modifier = Modifier
-                        .size(80.dp)
-                )
-                Text(
-                    text = ResourcesUtils.Strings.LOADING,
-                    style = MaterialTheme.typography.subtitle2,
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                )
-            }
+            Loading()
         }
         reviews.isEmpty() -> {
             Column(

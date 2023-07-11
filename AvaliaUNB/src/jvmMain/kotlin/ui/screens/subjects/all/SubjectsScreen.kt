@@ -24,6 +24,7 @@ import theme.White
 import ui.components.forms.GeneralDropDownMenu
 import ui.components.forms.GeneralTextField
 import ui.components.cards.SubjectCard
+import ui.components.loading.Loading
 import ui.screens.subjects.all.viewmodel.SubjectsViewModel
 
 @Composable
@@ -49,13 +50,17 @@ fun SubjectsScreen(
             currentSelectedSemesterFilter = subjectUiState.semesterFilter,
             onSelectSemesterFilter = { newFilter -> subjectsViewModel.updateSemesterFilter(newFilter) }
         )
-        SubjectsLists(
-            subjects = subjectUiState.subjects,
-            onSubjectClicked = onSubjectClicked,
-            modifier = Modifier
-                .padding(top = 30.dp)
-                .fillMaxWidth()
-        )
+        if (subjectUiState.isSubjectsLoading) {
+            Loading()
+        } else {
+            SubjectsLists(
+                subjects = subjectUiState.subjects,
+                onSubjectClicked = onSubjectClicked,
+                modifier = Modifier
+                    .padding(top = 30.dp)
+                    .fillMaxWidth()
+            )
+        }
     }
 }
 
@@ -67,8 +72,8 @@ private fun SearchAndFilterFields(
     currentSelectedDepartmentFilter: String? = null,
     onSelectDepartmentFilter: (String?) -> Unit = {},
     semesters: List<String> = listOf(),
-    currentSelectedSemesterFilter: String? = null,
-    onSelectSemesterFilter: (String?) -> Unit = {}
+    currentSelectedSemesterFilter: String,
+    onSelectSemesterFilter: (String) -> Unit = {}
 ) {
     Column {
         GeneralTextField(
@@ -114,11 +119,9 @@ private fun SearchAndFilterFields(
                     .padding(end = 12.dp, start = 16.dp)
             )
             GeneralDropDownMenu(
-                menuItems = listOf(ResourcesUtils.Strings.GENERAL_TEXT_ALL) + semesters,
-                selectedItem = currentSelectedSemesterFilter ?: ResourcesUtils.Strings.GENERAL_TEXT_ALL,
-                onSelectItem = {newFilter -> onSelectSemesterFilter(
-                    if (newFilter == ResourcesUtils.Strings.GENERAL_TEXT_ALL) null else newFilter)
-                },
+                menuItems = semesters,
+                selectedItem = currentSelectedSemesterFilter,
+                onSelectItem = { newFilter -> onSelectSemesterFilter(newFilter) },
                 dropDownMenuMinWidth = 100.dp,
                 dropDownMenuMinHeight = 200.dp,
                 modifier = Modifier

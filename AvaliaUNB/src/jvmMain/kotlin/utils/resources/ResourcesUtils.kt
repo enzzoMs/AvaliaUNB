@@ -137,6 +137,10 @@ object ResourcesUtils {
             "19:00 - 19:50", "19:50 - 20:40", "20:50 - 21:40", "21:40 - 22:30"
         )
 
+        val RATING_FILTERS = listOf(
+            ">= 5", ">= 4", ">= 3", ">= 2", ">= 1"
+        )
+
         const val GENERAL_TEXT_OR = "Ou"
         const val GENERAL_TEXT_ALL = "TODOS"
     }
