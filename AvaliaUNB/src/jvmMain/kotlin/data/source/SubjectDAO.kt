@@ -9,8 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SubjectDAO @Inject constructor(
-    private val database: DatabaseManager,
-    private val classDAO: ClassDAO
+    private val database: DatabaseManager
 ) {
     fun getAllSubjects(): List<SubjectModel> {
         val allSubjectsQueryResult = database.executeQuery(

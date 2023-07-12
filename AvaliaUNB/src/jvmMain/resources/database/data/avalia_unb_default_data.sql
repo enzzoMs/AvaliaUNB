@@ -21,8 +21,8 @@ VALUES ('111111111', 'Usuário comum 01', 'aluno@exemplo.com', '1234');
 INSERT INTO usuario(matricula, nome, curso, email, senha)
 VALUES ('222222222', 'Usuário comum 02', 'Ciência da Computação', 'aluno@unb.com.br', '1234');
 
-INSERT INTO usuario(matricula, nome, email, senha)
-VALUES ('333333333', 'Administrador 01', 'administrador@unb.com.br', '1234');
+INSERT INTO usuario(matricula, nome, email, senha, eh_administrador)
+VALUES ('333333333', 'Administrador 01', 'administrador@unb.com.br', '1234', '1');
 
 --------------------------------
 -- DEPARTAMENTOS

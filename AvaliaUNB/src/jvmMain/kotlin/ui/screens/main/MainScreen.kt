@@ -4,12 +4,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.outlined.Badge
 import androidx.compose.material.icons.outlined.Logout
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -48,6 +50,7 @@ const val NAV_NO_SELECTED_ITEM_INDEX = -1
 const val NAV_ITEM_SUBJECTS_INDEX = 0
 const val NAV_ITEM_CLASSES_INDEX = 1
 const val NAV_ITEM_TEACHERS_INDEX = 2
+private const val USER_NAME_MAX_LENGTH = 25
 
 @Composable
 fun MainScreen(
@@ -105,6 +108,7 @@ fun MainScreen(
                 },
                 userName = mainScreenUiState.userModel.name,
                 userProfilePicture = mainScreenUiState.userModel.profilePicture,
+                isUserAdministrator = mainScreenUiState.userModel.isAdministrator,
                 onEditProfileClicked = {
                     mainScreenViewModel.updateCurrentScreen(Screen.PROFILE)
                     mainScreenViewModel.setIsEditingProfile(true)
@@ -145,7 +149,9 @@ fun MainScreen(
                                 classModel = mainScreenUiState.selectedClass!!,
                                 classRepository = DaggerComponentHolder.appComponent.getClassRepository(),
                                 reviewRepository = DaggerComponentHolder.appComponent.getReviewRepository(),
-                                user = mainScreenUiState.userModel
+                                user = mainScreenUiState.userModel,
+                                userRepository = DaggerComponentHolder.appComponent.getUserRepository(),
+                                reportRepository = DaggerComponentHolder.appComponent.getReportRepository()
                             ),
                             onBackClicked = {
                                 mainScreenViewModel.updateCurrentScreen(
@@ -175,7 +181,9 @@ fun MainScreen(
                                 teacherModel = mainScreenUiState.selectedTeacher!!,
                                 teacherRepository = DaggerComponentHolder.appComponent.getTeacherRepository(),
                                 reviewRepository = DaggerComponentHolder.appComponent.getReviewRepository(),
-                                user = mainScreenUiState.userModel
+                                user = mainScreenUiState.userModel,
+                                userRepository = DaggerComponentHolder.appComponent.getUserRepository(),
+                                reportRepository = DaggerComponentHolder.appComponent.getReportRepository()
                             ),
                             onBackClicked = {
                                 mainScreenViewModel.updateCurrentScreen(
@@ -237,8 +245,9 @@ fun MainScreen(
 private fun MainScreenContent(
     pageTitle: String = "",
     pageIcon: ImageVector? = null,
-    userName: String? = null,
-    userProfilePicture: ImageBitmap? = null,
+    userName: String,
+    userProfilePicture: ImageBitmap,
+    isUserAdministrator: Boolean = false,
     onEditProfileClicked: () -> Unit,
     currentScreen: Screen,
     getScreenContent: (@Composable (Screen) -> Unit)
@@ -278,68 +287,120 @@ private fun MainScreenContent(
                     .weight(1f)
             )
 
-            if (userProfilePicture != null) {
-                Image(
-                    bitmap = userProfilePicture,
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .padding(vertical = 6.dp)
-                )
-            }
+            if (isUserAdministrator) AdministratorBadge()
+            
+            Image(
+                bitmap = userProfilePicture,
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .size(40.dp)
+                    .padding(top = 6.dp, bottom = 6.dp, start = 16.dp)
+            )
 
-            if (userName != null) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(horizontal = 4.dp)
-                        .clip(RoundedCornerShape(5.dp))
-                        .clickable { userNameDropdownExpanded.value = !userNameDropdownExpanded.value }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(horizontal = 6.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .clickable { userNameDropdownExpanded.value = !userNameDropdownExpanded.value }
+            ) {
+                UserName(userName)
+
+                Icon(
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    contentDescription = null,
+                    tint = DimGray
+                )
+                DropdownMenu(
+                    expanded = userNameDropdownExpanded.value,
+                    onDismissRequest = { userNameDropdownExpanded.value = false }
                 ) {
-                    Text(
-                        text = userName,
-                        style = MaterialTheme.typography.h6,
-                        color = DimGray,
-                        fontSize = 24.sp,
-                        modifier = Modifier
-                            .padding(
-                                end = 4.dp,
-                                start = 10.dp
-                            )
-                    )
-                    Icon(
-                        imageVector = Icons.Filled.ArrowDropDown,
-                        contentDescription = null,
-                        tint = DimGray,
-                        modifier = Modifier
-                            .padding(
-                                end = 6.dp
-                            )
-                    )
-                    DropdownMenu(
-                        expanded = userNameDropdownExpanded.value,
-                        onDismissRequest = { userNameDropdownExpanded.value = false }
+                    DropdownMenuItem(
+                        onClick = {
+                            onEditProfileClicked()
+                            userNameDropdownExpanded.value = false
+                        },
                     ) {
-                        DropdownMenuItem(
-                            onClick = {
-                                onEditProfileClicked()
-                                userNameDropdownExpanded.value = false
-                            },
-                        ) {
-                            Text(ResourcesUtils.Strings.EDIT_PROFILE)
-                        }
+                        Text(ResourcesUtils.Strings.EDIT_PROFILE)
                     }
                 }
-
-
             }
+
+            if (isUserAdministrator) AdministratorNotifications()
 
         }
 
         getScreenContent(currentScreen)
     }
 }
+
+@Composable
+private fun AdministratorNotifications() {
+    BadgedBox(
+        badge = {
+            Badge {
+                Text("8")
+            }
+        },
+        modifier = Modifier
+            .padding(end = 26.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Notifications,
+            contentDescription = null,
+            tint = DimGray,
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable {}
+        )
+    }
+
+}
+
+@Composable
+private fun AdministratorBadge() {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(percent = 50))
+            .background(UnbGreen)
+            .padding(vertical = 4.dp, horizontal = 12.dp)
+    ) {
+        Text(
+            text = ResourcesUtils.Strings.ADMINISTRATOR,
+            style = MaterialTheme.typography.subtitle1,
+            color = White
+        )
+    }
+}
+
+@Composable
+private fun UserName(
+    userName: String
+) {
+    val nameSplit = userName.split(" ")
+
+    var name = ""
+
+    for (part in nameSplit) {
+        name += if ("$name$part".length <= USER_NAME_MAX_LENGTH) "$part " else ""
+    }
+
+    if (name.isEmpty()) {
+        name = nameSplit[0].substring(0, USER_NAME_MAX_LENGTH) + "..."
+    }
+
+    Text(
+        text = name,
+        style = MaterialTheme.typography.h6,
+        color = DimGray,
+        fontSize = 24.sp,
+        modifier = Modifier
+            .padding(start = 10.dp)
+    )
+}
+
+
 
 @Composable
 private fun SideNavigationPanel(

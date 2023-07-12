@@ -36,7 +36,6 @@ object ResourcesUtils {
         const val LOGIN_TITLE = "Bem-vindo ao AvaliaUNB!"
         const val LOGIN_SUBTITLE = "Melhore sua experiência acadêmica com avaliações e opniões reais de outros estudantes!"
         const val LOGIN_FORM_TITLE = "LOGIN"
-        const val LOGIN_WITHOUT_ACCOUNT_BUTTON = "ENTRAR SEM CONTA"
         const val LOGIN_NO_ACCOUNT_QUESTION = "Não possui uma conta?"
         const val LOGIN_NO_ACCOUNT_REGISTER = "Registre-se!"
         const val LOGIN_BUTTON = "LOGIN"
@@ -141,7 +140,13 @@ object ResourcesUtils {
             ">= 5", ">= 4", ">= 3", ">= 2", ">= 1"
         )
 
-        const val GENERAL_TEXT_OR = "Ou"
+        const val ADMINISTRATOR = "Administrador"
+
+        const val REPORT_REVIEW_FIELD_PREFIX = "Denunciar avaliação: "
+        const val USER_MADE_REPORT_FIELD_PREFIX = "Você fez uma denúncia: "
+        const val REPORT_REVIEW_FIELD_HINT = "Descreva o motivo da denúncia"
+        const val REPORT_ERROR_EMPTY_DESCRIPTION = "* Descrição obrigatória"
+
         const val GENERAL_TEXT_ALL = "TODOS"
     }
 }

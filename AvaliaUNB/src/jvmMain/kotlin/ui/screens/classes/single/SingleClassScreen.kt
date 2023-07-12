@@ -22,14 +22,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.ClassReviewModel
+import data.models.ReportModel
 import data.models.ReviewModel
 import data.models.TeacherModel
 import theme.*
 import ui.components.buttons.SecondaryButton
 import ui.components.cards.CardInformation
 import ui.components.cards.ClassCard
-import ui.components.review.ReviewForm
 import ui.components.review.RatingInformation
+import ui.components.review.ReviewForm
 import ui.components.review.ReviewList
 import ui.components.schedule.ClassWeeklySchedule
 import ui.screens.classes.single.viewmodel.SingleClassViewModel
@@ -90,12 +91,28 @@ fun SingleClassScreen(
                 decideShowEditRemoveButtons = { reviewModel ->
                     singleClassViewModel.reviewBelongsToUser(reviewModel)
                 },
+                decideShowReportButton = { reviewModel ->
+                    !singleClassViewModel.reviewBelongsToUser(reviewModel) &&
+                            singleClassViewModel.userIsNotAdministrator()
+                },
+                getUserReport = { reviewModel ->
+                    singleClassViewModel.getUserReport(reviewModel)
+                },
                 onRemoveClicked = { reviewModel ->
                     singleClassViewModel.deleteReview(reviewModel as ClassReviewModel)
                 },
                 onEditClicked = { oldReviewModel, newRating, newComment ->
                     singleClassViewModel.editReview(oldReviewModel, newRating, newComment)
-                }
+                },
+                onReportClicked = { reviewId, description ->
+                    singleClassViewModel.submitReviewReport(reviewId, description)
+                },
+                onEditReportClicked = { reviewId, newDescription ->
+                    singleClassViewModel.editReport(reviewId, newDescription)
+                },
+                onRemoveReportClicked = { reviewId ->
+                    singleClassViewModel.deleteReport(reviewId)
+                },
             )
 
             Spacer(
@@ -363,8 +380,13 @@ private fun Reviews(
     error: Boolean,
     onEditClicked: (ReviewModel, Int, String) -> Unit = { _: ReviewModel, _: Int, _: String -> },
     onRemoveClicked: (ReviewModel) -> Unit = {},
+    onReportClicked: (Int, String) -> Unit = {_: Int, _: String -> },
+    onEditReportClicked: (Int, String) -> Unit = {_: Int, _: String -> },
+    onRemoveReportClicked: (Int) -> Unit = {_: Int ->},
     onPublishClicked: (String, Int) -> Unit,
     decideShowEditRemoveButtons: (ReviewModel) -> Boolean,
+    decideShowReportButton: (ReviewModel) -> Boolean,
+    getUserReport: (ReviewModel) -> ReportModel?,
     classReviews: List<ClassReviewModel>,
     isLoading: Boolean
 ) {
@@ -383,8 +405,13 @@ private fun Reviews(
             reviews = classReviews,
             isLoading = isLoading,
             decideShowEditRemoveButtons = decideShowEditRemoveButtons,
+            decideShowReportButton = decideShowReportButton,
             onRemoveClicked = onRemoveClicked,
             onEditClicked = onEditClicked,
+            onReportClicked = onReportClicked,
+            onEditReportClicked = onEditReportClicked,
+            onRemoveReportClicked = onRemoveReportClicked,
+            getUserReport = getUserReport,
             modifier = Modifier
                 .padding(top = 16.dp)
         )

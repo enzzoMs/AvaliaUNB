@@ -1,8 +1,10 @@
 package ui.screens.teachers.single.viewmodel
 
 import data.models.*
+import data.repositories.ReportRepository
 import data.repositories.ReviewRepository
 import data.repositories.TeacherRepository
+import data.repositories.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +17,9 @@ class SingleTeacherViewModel(
     private val user: UserModel,
     private val teacherModel: TeacherModel,
     private val teacherRepository: TeacherRepository,
-    private val reviewRepository: ReviewRepository
+    private val reviewRepository: ReviewRepository,
+    private val userRepository: UserRepository,
+    private val reportRepository: ReportRepository
 ) {
     private val _singleTeacherUiState = MutableStateFlow(
         SingleTeacherUiState(
@@ -46,6 +50,10 @@ class SingleTeacherViewModel(
 
     fun reviewBelongsToUser(review: ReviewModel): Boolean = review.userRegistrationNumber == user.registrationNumber
 
+    fun getUserReport(review: ReviewModel): ReportModel? = reportRepository.getUserReport(review.id, user.registrationNumber)
+
+    fun userIsNotAdministrator(): Boolean = !userRepository.isUserAdministrator(user.registrationNumber)
+
     fun updateReviewComment(newComment: String) {
         _singleTeacherUiState.update { singleTeacherUiState ->
             singleTeacherUiState.copy(
@@ -54,6 +62,8 @@ class SingleTeacherViewModel(
             )
         }
     }
+
+    fun deleteReport(reviewId: Int) = reportRepository.deleteReport(reviewId, user.registrationNumber)
 
     fun publishReview(comment: String, rating: Int) {
         val reviewModel = TeacherReviewModel(
@@ -92,6 +102,20 @@ class SingleTeacherViewModel(
                 }
             }
         }
+    }
+
+    fun submitReviewReport(reviewId: Int, reviewDescription: String) {
+        reportRepository.insertReport(
+            ReportModel(
+                reviewId = reviewId,
+                userRegistrationNumber = user.registrationNumber,
+                description = reviewDescription
+            )
+        )
+    }
+
+    fun editReport(reviewId: Int, newDescription: String) {
+        reportRepository.updateReport(reviewId, user.registrationNumber, newDescription)
     }
 
     fun editReview(oldReviewModel: ReviewModel, newRating: Int, newComment: String) {

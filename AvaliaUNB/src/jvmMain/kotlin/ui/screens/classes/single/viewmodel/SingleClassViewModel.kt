@@ -1,12 +1,11 @@
 package ui.screens.classes.single.viewmodel
 
-import data.models.ClassModel
-import data.models.ClassReviewModel
-import data.models.ReviewModel
-import data.models.UserModel
+import data.models.*
 import data.repositories.ClassRepository
+import data.repositories.ReportRepository
 import data.repositories.ReviewRepository
 import data.repositories.ReviewRepository.ReviewInsertionResult
+import data.repositories.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +18,9 @@ class SingleClassViewModel(
     private val classModel: ClassModel,
     private val user: UserModel,
     private val classRepository: ClassRepository,
-    private val reviewRepository: ReviewRepository
+    private val reviewRepository: ReviewRepository,
+    private val userRepository: UserRepository,
+    private val reportRepository: ReportRepository
 ) {
     private val _singleClassUiState = MutableStateFlow(
         SingleClassUiState(
@@ -51,6 +52,10 @@ class SingleClassViewModel(
 
     fun reviewBelongsToUser(review: ReviewModel): Boolean = review.userRegistrationNumber == user.registrationNumber
 
+    fun getUserReport(review: ReviewModel): ReportModel? = reportRepository.getUserReport(review.id, user.registrationNumber)
+
+    fun userIsNotAdministrator(): Boolean = !userRepository.isUserAdministrator(user.registrationNumber)
+
     fun updateReviewComment(newComment: String) {
         _singleClassUiState.update { singleClassUiState ->
             singleClassUiState.copy(
@@ -59,6 +64,8 @@ class SingleClassViewModel(
             )
         }
     }
+
+    fun deleteReport(reviewId: Int) = reportRepository.deleteReport(reviewId, user.registrationNumber)
 
     fun publishReview(comment: String, rating: Int) {
         val reviewModel = ClassReviewModel(
@@ -93,6 +100,20 @@ class SingleClassViewModel(
                 }
             }
         }
+    }
+
+    fun submitReviewReport(reviewId: Int, reviewDescription: String) {
+        reportRepository.insertReport(
+            ReportModel(
+                reviewId = reviewId,
+                userRegistrationNumber = user.registrationNumber,
+                description = reviewDescription
+            )
+        )
+    }
+
+    fun editReport(reviewId: Int, newDescription: String) {
+        reportRepository.updateReport(reviewId, user.registrationNumber, newDescription)
     }
 
     fun editReview(oldReviewModel: ReviewModel, newRating: Int, newComment: String) {

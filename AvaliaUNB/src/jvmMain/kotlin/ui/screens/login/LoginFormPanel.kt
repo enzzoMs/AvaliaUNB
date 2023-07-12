@@ -194,32 +194,6 @@ private fun LoginFormFields(
             .fillMaxWidth()
             .padding(top = 36.dp)
     )
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Divider(
-            modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 22.dp)
-                .weight(1f)
-        )
-        Text(
-            text = ResourcesUtils.Strings.GENERAL_TEXT_OR,
-            style = MaterialTheme.typography.subtitle2
-        )
-        Divider(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .weight(1f)
-        )
-    }
-
-    SecondaryButton(
-        label = ResourcesUtils.Strings.LOGIN_WITHOUT_ACCOUNT_BUTTON,
-        onClick = {},
-        modifier = Modifier
-            .fillMaxWidth()
-    )
 }
 
 @Composable

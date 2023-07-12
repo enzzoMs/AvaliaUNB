@@ -253,7 +253,7 @@ private fun UserProfilePicture(
             Image(
                 bitmap = userProfilePicture,
                 contentDescription = null,
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .size(250.dp)
             )

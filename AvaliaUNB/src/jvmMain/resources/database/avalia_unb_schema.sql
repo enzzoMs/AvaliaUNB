@@ -122,8 +122,32 @@ CREATE TABLE IF NOT EXISTS avaliacao_professor(
 );
 
 --------------------------------
+-- DENUNCIAS
+--------------------------------
+
+CREATE TABLE IF NOT EXISTS denuncia(
+	id_avaliacao INTEGER NOT NULL,
+	matricula_aluno TEXT NOT NULL CHECK (length(matricula_aluno) = 9),
+	descricao TEXT NOT NULL,
+	PRIMARY KEY (id_avaliacao, matricula_aluno),
+	FOREIGN KEY (id_avaliacao) REFERENCES avaliacao(id),
+	FOREIGN KEY (matricula_aluno) REFERENCES usuario(matricula)
+);
+
+--------------------------------
 -- TRIGGERS
 --------------------------------
+
+-- Trigger para remover avalicoes de turmas, avaliacoes de professores e denuncias quando uma avaliacao
+-- for removida
+
+CREATE TRIGGER IF NOT EXISTS analise_deletada
+AFTER DELETE ON avaliacao
+BEGIN
+    DELETE FROM avaliacao_turma WHERE id_avaliacao = OLD.id;
+    DELETE FROM avaliacao_professor WHERE id_avaliacao = OLD.id;
+    DELETE FROM denuncia WHERE id_avaliacao = OLD.id;
+END;
 
 -- Esses triggers atualizam a pontuacao da turma e professor toda vez que uma
 -- avalicao for inserida/removida/modificada

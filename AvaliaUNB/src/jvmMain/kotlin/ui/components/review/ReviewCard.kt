@@ -10,6 +10,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Report
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import data.models.ReportModel
 import data.models.ReviewModel
 import theme.*
 import ui.components.forms.GeneralDropDownMenu
@@ -26,25 +28,38 @@ import ui.components.forms.MultilineTextField
 import utils.resources.ResourcesUtils
 
 private const val MAX_SCORE_STARS = 5
-private const val REVIEW_MAX_NUMBER_OF_CHAR = 850
-private val FORM_HEIGHT = 150.dp
+private const val REVIEW_MAX_NUMBER_OF_CHARS = 850
+private const val REPORT_MAX_NUMBER_OF_CHARS = 200
+private const val USER_NAME_MAX_LENGTH = 25
+private val REVIEW_FORM_HEIGHT = 150.dp
+private val REPORT_FORM_HEIGHT = 100.dp
 
 @Composable
 fun ReviewCard(
     review: ReviewModel,
     showEditAndRemove: Boolean = false,
-    onEditClicked: (ReviewModel, Int, String) -> Unit = { _: ReviewModel, _: Int, _: String -> },
-    onRemoveClicked: (ReviewModel) -> Unit = {},
+    showReport: Boolean = false,
+    onEditClicked: (ReviewModel, Int, String) -> Unit,
+    onRemoveClicked: (ReviewModel) -> Unit,
+    onReportClicked: (Int, String) -> Unit,
+    onEditReportClicked: (Int, String) -> Unit,
+    onRemoveReportClicked: (Int) -> Unit = {_: Int ->},
+    userReport: ReportModel? = null,
     userNameTextStyle: TextStyle = MaterialTheme.typography.subtitle2,
     backgroundColor: Color = White,
     modifier: Modifier = Modifier
 ) {
-    var isEditingCard by remember { mutableStateOf(false) }
-    var isDeletingCard by remember { mutableStateOf(false) }
+    var isEditingReview by remember { mutableStateOf(false) }
+    var isDeletingReview by remember { mutableStateOf(false) }
+    var isReportingReview by remember { mutableStateOf(false) }
+    var isEditingReport by remember { mutableStateOf(false) }
+    var userMadeReport by remember { mutableStateOf(userReport != null) }
+    var userEditComment by remember { mutableStateOf(review.comment) }
+    var userReportEditComment by remember { mutableStateOf(userReport?.description ?: "") }
+    var reportComment by remember { mutableStateOf(userReportEditComment) }
     var selectedStarRating by remember { mutableStateOf(ResourcesUtils.Strings.STAR_RATINGS.find {
             rating -> rating.length == review.rating }!!)
     }
-    var userEditComment by remember { mutableStateOf(review.comment) }
 
     Box(
         modifier = Modifier
@@ -69,27 +84,29 @@ fun ReviewCard(
                         .weight(1f)
                 )
 
-                if (showEditAndRemove && !isEditingCard && !isDeletingCard) {
+                if (showReport && !isReportingReview && !userMadeReport) {
+                    ReportButton { isReportingReview = true }
+                }
+
+                if (showEditAndRemove && !isEditingReview && !isDeletingReview) {
                     EditRemoveButtons(
-                        onEditClicked = {
-                            isEditingCard = true
-                        },
-                        onRemoveClicked = { isDeletingCard = true }
+                        onEditClicked = { isEditingReview = true },
+                        onRemoveClicked = { isDeletingReview = true }
                     )
                 }
-                if (isEditingCard || isDeletingCard) {
+                if (isEditingReview || isDeletingReview) {
                     ConfirmCancelButtons(
                         onConfirmClicked = {
-                            if (isDeletingCard) {
+                            if (isDeletingReview) {
                                 onRemoveClicked(review)
                             } else {
-                                isEditingCard = false
+                                isEditingReview = false
                                 onEditClicked(review, selectedStarRating.length, userEditComment)
                             }
                         },
                         onCancelClicked = {
-                            isEditingCard = false
-                            isDeletingCard = false
+                            isEditingReview = false
+                            isDeletingReview = false
                             selectedStarRating = ResourcesUtils.Strings.STAR_RATINGS.find {
                                     rating -> rating.length == review.rating
                             }!!
@@ -99,7 +116,7 @@ fun ReviewCard(
                 }
             }
 
-            if (isEditingCard) {
+            if (isEditingReview) {
                 ScoreDropdown(
                     selectedStarRating = selectedStarRating,
                     onSelectRating = { selectedStarRating = it }
@@ -111,10 +128,167 @@ fun ReviewCard(
             } else {
                 UserReviewScore(review.rating)
                 UserReviewComment(review.comment)
+
+                if (isReportingReview || isEditingReport) {
+                    ReportTextField(
+                        reportText = reportComment,
+                        isEditingReport = isEditingReport,
+                        onReportTextChanged = { reportComment = it },
+                        onCancelClicked = {
+                            reportComment = if (isReportingReview) "" else userReportEditComment
+                            isEditingReport = false
+                            isReportingReview = false
+                        },
+                        onConfirmClicked = {
+                            if (isReportingReview) {
+                                onReportClicked(review.id, reportComment)
+                            } else {
+                                onEditReportClicked(review.id, reportComment)
+                            }
+
+                            userMadeReport = true
+                            isReportingReview = false
+                            isEditingReport = false
+                            userReportEditComment = reportComment
+                        }
+                    )
+                } else if (userMadeReport) {
+                    ReportCard(
+                        description = userReportEditComment,
+                        onEditClicked = { isEditingReport = true },
+                        onDeleteClicked = {
+                            reportComment = ""
+                            userMadeReport = false
+                            onRemoveReportClicked(review.id)
+                        }
+                    )
+                }
             }
         }
     }
 }
+
+@Composable
+private fun ReportCard(
+    description: String,
+    onEditClicked: () -> Unit,
+    onDeleteClicked: () -> Unit
+) {
+    var isRemovingReport by remember { mutableStateOf(false) }
+
+    Column (
+        modifier = Modifier
+            .padding(top = 30.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Report,
+                contentDescription = null,
+                tint = MaterialTheme.colors.error,
+                modifier = Modifier
+                    .padding(end = 6.dp)
+            )
+            Text(
+                text = ResourcesUtils.Strings.USER_MADE_REPORT_FIELD_PREFIX,
+                style = MaterialTheme.typography.subtitle1,
+                color = MaterialTheme.colors.error
+            )
+
+            Spacer(
+                modifier = Modifier
+                    .weight(1f)
+            )
+
+            if (isRemovingReport) {
+                ConfirmCancelButtons(
+                    onConfirmClicked = onDeleteClicked,
+                    onCancelClicked = { isRemovingReport = false }
+                )
+            } else {
+                EditRemoveButtons(
+                    onEditClicked = onEditClicked,
+                    onRemoveClicked = { isRemovingReport = true }
+                )
+            }
+        }
+
+        Text(
+            text = description,
+            style = MaterialTheme.typography.body1,
+            color = MaterialTheme.colors.error,
+            softWrap = true,
+            modifier = Modifier
+                .padding(top = 14.dp)
+        )
+    }
+}
+
+
+@Composable
+private fun ReportTextField(
+    reportText: String,
+    isEditingReport: Boolean,
+    onReportTextChanged: (String) -> Unit,
+    onConfirmClicked: () -> Unit,
+    onCancelClicked: () -> Unit
+) {
+    var isReportEmpty by remember { mutableStateOf(false) }
+
+    Column (
+        modifier = Modifier
+            .padding(top = 30.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Report,
+                contentDescription = null,
+                tint = MaterialTheme.colors.error,
+                modifier = Modifier
+                    .padding(end = 6.dp)
+            )
+            Text(
+                text = if (isEditingReport) {
+                    ResourcesUtils.Strings.USER_MADE_REPORT_FIELD_PREFIX
+                } else {
+                    ResourcesUtils.Strings.REPORT_REVIEW_FIELD_PREFIX
+                },
+                style = MaterialTheme.typography.subtitle1,
+                color = MaterialTheme.colors.error
+            )
+
+            Spacer(
+                modifier = Modifier
+                    .weight(1f)
+            )
+
+            ConfirmCancelButtons(
+                onConfirmClicked = {
+                    if (reportText.isEmpty()) isReportEmpty = true else onConfirmClicked()
+                },
+                onCancelClicked = onCancelClicked
+            )
+        }
+
+        MultilineTextField(
+            value = reportText,
+            onValueChange = {
+                isReportEmpty = false
+                onReportTextChanged(it)
+            },
+            error = isReportEmpty,
+            errorMessage = ResourcesUtils.Strings.REPORT_ERROR_EMPTY_DESCRIPTION,
+            maxNumberOfCharacters = REPORT_MAX_NUMBER_OF_CHARS,
+            showCharacterCount = false,
+            textFieldHeight = REPORT_FORM_HEIGHT,
+            hintText = ResourcesUtils.Strings.REPORT_REVIEW_FIELD_HINT
+        )
+    }
+}
+
 
 @Composable
 private fun CommentTextField(
@@ -124,8 +298,8 @@ private fun CommentTextField(
     MultilineTextField(
         value = value,
         onValueChange = onValueChanged,
-        maxNumberOfCharacters = REVIEW_MAX_NUMBER_OF_CHAR,
-        textFieldHeight = FORM_HEIGHT,
+        maxNumberOfCharacters = REVIEW_MAX_NUMBER_OF_CHARS,
+        textFieldHeight = REVIEW_FORM_HEIGHT,
         hintText = ResourcesUtils.Strings.REVIEW_FORM_HINT
     )
 }
@@ -222,23 +396,61 @@ private fun UserInformation(
         Image(
             bitmap = review.userProfilePicture,
             contentDescription = null,
-            contentScale = ContentScale.FillBounds,
+            contentScale = ContentScale.Fit,
             modifier = Modifier
                 .size(40.dp)
                 .padding(end = 10.dp)
         )
-        Text(
-            text = review.userName,
-            style = userNameTextStyle,
-            color = MaterialTheme.colors.primary,
-            modifier = Modifier
-                .padding(end = 10.dp)
+        UserName(
+            userName = review.userName,
+            userNameTextStyle = userNameTextStyle
         )
+
         Text(
             text = ResourcesUtils.Strings.PUBLISHED,
             style = userNameTextStyle
         )
     }
+}
+
+@Composable
+private fun UserName(
+    userName: String,
+    userNameTextStyle: TextStyle
+) {
+    val nameSplit = userName.split(" ")
+
+    var name = ""
+
+    for (part in nameSplit) {
+        name += if ("$name$part".length <= USER_NAME_MAX_LENGTH) "$part " else ""
+    }
+
+    if (name.isEmpty()) {
+        name = nameSplit[0].substring(0, USER_NAME_MAX_LENGTH) + "..."
+    }
+
+    Text(
+        text = name,
+        style = userNameTextStyle,
+        color = MaterialTheme.colors.primary,
+        modifier = Modifier
+            .padding(end = 10.dp)
+    )
+}
+
+@Composable
+private fun ReportButton(
+    onReportClicked: () -> Unit
+) {
+    Icon(
+        imageVector = Icons.Filled.Report,
+        contentDescription = null,
+        tint = MaterialTheme.colors.error,
+        modifier = Modifier
+            .clip(CircleShape)
+            .clickable { onReportClicked() }
+    )
 }
 
 @Composable
@@ -249,7 +461,7 @@ private fun EditRemoveButtons(
     Icon(
         imageVector = Icons.Filled.Edit,
         contentDescription = null,
-        tint = Gray,
+        tint = DimGray,
         modifier = Modifier
             .clip(CircleShape)
             .clickable { onEditClicked() }
@@ -257,7 +469,7 @@ private fun EditRemoveButtons(
     Icon(
         imageVector = Icons.Filled.Delete,
         contentDescription = null,
-        tint = Gray,
+        tint = DimGray,
         modifier = Modifier
             .padding(start = 6.dp)
             .clip(CircleShape)

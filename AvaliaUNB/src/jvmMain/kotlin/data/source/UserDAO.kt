@@ -64,9 +64,19 @@ class UserDAO @Inject constructor(
         )
     }
 
+    fun isUserAdministrator(registrationNumber: String): Boolean {
+        val queryResult = database.executeQuery(
+            "SELECT eh_administrador FROM usuario WHERE matricula = '$registrationNumber'"
+        )
+
+        queryResult.next()
+
+        return queryResult.getBoolean("eh_administrador")
+    }
+
     fun getUser(userRegistrationNumber: String): UserModel {
         val queryResult = database.executeQuery(
-            "SELECT * FROM usuario WHERE matricula = '${userRegistrationNumber}'"
+            "SELECT * FROM usuario WHERE matricula = '$userRegistrationNumber'"
         )
 
         queryResult.next()
@@ -85,7 +95,8 @@ class UserDAO @Inject constructor(
             queryResult.getString("curso"),
             queryResult.getString("email"),
             queryResult.getString("senha"),
-            profilePic
+            profilePic,
+            queryResult.getBoolean("eh_administrador"),
         )
     }
 

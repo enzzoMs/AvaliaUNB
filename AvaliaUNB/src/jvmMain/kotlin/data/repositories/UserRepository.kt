@@ -19,6 +19,8 @@ class UserRepository @Inject constructor(
         }
     }
 
+    fun isUserAdministrator(registrationNumber: String) = userDAO.isUserAdministrator(registrationNumber)
+
     fun getUser(userRegistrationNumber: String): UserModel = userDAO.getUser(userRegistrationNumber)
 
     fun save(user: UserModel): UserModificationResult {
