@@ -9,6 +9,7 @@ object ResourcesUtils {
     object ImagePaths {
         const val CHECK_MARK_SPARKLES = "images/check_mark_sparkles.svg"
         const val APP_LOGO = "images/logo_avalia_unb.svg"
+        const val APP_ICON = "images/app_icon.svg"
         const val PERSON = "src/jvmMain/resources/images/person.png"
         const val RATING_PEOPLE = "images/rating_people.svg"
         const val RATING_SUBJECTS = "images/rating_subjects.svg"
