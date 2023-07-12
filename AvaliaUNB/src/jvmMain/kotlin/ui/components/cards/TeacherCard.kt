@@ -100,47 +100,50 @@ fun TeacherCard(
                         .padding(vertical = 6.dp)
                 )
             }
-        }
-
-        if (showScore) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            Column(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(14.dp)
+                    .padding(end = 6.dp)
             ) {
-                Icon(
-                    painter = painterResource(ResourcesUtils.ImagePaths.GRADE),
-                    contentDescription = null,
-                    tint = if (teacherModel.score == null) LightGray else AmericanOrange,
-                    modifier = Modifier
-                        .size(60.dp)
-                        .padding(end = 12.dp, bottom = 5.dp)
-                )
-                if (teacherModel.score == null) {
-                    Text(
-                        text = ResourcesUtils.Strings.NO_REVIEW_MULTILINE,
-                        style = TextStyle(
-                            fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 18.sp,
-                            color = Gray
-                        )
-                    )
-                } else {
-                    Column {
-                        Text(
-                            text = String.format("%.1f", teacherModel.score),
-                            style = MaterialTheme.typography.h4,
+                if (showScore) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(14.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(ResourcesUtils.ImagePaths.GRADE),
+                            contentDescription = null,
+                            tint = if (teacherModel.score == null) LightGray else AmericanOrange,
                             modifier = Modifier
-                                .padding(bottom = 6.dp)
+                                .size(60.dp)
+                                .padding(end = 12.dp, bottom = 5.dp)
                         )
-                        Text(
-                            text = "${teacherModel.numOfReviews} análises",
-                            style = MaterialTheme.typography.subtitle2,
-                            modifier = Modifier
-                                .padding(bottom = 12.dp)
-                        )
+                        if (teacherModel.score == null) {
+                            Text(
+                                text = ResourcesUtils.Strings.NO_REVIEW_MULTILINE,
+                                style = TextStyle(
+                                    fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 18.sp,
+                                    color = Gray
+                                )
+                            )
+                        } else {
+                            Column {
+                                Text(
+                                    text = String.format("%.1f", teacherModel.score),
+                                    style = MaterialTheme.typography.h4,
+                                    modifier = Modifier
+                                        .padding(bottom = 6.dp)
+                                )
+                                Text(
+                                    text = "${teacherModel.numOfReviews} análises",
+                                    style = MaterialTheme.typography.subtitle2,
+                                    modifier = Modifier
+                                        .padding(bottom = 12.dp)
+                                )
+                            }
+                        }
                     }
                 }
             }

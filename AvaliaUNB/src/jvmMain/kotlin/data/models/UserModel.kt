@@ -12,5 +12,6 @@ data class UserModel(
     val course: String?,
     val email: String,
     val password: String,
-    val profilePicture: ImageBitmap = ImageIO.read(File(ResourcesUtils.ImagePaths.PERSON)).toComposeImageBitmap()
+    val profilePicture: ImageBitmap = ImageIO.read(File(ResourcesUtils.ImagePaths.PERSON)).toComposeImageBitmap(),
+    val isAdministrator: Boolean = false
 )

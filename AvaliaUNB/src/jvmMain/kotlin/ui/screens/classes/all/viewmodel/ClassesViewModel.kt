@@ -48,7 +48,7 @@ class ClassesViewModel @Inject constructor(
 
             _classesUiState.update { classesUiState ->
                 classesUiState.copy(
-                    classes = allClasses,
+                    classes = filterClasses(null, null, classesUiState.semesters.first()),
                     departmentNames = allClasses.map { it.departmentName }.distinct(),
                     isClassesLoading = false
                 )

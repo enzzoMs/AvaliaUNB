@@ -3,7 +3,10 @@ package data.source
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import data.models.UserModel
+import utils.Utils
+import utils.resources.ResourcesUtils
 import java.io.ByteArrayOutputStream
+import java.io.File
 import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,11 +17,6 @@ class UserDAO @Inject constructor(
 ) {
 
     fun insertUser(user: UserModel) {
-        val defaultProfilePic = user.profilePicture.toAwtImage()
-        val stream = ByteArrayOutputStream()
-        ImageIO.write(defaultProfilePic, "png", stream)
-        val defaultProfilePicBytes = stream.toByteArray()
-
         val userInsertStatement = "INSERT INTO usuario (matricula, nome, curso, email, senha, foto_de_perfil) " +
                 "VALUES (?, ?, ?, ?, ?, ?)"
 
@@ -29,7 +27,7 @@ class UserDAO @Inject constructor(
             preparedStatement.setString(3, course)
             preparedStatement.setString(4, email)
             preparedStatement.setString(5, password)
-            preparedStatement.setBytes(6, defaultProfilePicBytes)
+            preparedStatement.setBytes(6, Utils.getDefaultProfilePictureBytes())
         }
 
         preparedStatement.execute()
@@ -73,7 +71,11 @@ class UserDAO @Inject constructor(
 
         queryResult.next()
 
-        val profilePicBytes = queryResult.getBytes("foto_de_perfil")
+        val profilePicBytes = if (queryResult.getObject("foto_de_perfil") == null) {
+            Utils.getDefaultProfilePictureBytes()
+        } else {
+            queryResult.getBytes("foto_de_perfil")
+        }
         val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
         val profilePic = bufferedProfilePicImage.toComposeImageBitmap()
 

@@ -48,7 +48,7 @@ class TeachersViewModel @Inject constructor(
 
             _teachersUiState.update { teacherUiState ->
                 teacherUiState.copy(
-                    teachers = allTeachers,
+                    teachers = filterTeachers(null, null, teacherUiState.semesters.first()),
                     departmentNames = allTeachers.map { it.departmentName }.distinct(),
                     isTeachersLoading = false
                 )

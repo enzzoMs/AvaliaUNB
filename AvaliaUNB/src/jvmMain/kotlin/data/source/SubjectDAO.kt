@@ -63,7 +63,10 @@ class SubjectDAO @Inject constructor(
     fun getSubjectClasses(subjectId: Int): List<ClassModel> {
         val subjectClassesQuery = database.executeQuery(
             "SELECT turma.*, semestre.*, disciplina.nome AS disc_nome, disciplina.codigo AS disc_cod, " +
-            "departamento.cor AS dept_cor, departamento.nome AS dept_nome " +
+            "departamento.cor AS dept_cor, departamento.nome AS dept_nome, " +
+            "(SELECT COUNT(id_avaliacao) " +
+            "FROM avaliacao_turma " +
+            "WHERE id_turma = turma.id) AS num_avaliacoes " +
             "FROM turma " +
             "INNER JOIN disciplina ON turma.id_disciplina = disciplina.id " +
             "INNER JOIN departamento " +
@@ -101,7 +104,7 @@ class SubjectDAO @Inject constructor(
                     ),
                     Color(subjectClassesQuery.getInt("dept_cor")),
                     subjectClassesQuery.getObject("pontuacao") as Double?,
-                    classDAO.getClassReviews(subjectClassesQuery.getInt("id")).size
+                    subjectClassesQuery.getInt("num_avaliacoes")
                 )
             )
         }

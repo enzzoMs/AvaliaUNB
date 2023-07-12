@@ -46,7 +46,7 @@ class SubjectsViewModel @Inject constructor(
             allSubjects = subjectRepository.getAllSubjects()
             _subjectUiState.update { subjectUiState ->
                 subjectUiState.copy(
-                    subjects = allSubjects,
+                    subjects = filterSubjects(null, null, subjectUiState.semesters.first()),
                     departmentNames = allSubjects.map { it.departmentName }.distinct(),
                     isSubjectsLoading = false
                 )

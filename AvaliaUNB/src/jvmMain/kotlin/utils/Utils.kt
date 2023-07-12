@@ -1,9 +1,15 @@
 package utils
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toAwtImage
+import androidx.compose.ui.graphics.toComposeImageBitmap
+import utils.resources.ResourcesUtils
 import utils.schedule.ClassDaySchedule
 import utils.schedule.ScheduleShifts
 import utils.schedule.ClassScheduleDays
+import java.io.ByteArrayOutputStream
+import java.io.File
+import javax.imageio.ImageIO
 import kotlin.random.Random
 
 private const val MAX_COLOR_COMPONENT_VALUE = 256
@@ -46,5 +52,12 @@ object Utils {
         }
 
         return classSchedule.toList()
+    }
+
+    fun getDefaultProfilePictureBytes(): ByteArray {
+        val defaultProfilePic = ImageIO.read(File(ResourcesUtils.ImagePaths.PERSON)).toComposeImageBitmap().toAwtImage()
+        val stream = ByteArrayOutputStream()
+        ImageIO.write(defaultProfilePic, "png", stream)
+        return stream.toByteArray()
     }
 }

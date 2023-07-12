@@ -31,8 +31,7 @@ fun CardInformation(
         Text(
             text = fieldText,
             style = fieldTextStyle,
-            fontWeight = FontWeight.Normal,
-            maxLines = 1
+            fontWeight = FontWeight.Normal
         )
     }
 }

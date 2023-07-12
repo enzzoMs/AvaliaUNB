@@ -6,6 +6,8 @@ import java.util.Properties
 object DatabaseUtils {
     fun getSchemaPath() = DatabasePaths.SCHEMA
 
+    fun getDefaultDataPath() = DatabasePaths.DEFAULT_DATA
+
     fun getDepartmentCsvPath(prePopulatedSemester: PrePopulatedSemester) = String.format(
             DatabasePaths.Departments.BASE_CSV_PATH,
             getSemesterFolder(prePopulatedSemester),
@@ -51,6 +53,7 @@ object DatabaseUtils {
 
 private object DatabasePaths {
     const val SCHEMA = "src/jvmMain/resources/database/avalia_unb_schema.sql"
+    const val DEFAULT_DATA = "src/jvmMain/resources/database/data/avalia_unb_default_data.sql"
     const val CONFIG_PROPERTIES = "src/jvmMain/resources/database/database_config.properties"
     private const val BASE_DATA_PATH = "src/jvmMain/resources/database/data"
 

@@ -3,6 +3,7 @@ package data.source
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import data.models.TeacherModel
 import data.models.TeacherReviewModel
+import utils.Utils
 import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,15 +15,27 @@ class TeacherDAO @Inject constructor(
 
     fun getAllTeachers(): List<TeacherModel> {
         val allTeachersQueryResult = database.executeQuery(
-            "SELECT professor.*, departamento.nome AS dept_nome " +
+            "SELECT professor.*, departamento.nome AS dept_nome, " +
+                    "(SELECT COUNT(id_avaliacao) " +
+                    "FROM avaliacao_professor " +
+                    "WHERE nome_professor = professor.nome " +
+                    "AND codigo_departamento = professor.codigo_departamento) AS num_avaliacoes " +
                     "FROM professor " +
-                    "INNER JOIN departamento ON professor.codigo_departamento = departamento.codigo;"
+                    "INNER JOIN departamento " +
+                    "ON professor.codigo_departamento = departamento.codigo " +
+                    "AND professor.ano_semestre = departamento.ano_semestre " +
+                    "AND professor.numero_semestre = departamento.numero_semestre;"
         )
 
         val teachers = mutableListOf<TeacherModel>()
 
         while (allTeachersQueryResult.next()) {
-            val profilePicBytes = allTeachersQueryResult.getBytes("foto_de_perfil")
+            val profilePicBytes = if (allTeachersQueryResult.getObject("foto_de_perfil") == null) {
+                Utils.getDefaultProfilePictureBytes()
+            } else {
+                allTeachersQueryResult.getBytes("foto_de_perfil")
+            }
+
             val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
             val profilePic = bufferedProfilePicImage.toComposeImageBitmap()
 
@@ -38,10 +51,7 @@ class TeacherDAO @Inject constructor(
                     allTeachersQueryResult.getInt("codigo_departamento"),
                     teacherSemester,
                     allTeachersQueryResult.getObject("pontuacao") as Double?,
-                    getTeacherReviews(
-                        allTeachersQueryResult.getString("nome"),
-                        allTeachersQueryResult.getInt("codigo_departamento")
-                    ).size,
+                    allTeachersQueryResult.getInt("num_avaliacoes"),
                     profilePic,
                 )
             )
@@ -64,14 +74,19 @@ class TeacherDAO @Inject constructor(
         val teacherReviews = mutableListOf<TeacherReviewModel>()
 
         while (reviewsQueryResult.next()) {
-            val profilePicBytes = reviewsQueryResult.getBytes("foto_de_perfil")
+            val profilePicBytes = if (reviewsQueryResult.getObject("foto_de_perfil") == null) {
+                Utils.getDefaultProfilePictureBytes()
+            } else {
+                reviewsQueryResult.getBytes("foto_de_perfil")
+            }
+
             val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
             val profilePic = bufferedProfilePicImage.toComposeImageBitmap()
 
             teacherReviews.add(
                 TeacherReviewModel(
                     reviewsQueryResult.getInt("id"),
-                    reviewsQueryResult.getString("comentario"),
+                    reviewsQueryResult.getString("comentario") ?: "",
                     reviewsQueryResult.getInt("pontuacao"),
                     profilePic,
                     reviewsQueryResult.getString("usuario_nome"),

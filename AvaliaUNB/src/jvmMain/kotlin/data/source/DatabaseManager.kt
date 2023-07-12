@@ -72,9 +72,14 @@ class DatabaseManager @Inject constructor(
     fun executeQuery(sqlQueryStatement: String): ResultSet = databaseConnection.prepareStatement(sqlQueryStatement).executeQuery()
 
     private fun initializeDatabase() {
+        databaseConnection.autoCommit = false
+
         deleteAllTableData()
         initializeDatabaseSchema()
-        initializeDatabaseData()
+        initializeDatabaseDefaultData()
+        initializeDatabaseCsvData()
+
+        databaseConnection.autoCommit = true
     }
 
     private fun deleteAllTableData() {
@@ -108,14 +113,20 @@ class DatabaseManager @Inject constructor(
         }
     }
 
-    private fun initializeDatabaseData() {
-        databaseConnection.autoCommit = false
+    private fun initializeDatabaseDefaultData() {
+        val splitDatabaseSchemaBySemicolon = Regex("(?<![a-z])(?<!([a-z]\\)));")
 
+        val defaultData = File(DatabaseUtils.getDefaultDataPath()).readText()
+
+        val statements = defaultData.split(splitDatabaseSchemaBySemicolon)
+
+        statements.forEach { executeStatement(it)  }
+    }
+
+    private fun initializeDatabaseCsvData() {
         val semesters = _databaseLoadingStatus.value.semestersLoadingStatus.map { it.prePopulatedSemester }
 
         for (semester in semesters) {
-            initializeSemester(semester)
-
             // Departments ------------------------------------------------------
             updateSemesterLoadingStatusForItem(
                 prePopulatedSemester = semester,
@@ -161,8 +172,6 @@ class DatabaseManager @Inject constructor(
                 finishedLoading = true
             )
         }
-
-        databaseConnection.autoCommit = true
     }
 
     private fun updateSemesterLoadingStatusForItem(
@@ -182,12 +191,6 @@ class DatabaseManager @Inject constructor(
             )
         }
     }
-
-    private fun initializeSemester(prePopulatedSemester: PrePopulatedSemester) = executeStatement(
-        "INSERT INTO semestre (ano, numero_semestre, data_inicio, data_fim) " +
-        "VALUES (${prePopulatedSemester.year}, ${prePopulatedSemester.semester_number}, ${prePopulatedSemester.begin_date}, ${prePopulatedSemester.end_date})"
-    )
-
 
     private fun initializeDepartments(prePopulatedSemester: PrePopulatedSemester) {
         val insertDepartmentStatement = prepareStatement(
@@ -247,8 +250,7 @@ class DatabaseManager @Inject constructor(
 
         val insertTeacherStatement = prepareStatement(
             "INSERT INTO professor (nome, codigo_departamento, ano_semestre, numero_semestre, foto_de_perfil) " +
-                    "VALUES (?, ?, ?, ?, ?) " +
-                    "ON CONFLICT (nome, codigo_departamento) DO NOTHING "
+                    "VALUES (?, ?, ?, ?, ?) ON CONFLICT DO NOTHING"
         )
 
         val regexNumberBetweenParentheses = Regex("(\\d+)")
@@ -263,6 +265,9 @@ class DatabaseManager @Inject constructor(
 
             val classCode = lineSplit[0]
             val teacherName = regexExcludeNumberParentheses.find(lineSplit[2])?.value?.trim() ?: ""
+
+            if (teacherName.isEmpty()) continue
+
             val numOfHours = regexNumberBetweenParentheses.find(lineSplit[2])?.value?.toInt() ?: 0
 
             var classSchedule: String? = lineSplit[3].replace(regexTextBetweenParentheses, "").trim()
@@ -300,7 +305,7 @@ class DatabaseManager @Inject constructor(
             ImageIO.write(defaultProfilePic, "png", stream)
             val defaultProfilePicBytes = stream.toByteArray()
 
-            insertTeacherStatement.setString(1, teacherName)
+            insertTeacherStatement.setString(1, teacherName.uppercase())
             insertTeacherStatement.setInt(2, departmentCode)
             insertTeacherStatement.setInt(3, prePopulatedSemester.year)
             insertTeacherStatement.setInt(4, prePopulatedSemester.semester_number)
