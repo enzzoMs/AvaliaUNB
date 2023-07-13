@@ -50,6 +50,7 @@ fun ReviewCard(
     getAllReports: (ReviewModel) -> List<ReportModel>,
     userNameTextStyle: TextStyle = MaterialTheme.typography.subtitle2,
     backgroundColor: Color = White,
+    userRegistrationNumber: String,
     modifier: Modifier = Modifier
 ) {
     var isEditingReview by remember { mutableStateOf(false) }
@@ -94,7 +95,13 @@ fun ReviewCard(
 
                 if (showEditAndRemove && !isEditingReview && !isDeletingReview) {
                     EditRemoveButtons(
-                        onEditClicked = { isEditingReview = true },
+                        onEditClicked = {
+                            userEditComment = review.comment
+                            selectedStarRating = ResourcesUtils.Strings.STAR_RATINGS.find {
+                                    rating -> rating.length == review.rating
+                            }!!
+                            isEditingReview = true
+                        },
                         onRemoveClicked = { isDeletingReview = true }
                     )
                 }
@@ -102,6 +109,8 @@ fun ReviewCard(
                     ConfirmCancelButtons(
                         onConfirmClicked = {
                             if (isDeletingReview) {
+                                isEditingReview = false
+                                isDeletingReview = false
                                 onRemoveClicked(review)
                             } else {
                                 isEditingReview = false
@@ -156,10 +165,13 @@ fun ReviewCard(
                             userReportEditComment = reportComment
                         }
                     )
-                } else if (userMadeReport) {
+                } else if (getAllReports(review).find { it.userRegistrationNumber == userRegistrationNumber } != null) {
+                    val report = getAllReports(review).find { it.userRegistrationNumber == userRegistrationNumber }
+
                     ReportCard(
                         reportTitle = ResourcesUtils.Strings.USER_MADE_REPORT_FIELD_PREFIX,
-                        description = userReportEditComment,
+                        description = report?.description ?: "",
+                        showEdit = true,
                         onEditClicked = { isEditingReport = true },
                         onDeleteClicked = {
                             reportComment = ""

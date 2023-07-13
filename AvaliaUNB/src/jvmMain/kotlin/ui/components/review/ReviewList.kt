@@ -36,6 +36,7 @@ fun ReviewList(
     getUserReport: (ReviewModel) -> ReportModel?,
     showAllReports: Boolean = false,
     getAllReports: (ReviewModel) -> List<ReportModel>,
+    userRegistrationNumber: String,
     modifier: Modifier = Modifier
 ) {
     when {
@@ -79,6 +80,7 @@ fun ReviewList(
                     modifier = Modifier
                         .padding(end = 10.dp)
                 ) {
+
                     items(reviews) { review ->
                         ReviewCard(
                             review = review,
@@ -92,7 +94,8 @@ fun ReviewList(
                             onRemoveAnyReportClicked = onRemoveAnyReportClicked,
                             showAllReports = showAllReports,
                             getAllReports = getAllReports,
-                            userReport = getUserReport(review)
+                            userReport = getUserReport(review),
+                            userRegistrationNumber = userRegistrationNumber
                         )
                     }
                 }

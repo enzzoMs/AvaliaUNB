@@ -50,6 +50,8 @@ class SingleClassViewModel(
         }
     }
 
+    fun getUserRegistrationNumber(): String = user.registrationNumber
+
     fun reviewBelongsToUser(review: ReviewModel): Boolean = review.userRegistrationNumber == user.registrationNumber
 
     fun getUserReport(review: ReviewModel): ReportModel? = reportRepository.getUserReport(review.id, user.registrationNumber)

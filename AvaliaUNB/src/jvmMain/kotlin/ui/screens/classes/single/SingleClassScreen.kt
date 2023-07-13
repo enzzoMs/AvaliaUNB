@@ -117,7 +117,8 @@ fun SingleClassScreen(
                     singleClassViewModel.deleteReport(reportModel)
                 },
                 showAllReports = singleClassViewModel.userIsAdministrator(),
-                getAllReports = { reviewModel -> singleClassViewModel.getReviewReports(reviewModel) }
+                getAllReports = { reviewModel -> singleClassViewModel.getReviewReports(reviewModel) },
+                userRegistrationNumber = singleClassViewModel.getUserRegistrationNumber()
             )
 
             Spacer(
@@ -396,7 +397,8 @@ private fun Reviews(
     classReviews: List<ClassReviewModel>,
     showAllReports: Boolean,
     getAllReports: (ReviewModel) -> List<ReportModel>,
-    isLoading: Boolean
+    isLoading: Boolean,
+    userRegistrationNumber: String,
 ) {
     Column(
         modifier = Modifier
@@ -423,6 +425,7 @@ private fun Reviews(
             getUserReport = getUserReport,
             showAllReports = showAllReports,
             getAllReports = getAllReports,
+            userRegistrationNumber = userRegistrationNumber,
             modifier = Modifier
                 .padding(top = 16.dp)
         )
