@@ -13,7 +13,7 @@ class SubjectDAO @Inject constructor(
 ) {
     fun getAllSubjects(): List<SubjectModel> {
         val allSubjectsQueryResult = database.executeQuery(
-    "SELECT disc.*, dept.nome AS dept_nome, dept.cor AS dept_cor " +
+            "SELECT disc.*, dept.nome AS dept_nome, dept.cor AS dept_cor " +
             "FROM disciplina as disc " +
             "INNER JOIN departamento as dept " +
             "ON disc.codigo_departamento = dept.codigo " +
@@ -61,23 +61,10 @@ class SubjectDAO @Inject constructor(
 
     fun getSubjectClasses(subjectId: Int): List<ClassModel> {
         val subjectClassesQuery = database.executeQuery(
-            "SELECT turma.*, semestre.*, disciplina.nome AS disc_nome, disciplina.codigo AS disc_cod, " +
-            "departamento.cor AS dept_cor, departamento.nome AS dept_nome, " +
-            "(SELECT COUNT(id_avaliacao) " +
-            "FROM avaliacao_turma " +
-            "WHERE id_turma = turma.id) AS num_avaliacoes " +
-            "FROM turma " +
-            "INNER JOIN disciplina ON turma.id_disciplina = disciplina.id " +
-            "INNER JOIN departamento " +
-            "ON disciplina.codigo_departamento = departamento.codigo AND " +
-            "disciplina.numero_semestre = departamento.numero_semestre AND " +
-            "disciplina.ano_semestre = departamento.ano_semestre " +
-            "INNER JOIN semestre " +
-            "ON semestre.ano = disciplina.ano_semestre AND " +
-            "semestre.numero_semestre = disciplina.numero_semestre " +
-            "WHERE turma.id_disciplina = $subjectId;"
+            "SELECT * FROM TURMAS_INFORMACOES " +
+            "WHERE id_disciplina = $subjectId;"
         )
-
+        println("SDADAS")
         val subjectClasses = mutableListOf<ClassModel>()
 
         while (subjectClassesQuery.next()) {

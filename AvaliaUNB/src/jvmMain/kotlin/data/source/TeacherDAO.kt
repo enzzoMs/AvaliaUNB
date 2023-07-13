@@ -15,16 +15,7 @@ class TeacherDAO @Inject constructor(
 
     fun getAllTeachers(): List<TeacherModel> {
         val allTeachersQueryResult = database.executeQuery(
-            "SELECT professor.*, departamento.nome AS dept_nome, " +
-                    "(SELECT COUNT(id_avaliacao) " +
-                    "FROM avaliacao_professor " +
-                    "WHERE nome_professor = professor.nome " +
-                    "AND codigo_departamento = professor.codigo_departamento) AS num_avaliacoes " +
-                    "FROM professor " +
-                    "INNER JOIN departamento " +
-                    "ON professor.codigo_departamento = departamento.codigo " +
-                    "AND professor.ano_semestre = departamento.ano_semestre " +
-                    "AND professor.numero_semestre = departamento.numero_semestre;"
+"SELECT * FROM PROFESSORES_INFORMACOES"
         )
 
         val teachers = mutableListOf<TeacherModel>()

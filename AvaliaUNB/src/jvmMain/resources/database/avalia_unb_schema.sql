@@ -78,9 +78,9 @@ CREATE TABLE IF NOT EXISTS turma(
 	id INTEGER NOT NULL,
 	codigo_turma TEXT,
     horario TEXT,
-    num_horas INTEGER NOT NULL CHECK (num_horas >= 0),
-    vagas_total INTEGER NOT NULL CHECK (vagas_total >= 0),
-    vagas_ocupadas INTEGER NOT NULL CHECK (vagas_ocupadas >= 0 AND vagas_ocupadas <= vagas_total),
+    num_horas INTEGER CHECK (num_horas >= 0),
+    vagas_total INTEGER CHECK (vagas_total >= 0),
+    vagas_ocupadas INTEGER CHECK (vagas_ocupadas >= 0 AND vagas_ocupadas <= vagas_total),
     local_aula TEXT,
     pontuacao REAL CHECK (pontuacao IS NULL OR (pontuacao >= 0 AND pontuacao <= 5)),
     nome_professor TEXT NOT NULL,
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS avaliacao_turma(
 
 CREATE TABLE IF NOT EXISTS avaliacao_professor(
 	id_avaliacao INTEGER NOT NULL,
-	nome_professor TEXT,
+	nome_professor TEXT NOT NULL,
 	codigo_departamento INTEGER NOT NULL CHECK (codigo_departamento >= 0),
 	PRIMARY KEY (id_avaliacao),
 	FOREIGN KEY (id_avaliacao) REFERENCES avaliacao(id),
@@ -133,6 +133,39 @@ CREATE TABLE IF NOT EXISTS denuncia(
 	FOREIGN KEY (id_avaliacao) REFERENCES avaliacao(id),
 	FOREIGN KEY (matricula_aluno) REFERENCES usuario(matricula)
 );
+
+--------------------------------
+-- VIEWS
+--------------------------------
+
+CREATE VIEW IF NOT EXISTS TURMAS_INFORMACOES AS
+SELECT turma.*, semestre.*, disciplina.nome AS disc_nome, disciplina.codigo AS disc_cod,
+    departamento.cor AS dept_cor, departamento.nome AS dept_nome,
+    (SELECT COUNT(id_avaliacao)
+    FROM avaliacao_turma
+    WHERE id_turma = turma.id) AS num_avaliacoes
+FROM turma
+INNER JOIN disciplina ON turma.id_disciplina = disciplina.id
+INNER JOIN departamento
+ON disciplina.codigo_departamento = departamento.codigo AND
+    disciplina.numero_semestre = departamento.numero_semestre AND
+    disciplina.ano_semestre = departamento.ano_semestre
+INNER JOIN semestre
+    ON semestre.ano = disciplina.ano_semestre AND
+    semestre.numero_semestre = disciplina.numero_semestre
+    ;
+
+CREATE VIEW IF NOT EXISTS PROFESSORES_INFORMACOES AS
+SELECT professor.*, departamento.nome AS dept_nome,
+    (SELECT COUNT(id_avaliacao)
+    FROM avaliacao_professor
+    WHERE nome_professor = professor.nome
+    AND codigo_departamento = professor.codigo_departamento) AS num_avaliacoes
+FROM professor
+INNER JOIN departamento
+    ON professor.codigo_departamento = departamento.codigo
+    AND professor.ano_semestre = departamento.ano_semestre
+    AND professor.numero_semestre = departamento.numero_semestre;
 
 --------------------------------
 -- TRIGGERS

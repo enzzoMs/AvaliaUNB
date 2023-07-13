@@ -16,17 +16,7 @@ class ClassDAO @Inject constructor(
 
     fun getAllClasses(): List<ClassModel> {
         val allClassesQuery = database.executeQuery(
-            "SELECT turma.*, semestre.*, disciplina.nome AS disc_nome, disciplina.codigo AS disc_cod, " +
-                    "departamento.cor AS dept_cor, departamento.nome AS dept_nome " +
-                    "FROM turma " +
-                    "INNER JOIN disciplina ON turma.id_disciplina = disciplina.id " +
-                    "INNER JOIN departamento " +
-                    "ON disciplina.codigo_departamento = departamento.codigo AND " +
-                    "disciplina.numero_semestre = departamento.numero_semestre AND " +
-                    "disciplina.ano_semestre = departamento.ano_semestre " +
-                    "INNER JOIN semestre " +
-                    "ON semestre.ano = disciplina.ano_semestre AND " +
-                    "semestre.numero_semestre = disciplina.numero_semestre;"
+            "SELECT * FROM TURMAS_INFORMACOES"
         )
 
         val classes = mutableListOf<ClassModel>()
@@ -64,18 +54,9 @@ class ClassDAO @Inject constructor(
 
     fun getClassTeacher(classModel: ClassModel): TeacherModel {
         val classTeacherQueryResult = database.executeQuery(
-            "SELECT professor.*, departamento.nome AS dept_nome, " +
-                    "(SELECT COUNT(id_avaliacao) " +
-                    "FROM avaliacao_professor " +
-                    "WHERE nome_professor = professor.nome " +
-                    "AND codigo_departamento = professor.codigo_departamento) AS num_avaliacoes " +
-                    "FROM professor " +
-                    "INNER JOIN departamento " +
-                    "ON professor.codigo_departamento = departamento.codigo AND " +
-                    "professor.ano_semestre = departamento.ano_semestre AND " +
-                    "professor.numero_semestre = departamento.numero_semestre " +
-                    "WHERE professor.nome = '${classModel.teacherName}' AND " +
-                    "professor.codigo_departamento = '${classModel.departmentCode}';"
+            "SELECT * FROM PROFESSORES_INFORMACOES " +
+                    "WHERE nome = '${classModel.teacherName}' AND " +
+                    "codigo_departamento = '${classModel.departmentCode}';"
         )
 
         classTeacherQueryResult.next()
