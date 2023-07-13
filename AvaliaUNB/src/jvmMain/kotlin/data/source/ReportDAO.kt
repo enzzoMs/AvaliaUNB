@@ -22,6 +22,31 @@ class ReportDAO @Inject constructor(
         reportInsertStatement.execute()
     }
 
+    fun getReviewReports(reviewId: Int): List<ReportModel> {
+        val reportQueryResult = database.executeQuery(
+    "SELECT denuncia.*, usuario.nome AS usuario_nome " +
+            "FROM denuncia " +
+            "INNER JOIN usuario ON " +
+            "usuario.matricula = denuncia.matricula_aluno " +
+            "WHERE id_avaliacao = $reviewId"
+        )
+
+        val reports = mutableListOf<ReportModel>()
+
+        while (reportQueryResult.next()) {
+            reports.add(
+                ReportModel(
+                    reviewId,
+                    reportQueryResult.getString("matricula_aluno"),
+                    reportQueryResult.getString("descricao"),
+                    reportQueryResult.getString("usuario_nome")
+                )
+            )
+        }
+
+        return reports.toList()
+    }
+
     fun updateReport(reviewId: Int, userRegistrationNumber: String, newDescription: String) {
         database.executeStatement(
             "UPDATE denuncia " +
@@ -39,15 +64,19 @@ class ReportDAO @Inject constructor(
 
     fun getUserReport(reviewId: Int, userRegistrationNumber: String): ReportModel? {
         val reportQueryResult = database.executeQuery(
-            "SELECT * FROM denuncia " +
+    "SELECT denuncia.*, usuario.nome AS usuario_nome " +
+            "FROM denuncia " +
+            "INNER JOIN usuario ON " +
+            "usuario.matricula = denuncia.matricula_aluno " +
             "WHERE matricula_aluno = $userRegistrationNumber AND id_avaliacao = $reviewId"
         )
 
         return if (reportQueryResult.next()) {
             return ReportModel(
-                reviewId = reviewId,
-                userRegistrationNumber = userRegistrationNumber,
-                reportQueryResult.getString("descricao")
+                reviewId,
+                userRegistrationNumber,
+                reportQueryResult.getString("descricao"),
+                reportQueryResult.getString("matricula_aluno")
             )
         } else {
             null

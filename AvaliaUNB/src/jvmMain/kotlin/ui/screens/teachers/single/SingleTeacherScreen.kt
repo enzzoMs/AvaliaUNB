@@ -70,7 +70,7 @@ fun SingleTeacherScreen(
                 },
                 decideShowReportButton = { reviewModel ->
                     !singleTeacherViewModel.reviewBelongsToUser(reviewModel) &&
-                            singleTeacherViewModel.userIsNotAdministrator()
+                            !singleTeacherViewModel.userIsAdministrator()
                 },
                 getUserReport = { reviewModel ->
                     singleTeacherViewModel.getUserReport(reviewModel)
@@ -90,6 +90,11 @@ fun SingleTeacherScreen(
                 onRemoveReportClicked = { reviewId ->
                     singleTeacherViewModel.deleteReport(reviewId)
                 },
+                onRemoveAnyReportClicked = { reportModel ->
+                    singleTeacherViewModel.deleteReport(reportModel)
+                },
+                showAllReports = singleTeacherViewModel.userIsAdministrator(),
+                getAllReports = { reviewModel -> singleTeacherViewModel.getReviewReports(reviewModel) }
             )
 
             Spacer(
@@ -167,11 +172,14 @@ private fun Reviews(
     onReportClicked: (Int, String) -> Unit = {_: Int, _: String -> },
     onEditReportClicked: (Int, String) -> Unit = {_: Int, _: String -> },
     onRemoveReportClicked: (Int) -> Unit = {_: Int ->},
+    onRemoveAnyReportClicked: (ReportModel) -> Unit = {},
     onPublishClicked: (String, Int) -> Unit,
     decideShowEditRemoveButtons: (ReviewModel) -> Boolean,
     decideShowReportButton: (ReviewModel) -> Boolean,
     getUserReport: (ReviewModel) -> ReportModel?,
     teacherReviews: List<TeacherReviewModel>,
+    showAllReports: Boolean,
+    getAllReports: (ReviewModel) -> List<ReportModel>,
     isLoading: Boolean
 ) {
     Column(
@@ -194,8 +202,11 @@ private fun Reviews(
             onEditClicked = onEditClicked,
             onReportClicked = onReportClicked,
             onEditReportClicked = onEditReportClicked,
-            onRemoveReportClicked = onRemoveReportClicked,
+            onRemoveUserReportClicked = onRemoveReportClicked,
+            onRemoveAnyReportClicked = onRemoveAnyReportClicked,
             getUserReport = getUserReport,
+            showAllReports = showAllReports,
+            getAllReports = getAllReports,
             modifier = Modifier
                 .padding(top = 16.dp)
         )

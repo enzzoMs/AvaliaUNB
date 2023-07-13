@@ -2,7 +2,6 @@ package data.repositories
 
 import data.models.ReportModel
 import data.source.ReportDAO
-import data.source.ReviewDAO
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,6 +18,10 @@ class ReportRepository @Inject constructor(
 
     fun updateReport(reviewId: Int, userRegistrationNumber: String, newDescription: String) {
         reportDAO.updateReport(reviewId, userRegistrationNumber, newDescription)
+    }
+
+    fun getReviewReports(reviewId: Int): List<ReportModel> {
+        return reportDAO.getReviewReports(reviewId)
     }
 
     fun deleteReport(reviewId: Int, userRegistrationNumber: String) {

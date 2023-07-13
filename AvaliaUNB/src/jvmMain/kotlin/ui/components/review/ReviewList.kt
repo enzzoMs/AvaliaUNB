@@ -29,10 +29,13 @@ fun ReviewList(
     onRemoveClicked: (ReviewModel) -> Unit = {},
     onReportClicked: (Int, String) -> Unit = {_: Int, _: String -> },
     onEditReportClicked: (Int, String) -> Unit = {_: Int, _: String -> },
-    onRemoveReportClicked: (Int) -> Unit = {_: Int ->},
+    onRemoveUserReportClicked: (Int) -> Unit = { _: Int ->},
+    onRemoveAnyReportClicked: (ReportModel) -> Unit = {},
     decideShowEditRemoveButtons: (ReviewModel) -> Boolean,
     decideShowReportButton: (ReviewModel) -> Boolean,
     getUserReport: (ReviewModel) -> ReportModel?,
+    showAllReports: Boolean = false,
+    getAllReports: (ReviewModel) -> List<ReportModel>,
     modifier: Modifier = Modifier
 ) {
     when {
@@ -80,12 +83,15 @@ fun ReviewList(
                         ReviewCard(
                             review = review,
                             showEditAndRemove = decideShowEditRemoveButtons(review),
-                            showReport = decideShowReportButton(review),
+                            showReportButton = decideShowReportButton(review),
                             onEditClicked = onEditClicked,
                             onRemoveClicked = onRemoveClicked,
                             onReportClicked = onReportClicked,
                             onEditReportClicked = onEditReportClicked,
-                            onRemoveReportClicked = onRemoveReportClicked,
+                            onRemoveUserReportClicked = onRemoveUserReportClicked,
+                            onRemoveAnyReportClicked = onRemoveAnyReportClicked,
+                            showAllReports = showAllReports,
+                            getAllReports = getAllReports,
                             userReport = getUserReport(review)
                         )
                     }

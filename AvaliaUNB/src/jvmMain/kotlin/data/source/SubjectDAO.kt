@@ -64,7 +64,7 @@ class SubjectDAO @Inject constructor(
             "SELECT * FROM TURMAS_INFORMACOES " +
             "WHERE id_disciplina = $subjectId;"
         )
-        println("SDADAS")
+
         val subjectClasses = mutableListOf<ClassModel>()
 
         while (subjectClassesQuery.next()) {

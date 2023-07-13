@@ -38,13 +38,16 @@ private val REPORT_FORM_HEIGHT = 100.dp
 fun ReviewCard(
     review: ReviewModel,
     showEditAndRemove: Boolean = false,
-    showReport: Boolean = false,
+    showReportButton: Boolean = false,
     onEditClicked: (ReviewModel, Int, String) -> Unit,
     onRemoveClicked: (ReviewModel) -> Unit,
     onReportClicked: (Int, String) -> Unit,
     onEditReportClicked: (Int, String) -> Unit,
-    onRemoveReportClicked: (Int) -> Unit = {_: Int ->},
+    onRemoveUserReportClicked: (Int) -> Unit,
+    onRemoveAnyReportClicked: (ReportModel) -> Unit = {},
     userReport: ReportModel? = null,
+    showAllReports: Boolean = false,
+    getAllReports: (ReviewModel) -> List<ReportModel>,
     userNameTextStyle: TextStyle = MaterialTheme.typography.subtitle2,
     backgroundColor: Color = White,
     modifier: Modifier = Modifier
@@ -60,6 +63,7 @@ fun ReviewCard(
     var selectedStarRating by remember { mutableStateOf(ResourcesUtils.Strings.STAR_RATINGS.find {
             rating -> rating.length == review.rating }!!)
     }
+    var allReports by remember { mutableStateOf(getAllReports(review)) }
 
     Box(
         modifier = Modifier
@@ -84,7 +88,7 @@ fun ReviewCard(
                         .weight(1f)
                 )
 
-                if (showReport && !isReportingReview && !userMadeReport) {
+                if (showReportButton && !isReportingReview && !userMadeReport) {
                     ReportButton { isReportingReview = true }
                 }
 
@@ -154,14 +158,28 @@ fun ReviewCard(
                     )
                 } else if (userMadeReport) {
                     ReportCard(
+                        reportTitle = ResourcesUtils.Strings.USER_MADE_REPORT_FIELD_PREFIX,
                         description = userReportEditComment,
                         onEditClicked = { isEditingReport = true },
                         onDeleteClicked = {
                             reportComment = ""
                             userMadeReport = false
-                            onRemoveReportClicked(review.id)
+                            onRemoveUserReportClicked(review.id)
                         }
                     )
+                }
+
+                if (showAllReports) {
+                    for (report in allReports) {
+                        ReportCard(
+                            reportTitle = "${report.userName}  fez uma denúncia: ",
+                            description = report.description,
+                            onDeleteClicked = {
+                                onRemoveAnyReportClicked(report)
+                                allReports = getAllReports(review)
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -170,8 +188,10 @@ fun ReviewCard(
 
 @Composable
 private fun ReportCard(
+    reportTitle: String,
     description: String,
-    onEditClicked: () -> Unit,
+    showEdit: Boolean = false,
+    onEditClicked: () -> Unit = {},
     onDeleteClicked: () -> Unit
 ) {
     var isRemovingReport by remember { mutableStateOf(false) }
@@ -191,7 +211,7 @@ private fun ReportCard(
                     .padding(end = 6.dp)
             )
             Text(
-                text = ResourcesUtils.Strings.USER_MADE_REPORT_FIELD_PREFIX,
+                text = reportTitle,
                 style = MaterialTheme.typography.subtitle1,
                 color = MaterialTheme.colors.error
             )
@@ -201,16 +221,30 @@ private fun ReportCard(
                     .weight(1f)
             )
 
-            if (isRemovingReport) {
-                ConfirmCancelButtons(
-                    onConfirmClicked = onDeleteClicked,
-                    onCancelClicked = { isRemovingReport = false }
-                )
-            } else {
-                EditRemoveButtons(
-                    onEditClicked = onEditClicked,
-                    onRemoveClicked = { isRemovingReport = true }
-                )
+            when {
+                isRemovingReport -> {
+                    ConfirmCancelButtons(
+                        onConfirmClicked = onDeleteClicked,
+                        onCancelClicked = { isRemovingReport = false }
+                    )
+                }
+                showEdit -> {
+                    EditRemoveButtons(
+                        onEditClicked = onEditClicked,
+                        onRemoveClicked = { isRemovingReport = true }
+                    )
+                }
+                else -> {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = null,
+                        tint = DimGray,
+                        modifier = Modifier
+                            .padding(start = 6.dp)
+                            .clip(CircleShape)
+                            .clickable { isRemovingReport = true }
+                    )
+                }
             }
         }
 

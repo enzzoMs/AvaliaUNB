@@ -326,36 +326,10 @@ private fun MainScreenContent(
                     }
                 }
             }
-
-            if (isUserAdministrator) AdministratorNotifications()
-
         }
 
         getScreenContent(currentScreen)
     }
-}
-
-@Composable
-private fun AdministratorNotifications() {
-    BadgedBox(
-        badge = {
-            Badge {
-                Text("8")
-            }
-        },
-        modifier = Modifier
-            .padding(end = 26.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.Notifications,
-            contentDescription = null,
-            tint = DimGray,
-            modifier = Modifier
-                .clip(CircleShape)
-                .clickable {}
-        )
-    }
-
 }
 
 @Composable

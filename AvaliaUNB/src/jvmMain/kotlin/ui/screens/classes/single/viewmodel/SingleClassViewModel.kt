@@ -54,7 +54,10 @@ class SingleClassViewModel(
 
     fun getUserReport(review: ReviewModel): ReportModel? = reportRepository.getUserReport(review.id, user.registrationNumber)
 
-    fun userIsNotAdministrator(): Boolean = !userRepository.isUserAdministrator(user.registrationNumber)
+    fun userIsAdministrator(): Boolean = userRepository.isUserAdministrator(user.registrationNumber)
+
+    fun getReviewReports(reviewModel: ReviewModel): List<ReportModel> =  reportRepository.getReviewReports(reviewModel.id)
+
 
     fun updateReviewComment(newComment: String) {
         _singleClassUiState.update { singleClassUiState ->
@@ -66,6 +69,8 @@ class SingleClassViewModel(
     }
 
     fun deleteReport(reviewId: Int) = reportRepository.deleteReport(reviewId, user.registrationNumber)
+
+    fun deleteReport(reportModel: ReportModel) = reportRepository.deleteReport(reportModel.reviewId, reportModel.userRegistrationNumber)
 
     fun publishReview(comment: String, rating: Int) {
         val reviewModel = ClassReviewModel(
@@ -107,7 +112,8 @@ class SingleClassViewModel(
             ReportModel(
                 reviewId = reviewId,
                 userRegistrationNumber = user.registrationNumber,
-                description = reviewDescription
+                description = reviewDescription,
+                userName = user.name
             )
         )
     }
