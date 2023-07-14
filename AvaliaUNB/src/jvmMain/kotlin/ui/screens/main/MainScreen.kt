@@ -25,7 +25,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import theme.*
 import ui.components.navigation.NavigationItem
 import ui.components.navigation.NavigationPanelColors
 import ui.components.navigation.SideNavigationPanel
@@ -41,6 +40,7 @@ import ui.screens.subjects.single.viewmodel.SingleSubjectViewModel
 import ui.screens.teachers.all.TeachersScreen
 import ui.screens.teachers.single.SingleTeacherScreen
 import ui.screens.teachers.single.viewmodel.SingleTeacherViewModel
+import utils.Utils
 import utils.navigation.Screen
 import utils.resources.Colors
 import utils.resources.Strings
@@ -106,7 +106,7 @@ fun MainScreen(
                     mainScreenUiState.pageIcon
                 },
                 userName = mainScreenUiState.userModel.name,
-                userProfilePicture = mainScreenUiState.userModel.profilePicture,
+                userProfilePicture = mainScreenUiState.userModel.profilePicture ?: Utils.getDefaultProfilePicture(),
                 isUserAdministrator = mainScreenUiState.userModel.isAdministrator,
                 onEditProfileClicked = {
                     mainScreenViewModel.updateCurrentScreen(Screen.PROFILE)

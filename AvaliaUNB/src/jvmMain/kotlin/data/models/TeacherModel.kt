@@ -13,5 +13,5 @@ data class TeacherModel(
     val semester: String,
     val score: Double?,
     val numOfReviews: Int = 0,
-    val profilePicture: ImageBitmap = ImageIO.read(File(Paths.Images.PERSON)).toComposeImageBitmap()
+    val profilePicture: ImageBitmap? = null
 )

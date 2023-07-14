@@ -3,7 +3,6 @@ package data.source
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import data.models.UserModel
-import utils.Utils
 import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 import javax.inject.Inject
@@ -15,8 +14,8 @@ class UserDAO @Inject constructor(
 ) {
 
     fun insertUser(user: UserModel) {
-        val userInsertStatement = "INSERT INTO usuario (matricula, nome, curso, email, senha, foto_de_perfil) " +
-                "VALUES (?, ?, ?, ?, ?, ?)"
+        val userInsertStatement = "INSERT INTO usuario (matricula, nome, curso, email, senha) " +
+                "VALUES (?, ?, ?, ?, ?)"
 
         val preparedStatement = database.prepareStatement(userInsertStatement)
         user.apply {
@@ -25,7 +24,6 @@ class UserDAO @Inject constructor(
             preparedStatement.setString(3, course)
             preparedStatement.setString(4, email)
             preparedStatement.setString(5, password)
-            preparedStatement.setBytes(6, Utils.getDefaultProfilePictureBytes())
         }
 
         preparedStatement.execute()
@@ -37,11 +35,14 @@ class UserDAO @Inject constructor(
             "SET matricula = ?, nome = ?, curso = ?, email = ?, " +
             "senha = ?, foto_de_perfil = ? WHERE matricula = '${oldRegistrationNumber}';"
 
-        val profilePictureBytes = updatedUserModel.profilePicture.toAwtImage()
-        val stream = ByteArrayOutputStream()
-        ImageIO.write(profilePictureBytes, "png", stream)
-
-        val bytes = stream.toByteArray()
+        val profilePictureBytes = if (updatedUserModel.profilePicture != null) {
+            val profilePicture = updatedUserModel.profilePicture.toAwtImage()
+            val stream = ByteArrayOutputStream()
+            ImageIO.write(profilePicture, "png", stream)
+            stream.toByteArray()
+        } else {
+            null
+        }
 
         val preparedStatement = database.prepareStatement(userUpdateStatement)
         updatedUserModel.apply {
@@ -50,7 +51,7 @@ class UserDAO @Inject constructor(
             preparedStatement.setString(3, course)
             preparedStatement.setString(4, email)
             preparedStatement.setString(5, password)
-            preparedStatement.setBytes(6, bytes)
+            preparedStatement.setBytes(6, profilePictureBytes)
         }
 
         preparedStatement.execute()
@@ -79,13 +80,14 @@ class UserDAO @Inject constructor(
 
         queryResult.next()
 
-        val profilePicBytes = if (queryResult.getObject("foto_de_perfil") == null) {
-            Utils.getDefaultProfilePictureBytes()
+        val profilePic = if (queryResult.getObject("foto_de_perfil") == null) {
+            null
         } else {
-            queryResult.getBytes("foto_de_perfil")
+            val profilePicBytes = queryResult.getBytes("foto_de_perfil")
+            val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
+            bufferedProfilePicImage.toComposeImageBitmap()
         }
-        val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
-        val profilePic = bufferedProfilePicImage.toComposeImageBitmap()
+
 
         return UserModel(
             queryResult.getString("matricula"),

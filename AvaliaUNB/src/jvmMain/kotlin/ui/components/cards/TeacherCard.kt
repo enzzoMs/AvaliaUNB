@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.TeacherModel
+import utils.Utils
 import utils.resources.Colors
 import utils.resources.Paths
 import utils.resources.Strings
@@ -57,7 +58,7 @@ fun TeacherCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                bitmap = teacherModel.profilePicture,
+                bitmap = teacherModel.profilePicture ?: Utils.getDefaultProfilePicture(),
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier

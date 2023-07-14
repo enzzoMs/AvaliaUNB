@@ -6,6 +6,8 @@ import data.repositories.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import utils.Utils.getDefaultProfilePicture
+import utils.resources.Paths
 import utils.resources.Strings
 import java.io.File
 import javax.imageio.ImageIO
@@ -13,7 +15,6 @@ import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 import javax.swing.filechooser.FileNameExtensionFilter
 
-private const val DEFAULT_PROFILE_PIC_PATH = "src/jvmMain/resources/images/person.png"
 private const val REGISTRATION_NUMBER_LENGTH = 9
 private const val FIELD_MAX_LENGTH = 100
 
@@ -30,7 +31,8 @@ class ProfileViewModel(
                 course = if (course == "null") "" else course,
                 email = email,
                 password = password,
-                profilePic = profilePicture
+                profilePic = profilePicture ?: getDefaultProfilePicture(),
+                showRemovePictureButton = false
             )
         }
     )
@@ -38,33 +40,26 @@ class ProfileViewModel(
 
     fun updateUser(): UserModel? {
         if (validateProfileState()) {
+            val updatedUser = _profileUiState.value.run {
+                UserModel(
+                    registrationNumber,
+                    name,
+                    course,
+                    email,
+                    password,
+                    if (showRemovePictureButton) profilePic else null
+                )
+            }
+
             val updateResult = userRepository.update(
                 oldRegistrationNumber = userModel.registrationNumber,
-                updatedUserModel = _profileUiState.value.run {
-                    UserModel(
-                        registrationNumber,
-                        name,
-                        course,
-                        email,
-                        password,
-                        profilePic
-                    )
-                }
+                updatedUserModel = updatedUser
             )
 
             when (updateResult) {
                 is UserRepository.UserModificationResult.Success -> {
                     setIsEditingFields(false)
-                    return _profileUiState.value.run {
-                        UserModel(
-                            registrationNumber,
-                            name,
-                            course,
-                            email,
-                            password,
-                            profilePic
-                        )
-                    }
+                    return updatedUser
                 }
                 is UserRepository.UserModificationResult.Failure -> {
                     _profileUiState.update { profileUiState ->
@@ -115,7 +110,8 @@ class ProfileViewModel(
                     registrationNumberAlreadyInUse = false,
                     emailAlreadyInUse = false,
                     isEditingFields = false,
-                    showRemovePictureButton = false
+                    showRemovePictureButton = false,
+                    profilePic = profilePicture ?: getDefaultProfilePicture()
                 )
             }
         }
@@ -167,7 +163,7 @@ class ProfileViewModel(
 
     fun removeProfilePicture() {
         _profileUiState.update { profileUiState ->
-            val bufferedImage = ImageIO.read(File(DEFAULT_PROFILE_PIC_PATH))
+            val bufferedImage = ImageIO.read(File(Paths.Images.PERSON))
             val defaultProfilePic = bufferedImage.toComposeImageBitmap()
 
             profileUiState.copy(
@@ -197,7 +193,7 @@ class ProfileViewModel(
         _profileUiState.update { profileUiState ->
             profileUiState.copy(
                 isEditingFields = isEditing,
-                showRemovePictureButton = isEditing
+                showRemovePictureButton = isEditing && userModel.profilePicture != null
             )
         }
     }

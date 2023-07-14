@@ -24,6 +24,7 @@ import data.models.ReportModel
 import data.models.ReviewModel
 import ui.components.forms.GeneralDropDownMenu
 import ui.components.forms.MultilineTextField
+import utils.Utils
 import utils.resources.Colors
 import utils.resources.Strings
 
@@ -440,7 +441,7 @@ private fun UserInformation(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            bitmap = review.userProfilePicture,
+            bitmap = review.userProfilePicture ?: Utils.getDefaultProfilePicture(),
             contentDescription = null,
             contentScale = ContentScale.Fit,
             modifier = Modifier

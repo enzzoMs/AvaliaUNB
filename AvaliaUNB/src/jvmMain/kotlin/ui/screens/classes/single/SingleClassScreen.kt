@@ -33,6 +33,7 @@ import ui.components.review.ReviewForm
 import ui.components.review.ReviewList
 import ui.components.schedule.ClassWeeklySchedule
 import ui.screens.classes.single.viewmodel.SingleClassViewModel
+import utils.Utils
 import utils.resources.Colors
 import utils.resources.Paths
 import utils.resources.Strings
@@ -255,7 +256,7 @@ private fun TeacherInformation(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    bitmap = teacherModel.profilePicture,
+                    bitmap = teacherModel.profilePicture ?: Utils.getDefaultProfilePicture(),
                     contentDescription = null,
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier

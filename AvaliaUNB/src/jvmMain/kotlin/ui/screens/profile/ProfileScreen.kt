@@ -7,8 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import theme.*
 import ui.components.buttons.PrimaryButton
 import ui.components.buttons.SecondaryButton
 import ui.components.forms.UserFormFields
@@ -144,6 +142,7 @@ private fun DeleteAccountButton(
     var confirmationVisible by remember { mutableStateOf(false) }
 
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(bottom = 30.dp, top = 52.dp)
     ) {
@@ -177,53 +176,34 @@ private fun DeleteAccountButton(
         }
 
         AnimatedVisibility(confirmationVisible) {
-            Row {
-                Button(
-                    onClick = { confirmationVisible = false } ,
-                    contentPadding = PaddingValues(vertical = 10.dp, horizontal = 15.dp),
-                    elevation = ButtonDefaults.elevation(
-                        defaultElevation = 0.dp,
-                        pressedElevation = 0.dp,
-                        hoveredElevation = 0.dp,
-                        focusedElevation = 0.dp
-                    ),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Colors.White
-                    ),
+            Row(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    tint = Colors.UnbGreen,
                     modifier = Modifier
-                        .padding(start = 24.dp)
-                ) {
-                    Text(
-                        text = Strings.CANCEL,
-                        style = MaterialTheme.typography.button,
-                        color = Colors.DimGray
-                    )
-                }
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .clickable { onConfirmButtonClicked() }
+                )
 
-                Button(
-                    onClick = onConfirmButtonClicked,
-                    contentPadding = PaddingValues(vertical = 10.dp, horizontal = 15.dp),
-                    elevation = ButtonDefaults.elevation(
-                        defaultElevation = 0.dp,
-                        pressedElevation = 0.dp,
-                        hoveredElevation = 0.dp,
-                        focusedElevation = 0.dp
-                    ),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.error,
-                        contentColor = Colors.White
-                    ),
+                Spacer(
                     modifier = Modifier
-                        .padding(start = 16.dp)
-                ) {
-                    Text(
-                        text = Strings.CONFIRM,
-                        style = MaterialTheme.typography.button,
-                        color = Colors.White
-                    )
-                }
+                        .size(16.dp)
+                )
+
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.error,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .clickable { confirmationVisible = false }
+                )
             }
         }
     }

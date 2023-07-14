@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import utils.Utils
 import java.util.*
 
 class SingleTeacherViewModel(
@@ -77,7 +78,7 @@ class SingleTeacherViewModel(
             id = UUID.randomUUID().hashCode(),
             comment = comment,
             rating = rating,
-            userProfilePicture = user.profilePicture,
+            userProfilePicture = user.profilePicture ?: Utils.getDefaultProfilePicture(),
             userName = user.name,
             userRegistrationNumber = user.registrationNumber,
             teacherName = teacherModel.name,

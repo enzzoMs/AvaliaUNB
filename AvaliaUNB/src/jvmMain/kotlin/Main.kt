@@ -1,5 +1,6 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
@@ -13,6 +14,7 @@ import ui.screens.splash.SplashScreen
 import utils.navigation.NavigationComponent
 import utils.navigation.NavigationController
 import utils.navigation.Screen
+import utils.resources.Colors
 import utils.resources.Paths
 import utils.resources.Strings
 import utils.resources.Typography
@@ -41,6 +43,9 @@ fun main() = application {
 
         MaterialTheme(
             typography = Typography,
+            colors = lightColors(
+                primary = Colors.UnbBlue,
+            ),
             content = {
                 AppAvaliaUNB()
             }

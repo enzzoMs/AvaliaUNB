@@ -3,7 +3,6 @@ package data.source
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import data.models.TeacherModel
 import data.models.TeacherReviewModel
-import utils.Utils
 import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,14 +20,13 @@ class TeacherDAO @Inject constructor(
         val teachers = mutableListOf<TeacherModel>()
 
         while (allTeachersQueryResult.next()) {
-            val profilePicBytes = if (allTeachersQueryResult.getObject("foto_de_perfil") == null) {
-                Utils.getDefaultProfilePictureBytes()
+            val profilePic = if (allTeachersQueryResult.getObject("foto_de_perfil") == null) {
+                null
             } else {
-                allTeachersQueryResult.getBytes("foto_de_perfil")
+                val profilePicBytes = allTeachersQueryResult.getBytes("foto_de_perfil")
+                val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
+                bufferedProfilePicImage.toComposeImageBitmap()
             }
-
-            val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
-            val profilePic = bufferedProfilePicImage.toComposeImageBitmap()
 
             val teacherSemesterYear = allTeachersQueryResult.getString("ano_semestre")
             val teacherSemesterNumber = allTeachersQueryResult.getString("numero_semestre")
@@ -43,7 +41,7 @@ class TeacherDAO @Inject constructor(
                     teacherSemester,
                     allTeachersQueryResult.getObject("pontuacao") as Double?,
                     allTeachersQueryResult.getInt("num_avaliacoes"),
-                    profilePic,
+                    profilePic
                 )
             )
         }
@@ -65,14 +63,13 @@ class TeacherDAO @Inject constructor(
         val teacherReviews = mutableListOf<TeacherReviewModel>()
 
         while (reviewsQueryResult.next()) {
-            val profilePicBytes = if (reviewsQueryResult.getObject("foto_de_perfil") == null) {
-                Utils.getDefaultProfilePictureBytes()
+            val profilePic = if (reviewsQueryResult.getObject("foto_de_perfil") == null) {
+                null
             } else {
-                reviewsQueryResult.getBytes("foto_de_perfil")
+                val profilePicBytes = reviewsQueryResult.getBytes("foto_de_perfil")
+                val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
+                bufferedProfilePicImage.toComposeImageBitmap()
             }
-
-            val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
-            val profilePic = bufferedProfilePicImage.toComposeImageBitmap()
 
             teacherReviews.add(
                 TeacherReviewModel(

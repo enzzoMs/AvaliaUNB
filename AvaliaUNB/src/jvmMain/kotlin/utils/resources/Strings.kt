@@ -89,9 +89,7 @@ object Strings {
     const val ADMINISTRATOR = "Administrador"
     const val SCHEDULES = "Horários"
     const val PROFILE = "Perfil"
-    const val CANCEL = "Cancelar"
     const val LOGOUT = "Sair"
-    const val CONFIRM = "Confirmar"
     const val RATINGS = "Avaliações"
     const val LOADING = "Carregando..."
 

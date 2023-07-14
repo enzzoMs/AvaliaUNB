@@ -2,16 +2,17 @@ package data.source
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toComposeImageBitmap
-import data.models.*
-import utils.Utils
+import data.models.ClassModel
+import data.models.ClassReviewModel
+import data.models.SemesterModel
+import data.models.TeacherModel
 import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ClassDAO @Inject constructor(
-    private val database: DatabaseManager,
-    private val teacherDAO: TeacherDAO
+    private val database: DatabaseManager
 ) {
 
     fun getAllClasses(): List<ClassModel> {
@@ -61,14 +62,13 @@ class ClassDAO @Inject constructor(
 
         classTeacherQueryResult.next()
 
-        val profilePicBytes = if (classTeacherQueryResult.getObject("foto_de_perfil") == null) {
-            Utils.getDefaultProfilePictureBytes()
+        val profilePic = if (classTeacherQueryResult.getObject("foto_de_perfil") == null) {
+            null
         } else {
-            classTeacherQueryResult.getBytes("foto_de_perfil")
+            val profilePicBytes = classTeacherQueryResult.getBytes("foto_de_perfil")
+            val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
+            bufferedProfilePicImage.toComposeImageBitmap()
         }
-
-        val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
-        val profilePic = bufferedProfilePicImage.toComposeImageBitmap()
 
         val teacherSemesterYear = classTeacherQueryResult.getString("ano_semestre")
         val teacherSemesterNumber = classTeacherQueryResult.getString("numero_semestre")
@@ -110,14 +110,13 @@ class ClassDAO @Inject constructor(
         val classReviews = mutableListOf<ClassReviewModel>()
 
         while (reviewsQueryResult.next()) {
-            val profilePicBytes = if (reviewsQueryResult.getObject("foto_de_perfil") == null) {
-                Utils.getDefaultProfilePictureBytes()
+            val profilePic = if (reviewsQueryResult.getObject("foto_de_perfil") == null) {
+                null
             } else {
-                reviewsQueryResult.getBytes("foto_de_perfil")
+                val profilePicBytes = reviewsQueryResult.getBytes("foto_de_perfil")
+                val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
+                bufferedProfilePicImage.toComposeImageBitmap()
             }
-
-            val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
-            val profilePic = bufferedProfilePicImage.toComposeImageBitmap()
 
             classReviews.add(
                 ClassReviewModel(

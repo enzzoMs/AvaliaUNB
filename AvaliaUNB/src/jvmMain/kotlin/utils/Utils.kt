@@ -1,6 +1,7 @@
 package utils
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import utils.resources.Paths
@@ -55,11 +56,7 @@ object Utils {
         return classSchedule.toList()
     }
 
-    fun getDefaultProfilePictureBytes(): ByteArray {
-        val defaultProfilePic = ImageIO.read(File(Paths.Images.PERSON)).toComposeImageBitmap().toAwtImage()
-        val stream = ByteArrayOutputStream()
-        ImageIO.write(defaultProfilePic, "png", stream)
-
-        return stream.toByteArray()
+    fun getDefaultProfilePicture(): ImageBitmap {
+        return ImageIO.read(File(Paths.Images.PERSON)).toComposeImageBitmap()
     }
 }
