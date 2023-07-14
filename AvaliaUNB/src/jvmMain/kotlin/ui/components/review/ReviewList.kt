@@ -16,10 +16,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import data.models.ReportModel
 import data.models.ReviewModel
-import theme.MediumGray
-import theme.SilverChalice
 import ui.components.loading.Loading
-import utils.resources.ResourcesUtils
+import utils.resources.Colors
+import utils.resources.Paths
+import utils.resources.Strings
 
 @Composable
 fun ReviewList(
@@ -51,16 +51,16 @@ fun ReviewList(
                     .padding(vertical = 80.dp)
             ) {
                 Icon(
-                    painter = painterResource(ResourcesUtils.ImagePaths.REVIEWS),
+                    painter = painterResource(Paths.Images.REVIEWS),
                     contentDescription = null,
-                    tint = MediumGray,
+                    tint = Colors.MediumGray,
                     modifier = Modifier
                         .size(80.dp)
                 )
                 Text(
-                    text = ResourcesUtils.Strings.NO_REVIEW_PUBLISHED,
+                    text = Strings.NO_REVIEW_PUBLISHED,
                     style = MaterialTheme.typography.subtitle2,
-                    color = SilverChalice,
+                    color = Colors.SilverChalice,
                     modifier = Modifier
                         .padding(top = 16.dp)
                 )

@@ -25,7 +25,6 @@ import data.models.ClassReviewModel
 import data.models.ReportModel
 import data.models.ReviewModel
 import data.models.TeacherModel
-import theme.*
 import ui.components.buttons.SecondaryButton
 import ui.components.cards.CardInformation
 import ui.components.cards.ClassCard
@@ -34,7 +33,9 @@ import ui.components.review.ReviewForm
 import ui.components.review.ReviewList
 import ui.components.schedule.ClassWeeklySchedule
 import ui.screens.classes.single.viewmodel.SingleClassViewModel
-import utils.resources.ResourcesUtils
+import utils.resources.Colors
+import utils.resources.Paths
+import utils.resources.Strings
 
 @Composable
 fun SingleClassScreen(
@@ -50,18 +51,18 @@ fun SingleClassScreen(
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .background(DarkAntiFlashWhite)
+                .background(Colors.DarkAntiFlashWhite)
                 .padding(horizontal = 20.dp, vertical = 5.dp)
                 .verticalScroll(stateVertical)
         ) {
             ClassCard(
                 classModel = singleClassUiState.classModel,
-                backgroundColor = DarkAntiFlashWhite,
+                backgroundColor = Colors.DarkAntiFlashWhite,
                 subjectTitleTextStyle = TextStyle(
                     fontFamily = MaterialTheme.typography.subtitle1.fontFamily,
                     fontWeight = MaterialTheme.typography.subtitle1.fontWeight,
                     fontSize = 20.sp,
-                    color = DarkCharcoal
+                    color = Colors.DarkCharcoal
                 ),
                 showScore = false
             )
@@ -162,24 +163,24 @@ private fun ClassSchedule(
                 modifier = Modifier
                     .padding(end = 12.dp)
                     .clip(RoundedCornerShape(percent = 15))
-                    .background(UnbBlue)
+                    .background(Colors.UnbBlue)
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Alarm,
                     contentDescription = null,
-                    tint = White,
+                    tint = Colors.White,
                     modifier = Modifier
                         .padding(5.dp)
                 )
             }
 
             Text(
-                text = ResourcesUtils.Strings.SCHEDULE_FIELD_PREFIX,
+                text = Strings.FIELD_PREFIX_SCHEDULE,
                 style = MaterialTheme.typography.subtitle1,
                 fontSize = 20.sp
             )
             Text(
-                text = schedule ?: ResourcesUtils.Strings.DEFAULT_CLASS_SCHEDULE,
+                text = schedule ?: Strings.DEFAULT_CLASS_SCHEDULE,
                 style = MaterialTheme.typography.body1,
                 fontSize = 20.sp,
                 modifier = Modifier
@@ -192,7 +193,7 @@ private fun ClassSchedule(
                         .weight(1f)
                 )
                 SecondaryButton(
-                    label = ResourcesUtils.Strings.SEE_DETAILS,
+                    label = Strings.ACTION_SEE_DETAILS,
                     onClick = { seeDetails = !seeDetails },
                     modifier = Modifier
                         .padding(end = 16.dp)
@@ -227,18 +228,18 @@ private fun TeacherInformation(
                 modifier = Modifier
                     .padding(end = 12.dp)
                     .clip(RoundedCornerShape(percent = 15))
-                    .background(UnbBlue)
+                    .background(Colors.UnbBlue)
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Group,
                     contentDescription = null,
-                    tint = White,
+                    tint = Colors.White,
                     modifier = Modifier
                         .padding(5.dp)
                 )
             }
             Text(
-                text = ResourcesUtils.Strings.TEACHER,
+                text = Strings.TEACHER,
                 style = MaterialTheme.typography.subtitle1,
                 fontSize = 20.sp
             )
@@ -247,7 +248,7 @@ private fun TeacherInformation(
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(10.dp))
-                .background(White)
+                .background(Colors.White)
                 .then(modifier)
         ) {
             Row(
@@ -266,7 +267,7 @@ private fun TeacherInformation(
                         .padding(16.dp)
                 ) {
                     CardInformation(
-                        fieldName = ResourcesUtils.Strings.NAME_FIELD_PREFIX,
+                        fieldName = Strings.FIELD_PREFIX_NAME,
                         fieldNameTextStyle = MaterialTheme.typography.subtitle1,
                         fieldText = teacherModel.name,
                         fieldTextStyle = MaterialTheme.typography.body1,
@@ -278,26 +279,26 @@ private fun TeacherInformation(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
-                            text = ResourcesUtils.Strings.SCORE_FIELD_PREFIX,
+                            text = Strings.FIELD_PREFIX_SCORE,
                             style = MaterialTheme.typography.subtitle1,
                             modifier = Modifier
                                 .padding(end = 10.dp)
                         )
                         Icon(
-                            painter = painterResource(ResourcesUtils.ImagePaths.GRADE),
+                            painter = painterResource(Paths.Images.GRADE),
                             contentDescription = null,
-                            tint = if (teacherModel.score == null) LightGray else AmericanOrange,
+                            tint = if (teacherModel.score == null) Colors.LightGray else Colors.AmericanOrange,
                             modifier = Modifier
                                 .size(35.dp)
                                 .padding(end = 12.dp, bottom = 5.dp)
                         )
                         if (teacherModel.score == null) {
                             Text(
-                                text = ResourcesUtils.Strings.NO_REVIEW,
+                                text = Strings.NO_REVIEW,
                                 style = TextStyle(
                                     fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
                                     fontSize = 18.sp,
-                                    color = Gray
+                                    color = Colors.Gray
                                 ),
                                 fontWeight = FontWeight.Normal,
                                 maxLines = 1
@@ -327,7 +328,7 @@ private fun TeacherInformation(
                                 .weight(1f)
                         )
                         SecondaryButton(
-                            label = ResourcesUtils.Strings.SEE_TEACHER_DETAILS,
+                            label = Strings.ACTION_SEE_DETAILS_TEACHER,
                             onClick = { onSeeTeacherDetailsClicked(teacherModel) }
                         )
                     }
@@ -355,18 +356,18 @@ private fun Rating(
                 modifier = Modifier
                     .padding(end = 12.dp)
                     .clip(RoundedCornerShape(percent = 15))
-                    .background(UnbBlue)
+                    .background(Colors.UnbBlue)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Grade,
                     contentDescription = null,
-                    tint = White,
+                    tint = Colors.White,
                     modifier = Modifier
                         .padding(5.dp)
                 )
             }
             Text(
-                text = ResourcesUtils.Strings.RATINGS,
+                text = Strings.RATINGS,
                 style = MaterialTheme.typography.subtitle1,
                 fontSize = 20.sp
             )
@@ -407,7 +408,7 @@ private fun Reviews(
         ReviewForm(
             value = reviewComment,
             onValueChanged = onCommentChanged,
-            errorMessage = ResourcesUtils.Strings.FIELD_ERROR_REVIEW_ALREADY_MADE,
+            errorMessage = Strings.FIELD_ERROR_ALREADY_MADE_REVIEW,
             error = error,
             onPublishClicked = onPublishClicked,
         )
@@ -445,7 +446,7 @@ private fun BackButton(
                 .weight(1.5f)
         )
         SecondaryButton(
-            label = ResourcesUtils.Strings.BACK_BUTTON,
+            label = Strings.CAPITALIZED_BACK,
             onClick = onClicked,
             modifier = Modifier
                 .weight(1f)

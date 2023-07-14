@@ -19,16 +19,14 @@ import androidx.compose.ui.unit.sp
 import data.models.ReportModel
 import data.models.ReviewModel
 import data.models.TeacherReviewModel
-import theme.DarkAntiFlashWhite
-import theme.UnbBlue
-import theme.White
 import ui.components.buttons.SecondaryButton
 import ui.components.cards.TeacherCard
 import ui.components.review.RatingInformation
 import ui.components.review.ReviewForm
 import ui.components.review.ReviewList
 import ui.screens.teachers.single.viewmodel.SingleTeacherViewModel
-import utils.resources.ResourcesUtils
+import utils.resources.Colors
+import utils.resources.Strings
 
 @Composable
 fun SingleTeacherScreen(
@@ -43,13 +41,13 @@ fun SingleTeacherScreen(
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .background(DarkAntiFlashWhite)
+                .background(Colors.DarkAntiFlashWhite)
                 .padding(horizontal = 34.dp, vertical = 20.dp)
                 .verticalScroll(stateVertical)
         ) {
             TeacherCard(
                 teacherModel = singleTeacherUiState.teacherModel,
-                backgroundColor = DarkAntiFlashWhite,
+                backgroundColor = Colors.DarkAntiFlashWhite,
                 showScore = false
             )
 
@@ -139,18 +137,18 @@ private fun Rating(
                 modifier = Modifier
                     .padding(end = 12.dp)
                     .clip(RoundedCornerShape(percent = 15))
-                    .background(UnbBlue)
+                    .background(Colors.UnbBlue)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Grade,
                     contentDescription = null,
-                    tint = White,
+                    tint = Colors.White,
                     modifier = Modifier
                         .padding(5.dp)
                 )
             }
             Text(
-                text = ResourcesUtils.Strings.RATINGS,
+                text = Strings.RATINGS,
                 style = MaterialTheme.typography.subtitle1,
                 fontSize = 20.sp
             )
@@ -191,7 +189,7 @@ private fun Reviews(
         ReviewForm(
             value = reviewComment,
             onValueChanged = onCommentChanged,
-            errorMessage = ResourcesUtils.Strings.FIELD_ERROR_REVIEW_ALREADY_MADE,
+            errorMessage = Strings.FIELD_ERROR_ALREADY_MADE_REVIEW,
             error = error,
             onPublishClicked = onPublishClicked,
         )
@@ -229,7 +227,7 @@ private fun BackButton(
                 .weight(1.5f)
         )
         SecondaryButton(
-            label = ResourcesUtils.Strings.BACK_BUTTON,
+            label = Strings.CAPITALIZED_BACK,
             onClick = onClicked,
             modifier = Modifier
                 .weight(1f)

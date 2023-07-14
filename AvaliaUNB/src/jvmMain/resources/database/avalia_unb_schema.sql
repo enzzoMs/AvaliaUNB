@@ -165,7 +165,8 @@ FROM professor
 INNER JOIN departamento
     ON professor.codigo_departamento = departamento.codigo
     AND professor.ano_semestre = departamento.ano_semestre
-    AND professor.numero_semestre = departamento.numero_semestre;
+    AND professor.numero_semestre = departamento.numero_semestre
+    ;
 
 --------------------------------
 -- TRIGGERS

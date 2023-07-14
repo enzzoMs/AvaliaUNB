@@ -15,8 +15,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.ReviewModel
-import theme.*
-import utils.resources.ResourcesUtils
+import utils.resources.Colors
+import utils.resources.Paths
+import utils.resources.Strings
 
 private val SCORE_RANGE = 5 downTo 1
 
@@ -31,20 +32,20 @@ fun RatingInformation(
         modifier = modifier
     ) {
         Icon(
-            painter = painterResource(ResourcesUtils.ImagePaths.GRADE),
+            painter = painterResource(Paths.Images.GRADE),
             contentDescription = null,
-            tint = if (score == null) LightGray else AmericanOrange,
+            tint = if (score == null) Colors.LightGray else Colors.AmericanOrange,
             modifier = Modifier
                 .size(60.dp)
                 .padding(end = 12.dp, bottom = 5.dp)
         )
         if (score == null) {
             Text(
-                text = ResourcesUtils.Strings.NO_REVIEW_MULTILINE,
+                text = Strings.NO_REVIEW_MULTILINE,
                 style = TextStyle(
                     fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
                     fontSize = 18.sp,
-                    color = DimGray
+                    color = Colors.DimGray
                 )
             )
         } else {
@@ -96,7 +97,7 @@ private fun ReviewsInformation(
                     text = "$score ⭐",
                     style = MaterialTheme.typography.subtitle2,
                     fontSize = 18.sp,
-                    color = if (reviews.isEmpty()) Gray else AmericanOrange
+                    color = if (reviews.isEmpty()) Colors.Gray else Colors.AmericanOrange
                 )
             }
         }
@@ -118,8 +119,8 @@ private fun ReviewsInformation(
                     } else {
                         0f
                     },
-                    backgroundColor = LightGray,
-                    color = AmericanOrange,
+                    backgroundColor = Colors.LightGray,
+                    color = Colors.AmericanOrange,
                     modifier = Modifier
                         .clip(RoundedCornerShape(percent = 50))
                         .padding(vertical = 10.dp)
@@ -138,7 +139,7 @@ private fun ReviewsInformation(
                 Text(
                     text = scoreNumberOfReviews.toString(),
                     style = MaterialTheme.typography.subtitle2,
-                    color = Silver,
+                    color = Colors.Silver,
                     fontSize = 18.sp
                 )
             }

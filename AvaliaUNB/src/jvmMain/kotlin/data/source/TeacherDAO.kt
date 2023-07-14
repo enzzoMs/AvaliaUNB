@@ -15,7 +15,7 @@ class TeacherDAO @Inject constructor(
 
     fun getAllTeachers(): List<TeacherModel> {
         val allTeachersQueryResult = database.executeQuery(
-    "SELECT * FROM PROFESSORES_INFORMACOES"
+        "SELECT * FROM PROFESSORES_INFORMACOES"
         )
 
         val teachers = mutableListOf<TeacherModel>()

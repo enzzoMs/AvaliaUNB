@@ -4,9 +4,10 @@ import java.io.File
 import java.util.Properties
 
 object DatabaseUtils {
-    fun getSchemaPath() = DatabasePaths.SCHEMA
 
-    fun getDefaultDataPath() = DatabasePaths.DEFAULT_DATA
+    const val SCHEMA_PATH = DatabasePaths.SCHEMA
+
+    const val DEFAULT_DATA_PATH = DatabasePaths.DEFAULT_DATA
 
     fun getDepartmentCsvPath(prePopulatedSemester: PrePopulatedSemester) = String.format(
             DatabasePaths.Departments.BASE_CSV_PATH,
@@ -45,9 +46,13 @@ object DatabaseUtils {
             loadDataForSemester2023_1 = databaseProperties.getProperty("incluir_dados_2023_1").toBoolean()
         )
     }
-    private fun getSemesterFolder(prePopulatedSemester: PrePopulatedSemester) = "${prePopulatedSemester.year}.${prePopulatedSemester.semester_number}"
+    private fun getSemesterFolder(prePopulatedSemester: PrePopulatedSemester): String {
+        return "${prePopulatedSemester.year}.${prePopulatedSemester.semester_number}"
+    }
 
-    private fun getSemesterFileName(prePopulatedSemester: PrePopulatedSemester) = "${prePopulatedSemester.year}-${prePopulatedSemester.semester_number}"
+    private fun getSemesterFileName(prePopulatedSemester: PrePopulatedSemester): String {
+        return "${prePopulatedSemester.year}-${prePopulatedSemester.semester_number}"
+    }
 
 }
 

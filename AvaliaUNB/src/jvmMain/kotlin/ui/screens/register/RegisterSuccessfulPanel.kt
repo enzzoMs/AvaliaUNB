@@ -12,10 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import utils.resources.ResourcesUtils
-import theme.UnbGreen
-import theme.White
 import ui.components.buttons.PrimaryButton
+import utils.resources.Colors
+import utils.resources.Paths
+import utils.resources.Strings
 
 
 @Composable
@@ -42,13 +42,13 @@ private fun registerSuccessfulIcon(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .background(UnbGreen)
+            .background(Colors.UnbGreen)
             .then(modifier)
     ) {
         Icon(
-            painter = painterResource(ResourcesUtils.ImagePaths.CHECK_MARK_SPARKLES),
+            painter = painterResource(Paths.Images.CHECK_MARK_SPARKLES),
             contentDescription = null,
-            tint = White,
+            tint = Colors.White,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 30.dp, vertical = 70.dp)
@@ -68,15 +68,15 @@ private fun registerSuccessfulMessage(
             .then(modifier)
     ) {
         Text(
-            text = ResourcesUtils.Strings.REGISTER_SUCCESSFUL_TITLE,
+            text = Strings.REGISTER_SUCCESSFUL_TITLE,
             style = MaterialTheme.typography.h6,
             fontWeight = FontWeight.Bold,
-            color = UnbGreen,
+            color = Colors.UnbGreen,
             modifier = Modifier
                 .padding(bottom = 18.dp)
         )
         Text(
-            text = ResourcesUtils.Strings.REGISTER_SUCCESSFUL_MESSAGE,
+            text = Strings.REGISTER_SUCCESSFUL_MESSAGE,
             style = MaterialTheme.typography.subtitle1,
             modifier = Modifier
                 .padding(bottom = 28.dp)
@@ -88,7 +88,7 @@ private fun registerSuccessfulMessage(
         )
 
         PrimaryButton(
-            label = ResourcesUtils.Strings.BACK_TO_LOGIN_BUTTON,
+            label = Strings.REGISTER_BACK_TO_LOGIN_CAPITALIZED,
             onClick = onBackClicked,
             modifier = Modifier
                 .fillMaxWidth()

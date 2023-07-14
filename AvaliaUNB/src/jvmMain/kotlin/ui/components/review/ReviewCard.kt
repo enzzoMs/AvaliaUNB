@@ -22,10 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.ReportModel
 import data.models.ReviewModel
-import theme.*
 import ui.components.forms.GeneralDropDownMenu
 import ui.components.forms.MultilineTextField
-import utils.resources.ResourcesUtils
+import utils.resources.Colors
+import utils.resources.Strings
 
 private const val MAX_SCORE_STARS = 5
 private const val REVIEW_MAX_NUMBER_OF_CHARS = 850
@@ -49,7 +49,7 @@ fun ReviewCard(
     showAllReports: Boolean = false,
     getAllReports: (ReviewModel) -> List<ReportModel>,
     userNameTextStyle: TextStyle = MaterialTheme.typography.subtitle2,
-    backgroundColor: Color = White,
+    backgroundColor: Color = Colors.White,
     userRegistrationNumber: String,
     modifier: Modifier = Modifier
 ) {
@@ -61,7 +61,7 @@ fun ReviewCard(
     var userEditComment by remember { mutableStateOf(review.comment) }
     var userReportEditComment by remember { mutableStateOf(userReport?.description ?: "") }
     var reportComment by remember { mutableStateOf(userReportEditComment) }
-    var selectedStarRating by remember { mutableStateOf(ResourcesUtils.Strings.STAR_RATINGS.find {
+    var selectedStarRating by remember { mutableStateOf(Strings.LIST_STAR_RATINGS.find {
             rating -> rating.length == review.rating }!!)
     }
     var allReports by remember { mutableStateOf(getAllReports(review)) }
@@ -97,7 +97,7 @@ fun ReviewCard(
                     EditRemoveButtons(
                         onEditClicked = {
                             userEditComment = review.comment
-                            selectedStarRating = ResourcesUtils.Strings.STAR_RATINGS.find {
+                            selectedStarRating = Strings.LIST_STAR_RATINGS.find {
                                     rating -> rating.length == review.rating
                             }!!
                             isEditingReview = true
@@ -120,7 +120,7 @@ fun ReviewCard(
                         onCancelClicked = {
                             isEditingReview = false
                             isDeletingReview = false
-                            selectedStarRating = ResourcesUtils.Strings.STAR_RATINGS.find {
+                            selectedStarRating = Strings.LIST_STAR_RATINGS.find {
                                     rating -> rating.length == review.rating
                             }!!
                             userEditComment = review.comment
@@ -169,7 +169,7 @@ fun ReviewCard(
                     val report = getAllReports(review).find { it.userRegistrationNumber == userRegistrationNumber }
 
                     ReportCard(
-                        reportTitle = ResourcesUtils.Strings.USER_MADE_REPORT_FIELD_PREFIX,
+                        reportTitle = Strings.FIELD_PREFIX_REPORT_MADE,
                         description = report?.description ?: "",
                         showEdit = true,
                         onEditClicked = { isEditingReport = true },
@@ -250,7 +250,7 @@ private fun ReportCard(
                     Icon(
                         imageVector = Icons.Filled.Delete,
                         contentDescription = null,
-                        tint = DimGray,
+                        tint = Colors.DimGray,
                         modifier = Modifier
                             .padding(start = 6.dp)
                             .clip(CircleShape)
@@ -298,9 +298,9 @@ private fun ReportTextField(
             )
             Text(
                 text = if (isEditingReport) {
-                    ResourcesUtils.Strings.USER_MADE_REPORT_FIELD_PREFIX
+                    Strings.FIELD_PREFIX_REPORT_MADE
                 } else {
-                    ResourcesUtils.Strings.REPORT_REVIEW_FIELD_PREFIX
+                    Strings.FIELD_PREFIX_REPORT_REVIEW
                 },
                 style = MaterialTheme.typography.subtitle1,
                 color = MaterialTheme.colors.error
@@ -326,11 +326,11 @@ private fun ReportTextField(
                 onReportTextChanged(it)
             },
             error = isReportEmpty,
-            errorMessage = ResourcesUtils.Strings.REPORT_ERROR_EMPTY_DESCRIPTION,
+            errorMessage = Strings.FIELD_ERROR_REQUIRED_DESCRIPTION,
             maxNumberOfCharacters = REPORT_MAX_NUMBER_OF_CHARS,
             showCharacterCount = false,
             textFieldHeight = REPORT_FORM_HEIGHT,
-            hintText = ResourcesUtils.Strings.REPORT_REVIEW_FIELD_HINT
+            hintText = Strings.FIELD_HINT_REVIEW_REPORT
         )
     }
 }
@@ -346,7 +346,7 @@ private fun CommentTextField(
         onValueChange = onValueChanged,
         maxNumberOfCharacters = REVIEW_MAX_NUMBER_OF_CHARS,
         textFieldHeight = REVIEW_FORM_HEIGHT,
-        hintText = ResourcesUtils.Strings.REVIEW_FORM_HINT
+        hintText = Strings.FIELD_HINT_REVIEW
     )
 }
 
@@ -357,21 +357,21 @@ private fun ScoreDropdown(
 ) {
     Row {
         GeneralDropDownMenu(
-            menuItems = ResourcesUtils.Strings.STAR_RATINGS,
+            menuItems = Strings.LIST_STAR_RATINGS,
             selectedItem = selectedStarRating,
-            backgroundColor = AntiFlashWhite,
+            backgroundColor = Colors.AntiFlashWhite,
             onSelectItem = { onSelectRating(it) },
             selectedItemTextStyle = TextStyle(
                 fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
                 fontSize = 16.sp,
                 fontWeight = MaterialTheme.typography.subtitle2.fontWeight,
-                color = AmericanOrange
+                color = Colors.AmericanOrange
             ),
             dropDownTextStyle = TextStyle(
                 fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
                 fontSize = 16.sp,
                 fontWeight = MaterialTheme.typography.subtitle2.fontWeight,
-                color = AmericanOrange
+                color = Colors.AmericanOrange
             ),
             dropDownMenuMinWidth = 120.dp,
             dropDownMenuMinHeight = 250.dp,
@@ -414,7 +414,7 @@ private fun UserReviewScore(
             Icon(
                 imageVector = Icons.Filled.Star,
                 contentDescription = null,
-                tint = AmericanOrange,
+                tint = Colors.AmericanOrange,
                 modifier = Modifier
                     .size(16.dp)
             )
@@ -423,7 +423,7 @@ private fun UserReviewScore(
             Icon(
                 imageVector = Icons.Filled.Star,
                 contentDescription = null,
-                tint = Gray,
+                tint = Colors.Gray,
                 modifier = Modifier
                     .size(16.dp)
             )
@@ -453,7 +453,7 @@ private fun UserInformation(
         )
 
         Text(
-            text = ResourcesUtils.Strings.PUBLISHED,
+            text = Strings.FIELD_PREFIX_PUBLISHED,
             style = userNameTextStyle
         )
     }
@@ -479,7 +479,7 @@ private fun UserName(
     Text(
         text = name,
         style = userNameTextStyle,
-        color = MaterialTheme.colors.primary,
+        color = Colors.UnbBlue,
         modifier = Modifier
             .padding(end = 10.dp)
     )
@@ -507,7 +507,7 @@ private fun EditRemoveButtons(
     Icon(
         imageVector = Icons.Filled.Edit,
         contentDescription = null,
-        tint = DimGray,
+        tint = Colors.DimGray,
         modifier = Modifier
             .clip(CircleShape)
             .clickable { onEditClicked() }
@@ -515,7 +515,7 @@ private fun EditRemoveButtons(
     Icon(
         imageVector = Icons.Filled.Delete,
         contentDescription = null,
-        tint = DimGray,
+        tint = Colors.DimGray,
         modifier = Modifier
             .padding(start = 6.dp)
             .clip(CircleShape)
@@ -531,7 +531,7 @@ private fun ConfirmCancelButtons(
     Icon(
         imageVector = Icons.Filled.Check,
         contentDescription = null,
-        tint = UnbGreen,
+        tint = Colors.UnbGreen,
         modifier = Modifier
             .clip(CircleShape)
             .clickable { onConfirmClicked() }

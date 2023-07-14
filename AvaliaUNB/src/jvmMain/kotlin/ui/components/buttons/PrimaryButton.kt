@@ -9,8 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import theme.UnbGreen
-import theme.White
+import utils.resources.Colors
 
 @Composable
 fun PrimaryButton(
@@ -23,8 +22,8 @@ fun PrimaryButton(
         shape = RoundedCornerShape(4.dp),
         contentPadding = PaddingValues(10.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = UnbGreen,
-            contentColor = White
+            backgroundColor = Colors.UnbGreen,
+            contentColor = Colors.White
         ),
         modifier = modifier
     ) {

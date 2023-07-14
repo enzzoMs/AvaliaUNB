@@ -4,14 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.outlined.Badge
 import androidx.compose.material.icons.outlined.Logout
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -44,7 +42,8 @@ import ui.screens.teachers.all.TeachersScreen
 import ui.screens.teachers.single.SingleTeacherScreen
 import ui.screens.teachers.single.viewmodel.SingleTeacherViewModel
 import utils.navigation.Screen
-import utils.resources.ResourcesUtils
+import utils.resources.Colors
+import utils.resources.Strings
 
 const val NAV_NO_SELECTED_ITEM_INDEX = -1
 const val NAV_ITEM_SUBJECTS_INDEX = 0
@@ -67,7 +66,7 @@ fun MainScreen(
                 mainScreenUiState.onEditProfile -> NAV_NO_SELECTED_ITEM_INDEX
                 mainScreenUiState.selectedNavItemIndex == null -> {
                     mainScreenViewModel.updatePageInformation(
-                        newTitle = ResourcesUtils.Strings.SUBJECTS,
+                        newTitle = Strings.SUBJECTS,
                         newIcon = Icons.Outlined.School
                     )
                     NAV_ITEM_SUBJECTS_INDEX
@@ -97,7 +96,7 @@ fun MainScreen(
         ) {
             MainScreenContent(
                 pageTitle = if (mainScreenUiState.onEditProfile) {
-                    ResourcesUtils.Strings.PROFILE
+                    Strings.PROFILE
                 } else {
                     mainScreenUiState.pageTitle
                 },
@@ -258,13 +257,13 @@ private fun MainScreenContent(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .background(White)
+                .background(Colors.White)
         ) {
             if (pageIcon != null) {
                 Icon(
                     imageVector = pageIcon,
                     contentDescription = null,
-                    tint = DarkCharcoal,
+                    tint = Colors.DarkCharcoal,
                     modifier = Modifier
                         .padding(start = 16.dp)
                 )
@@ -310,7 +309,7 @@ private fun MainScreenContent(
                 Icon(
                     imageVector = Icons.Filled.ArrowDropDown,
                     contentDescription = null,
-                    tint = DimGray
+                    tint = Colors.DimGray
                 )
                 DropdownMenu(
                     expanded = userNameDropdownExpanded.value,
@@ -322,7 +321,7 @@ private fun MainScreenContent(
                             userNameDropdownExpanded.value = false
                         },
                     ) {
-                        Text(ResourcesUtils.Strings.EDIT_PROFILE)
+                        Text(Strings.ACTION_EDIT_PROFILE)
                     }
                 }
             }
@@ -337,13 +336,13 @@ private fun AdministratorBadge() {
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(percent = 50))
-            .background(UnbGreen)
+            .background(Colors.UnbGreen)
             .padding(vertical = 4.dp, horizontal = 12.dp)
     ) {
         Text(
-            text = ResourcesUtils.Strings.ADMINISTRATOR,
+            text = Strings.ADMINISTRATOR,
             style = MaterialTheme.typography.subtitle1,
-            color = White
+            color = Colors.White
         )
     }
 }
@@ -367,7 +366,7 @@ private fun UserName(
     Text(
         text = name,
         style = MaterialTheme.typography.h6,
-        color = DimGray,
+        color = Colors.DimGray,
         fontSize = 24.sp,
         modifier = Modifier
             .padding(start = 10.dp)
@@ -394,14 +393,14 @@ private fun SideNavigationPanel(
                     .padding(vertical = 28.dp, horizontal = 16.dp)
             ) {
                 Text(
-                    text = ResourcesUtils.Strings.COMPLETE_APP_TITLE,
+                    text = Strings.APP_TITLE_COMPLETE,
                     style = MaterialTheme.typography.h4,
-                    color = White,
+                    color = Colors.White,
                     modifier = Modifier
                         .padding(bottom = 20.dp)
                 )
                 Divider(
-                    color = White
+                    color = Colors.White
                 )
             }
         },
@@ -411,8 +410,8 @@ private fun SideNavigationPanel(
                 shape = RoundedCornerShape(4.dp),
                 contentPadding = PaddingValues(vertical = 10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = DarkCornflowerBlue,
-                    contentColor = White
+                    backgroundColor = Colors.DarkCornflowerBlue,
+                    contentColor = Colors.White
                 ),
                 modifier = Modifier
                     .padding(24.dp)
@@ -421,21 +420,21 @@ private fun SideNavigationPanel(
                 Icon(
                     imageVector = Icons.Outlined.Logout,
                     contentDescription = null,
-                    tint = White
+                    tint = Colors.White
                 )
                 Text(
-                    text = ResourcesUtils.Strings.LOGOUT_BUTTON,
+                    text = Strings.LOGOUT,
                     style = MaterialTheme.typography.button
                 )
             }
         },
         navPanelColors = NavigationPanelColors(
-            backgroundColor = DarkUnbBlue,
-            selectedItemColor = DarkCornflowerBlue,
-            unSelectedItemColor = DarkUnbBlue,
-            selectedTextColor = White,
-            unSelectedTextColor = ShadowBlue,
-            selectedIndicatorColor = White
+            backgroundColor = Colors.UnbBlueDark,
+            selectedItemColor = Colors.DarkCornflowerBlue,
+            unSelectedItemColor = Colors.UnbBlueDark,
+            selectedTextColor = Colors.White,
+            unSelectedTextColor = Colors.ShadowBlue,
+            selectedIndicatorColor = Colors.White
         ),
         navItems = navItems,
         modifier = modifier

@@ -23,17 +23,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.TeacherModel
-import theme.AmericanOrange
-import theme.Gray
-import theme.LightGray
-import theme.White
-import utils.resources.ResourcesUtils
+import utils.resources.Colors
+import utils.resources.Paths
+import utils.resources.Strings
 
 @Composable
 fun TeacherCard(
     teacherModel: TeacherModel,
-    backgroundColor: Color = White,
-    rippleColor: Color = Gray,
+    backgroundColor: Color = Colors.White,
+    rippleColor: Color = Colors.Gray,
     fieldNameTextStyle: TextStyle = MaterialTheme.typography.subtitle1,
     fieldTextStyle: TextStyle = MaterialTheme.typography.body1,
     showScore: Boolean = true,
@@ -72,7 +70,7 @@ fun TeacherCard(
             ) {
                 // Teacher Name
                 CardInformation(
-                    fieldName = ResourcesUtils.Strings.NAME_FIELD_PREFIX,
+                    fieldName = Strings.FIELD_PREFIX_NAME,
                     fieldNameTextStyle = MaterialTheme.typography.subtitle1,
                     fieldText = teacherModel.name,
                     fieldTextStyle = MaterialTheme.typography.body1,
@@ -82,7 +80,7 @@ fun TeacherCard(
 
                 // Teacher department name
                 CardInformation(
-                    fieldName = ResourcesUtils.Strings.DEPARTMENT_FIELD_PREFIX,
+                    fieldName = Strings.FIELD_PREFIX_DEPARTMENT,
                     fieldNameTextStyle = fieldNameTextStyle,
                     fieldText = teacherModel.departmentName,
                     fieldTextStyle = fieldTextStyle,
@@ -92,7 +90,7 @@ fun TeacherCard(
 
                 // Teacher semester
                 CardInformation(
-                    fieldName = ResourcesUtils.Strings.SEMESTER_FIELD_PREFIX,
+                    fieldName = Strings.FIELD_PREFIX_SEMESTER,
                     fieldNameTextStyle = fieldNameTextStyle,
                     fieldText = teacherModel.semester,
                     fieldTextStyle = fieldTextStyle,
@@ -111,21 +109,21 @@ fun TeacherCard(
                             .padding(14.dp)
                     ) {
                         Icon(
-                            painter = painterResource(ResourcesUtils.ImagePaths.GRADE),
+                            painter = painterResource(Paths.Images.GRADE),
                             contentDescription = null,
-                            tint = if (teacherModel.score == null) LightGray else AmericanOrange,
+                            tint = if (teacherModel.score == null) Colors.LightGray else Colors.AmericanOrange,
                             modifier = Modifier
                                 .size(60.dp)
                                 .padding(end = 12.dp, bottom = 5.dp)
                         )
                         if (teacherModel.score == null) {
                             Text(
-                                text = ResourcesUtils.Strings.NO_REVIEW_MULTILINE,
+                                text = Strings.NO_REVIEW_MULTILINE,
                                 style = TextStyle(
                                     fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
                                     fontWeight = FontWeight.Normal,
                                     fontSize = 18.sp,
-                                    color = Gray
+                                    color = Colors.Gray
                                 )
                             )
                         } else {

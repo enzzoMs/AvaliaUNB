@@ -21,15 +21,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.ClassModel
-import theme.*
-import ui.components.cards.CardInformation
-import utils.resources.ResourcesUtils
+import utils.resources.Colors
+import utils.resources.Paths
+import utils.resources.Strings
 
 @Composable
 fun ClassCard(
     classModel: ClassModel,
-    backgroundColor: Color = White,
-    rippleColor: Color = Gray,
+    backgroundColor: Color = Colors.White,
+    rippleColor: Color = Colors.Gray,
     subjectTitleTextStyle: TextStyle = MaterialTheme.typography.subtitle1,
     fieldNameTextStyle: TextStyle = MaterialTheme.typography.subtitle1,
     fieldTextStyle: TextStyle = MaterialTheme.typography.body1,
@@ -89,7 +89,7 @@ fun ClassCard(
 
             // Class department name
             CardInformation(
-                fieldName = ResourcesUtils.Strings.DEPARTMENT_FIELD_PREFIX,
+                fieldName = Strings.FIELD_PREFIX_DEPARTMENT,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = classModel.departmentName,
                 fieldTextStyle = fieldTextStyle,
@@ -99,9 +99,9 @@ fun ClassCard(
 
             // Class schedule
             CardInformation(
-                fieldName = ResourcesUtils.Strings.SCHEDULE_FIELD_PREFIX,
+                fieldName = Strings.FIELD_PREFIX_SCHEDULE,
                 fieldNameTextStyle = fieldNameTextStyle,
-                fieldText = classModel.schedule ?: ResourcesUtils.Strings.DEFAULT_CLASS_SCHEDULE,
+                fieldText = classModel.schedule ?: Strings.DEFAULT_CLASS_SCHEDULE,
                 fieldTextStyle = fieldTextStyle,
                 modifier = Modifier
                     .padding(bottom = 6.dp)
@@ -109,7 +109,7 @@ fun ClassCard(
 
             // Class location
             CardInformation(
-                fieldName = ResourcesUtils.Strings.LOCATION_FIELD_PREFIX,
+                fieldName = Strings.FIELD_PREFIX_LOCATION,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = classModel.location,
                 fieldTextStyle = fieldTextStyle,
@@ -119,7 +119,7 @@ fun ClassCard(
 
             // Class teacher
             CardInformation(
-                fieldName = ResourcesUtils.Strings.TEACHER_FIELD_PREFIX,
+                fieldName = Strings.FIELD_PREFIX_TEACHER,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = classModel.teacherName,
                 fieldTextStyle = fieldTextStyle,
@@ -129,7 +129,7 @@ fun ClassCard(
 
             // Class filled seats
             CardInformation(
-                fieldName = ResourcesUtils.Strings.FILLED_SEATS_FIELD_PREFIX,
+                fieldName = Strings.FIELD_PREFIX_FILLED_SEATS,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = "${classModel.filledSeats}/${classModel.totalSeats}",
                 fieldTextStyle = fieldTextStyle,
@@ -139,9 +139,9 @@ fun ClassCard(
 
             // Class semester
             CardInformation(
-                fieldName = ResourcesUtils.Strings.SEMESTER_FIELD_PREFIX,
+                fieldName = Strings.FIELD_PREFIX_SEMESTER,
                 fieldNameTextStyle = fieldNameTextStyle,
-                fieldText = "${classModel.semester.year}-${classModel.semester.semesterNumber}",
+                fieldText = "${classModel.semester.year}.${classModel.semester.semesterNumber}",
                 fieldTextStyle = fieldTextStyle,
                 modifier = Modifier
                     .padding(bottom = 6.dp)
@@ -156,21 +156,21 @@ fun ClassCard(
                     .padding(14.dp)
             ) {
                 Icon(
-                    painter = painterResource(ResourcesUtils.ImagePaths.GRADE),
+                    painter = painterResource(Paths.Images.GRADE),
                     contentDescription = null,
-                    tint = if (classModel.score == null) LightGray else AmericanOrange,
+                    tint = if (classModel.score == null) Colors.LightGray else Colors.AmericanOrange,
                     modifier = Modifier
                         .size(60.dp)
                         .padding(end = 12.dp, bottom = 5.dp)
                 )
                 if (classModel.score == null) {
                     Text(
-                        text = ResourcesUtils.Strings.NO_REVIEW_MULTILINE,
+                        text = Strings.NO_REVIEW_MULTILINE,
                         style = TextStyle(
                             fontFamily = MaterialTheme.typography.subtitle2.fontFamily,
                             fontWeight = FontWeight.Normal,
                             fontSize = 18.sp,
-                            color = Gray
+                            color = Colors.Gray
                         )
                     )
                 } else {

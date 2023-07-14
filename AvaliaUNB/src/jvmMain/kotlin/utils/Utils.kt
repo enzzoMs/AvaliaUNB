@@ -3,7 +3,7 @@ package utils
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.graphics.toComposeImageBitmap
-import utils.resources.ResourcesUtils
+import utils.resources.Paths
 import utils.schedule.ClassDaySchedule
 import utils.schedule.ScheduleShifts
 import utils.schedule.ClassScheduleDays
@@ -26,6 +26,7 @@ object Utils {
         val red = Random.nextInt(MAX_COLOR_COMPONENT_VALUE)
         val green = Random.nextInt(MAX_COLOR_COMPONENT_VALUE)
         val blue = Random.nextInt(MAX_COLOR_COMPONENT_VALUE)
+
         return Color(red, green, blue, transparencyValue)
     }
 
@@ -55,9 +56,10 @@ object Utils {
     }
 
     fun getDefaultProfilePictureBytes(): ByteArray {
-        val defaultProfilePic = ImageIO.read(File(ResourcesUtils.ImagePaths.PERSON)).toComposeImageBitmap().toAwtImage()
+        val defaultProfilePic = ImageIO.read(File(Paths.Images.PERSON)).toComposeImageBitmap().toAwtImage()
         val stream = ByteArrayOutputStream()
         ImageIO.write(defaultProfilePic, "png", stream)
+
         return stream.toByteArray()
     }
 }

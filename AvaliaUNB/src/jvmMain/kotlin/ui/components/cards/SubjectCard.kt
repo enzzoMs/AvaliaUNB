@@ -18,16 +18,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import data.models.SubjectModel
-import theme.Gray
-import theme.White
-import ui.components.cards.CardInformation
-import utils.resources.ResourcesUtils
+import utils.resources.Colors
+import utils.resources.Strings
 
 @Composable
 fun SubjectCard(
     subject: SubjectModel,
-    backgroundColor: Color = White,
-    rippleColor: Color = Gray,
+    backgroundColor: Color = Colors.White,
+    rippleColor: Color = Colors.Gray,
     subjectTitleTextStyle: TextStyle = MaterialTheme.typography.subtitle1,
     fieldNameTextStyle: TextStyle = MaterialTheme.typography.subtitle1,
     fieldTextStyle: TextStyle = MaterialTheme.typography.body1,
@@ -85,7 +83,7 @@ fun SubjectCard(
 
             // Subject department name
             CardInformation(
-                fieldName = ResourcesUtils.Strings.DEPARTMENT_FIELD_PREFIX,
+                fieldName = Strings.FIELD_PREFIX_DEPARTMENT,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = subject.departmentName,
                 fieldTextStyle = fieldTextStyle,
@@ -95,7 +93,7 @@ fun SubjectCard(
 
             // Subject semester
             CardInformation(
-                fieldName = ResourcesUtils.Strings.SEMESTER_FIELD_PREFIX,
+                fieldName = Strings.FIELD_PREFIX_SEMESTER,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = subject.semester,
                 fieldTextStyle = fieldTextStyle,
@@ -105,7 +103,7 @@ fun SubjectCard(
 
             // Subject number of classes
             CardInformation(
-                fieldName = ResourcesUtils.Strings.NUM_OF_CLASSES_FIELD_PREFIX,
+                fieldName = Strings.FIELD_PREFIX_NUM_OF_CLASSES,
                 fieldNameTextStyle = fieldNameTextStyle,
                 fieldText = subject.numberOfClasses.toString(),
                 fieldTextStyle = fieldTextStyle

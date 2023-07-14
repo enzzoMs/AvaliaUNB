@@ -17,7 +17,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Transparent
@@ -25,9 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import theme.AntiFlashWhite
-import theme.DimGray
-import theme.UnbGreen
+import utils.resources.Colors
 
 @Composable
 fun GeneralTextField(
@@ -35,15 +32,15 @@ fun GeneralTextField(
     onValueChange: (String) -> Unit,
     error: Boolean = false,
     hintText: String = "",
-    hintTextColor: Color = DimGray,
+    hintTextColor: Color = Colors.DimGray,
     textStyle: TextStyle = MaterialTheme.typography.body1,
     startIcon: ImageVector? = null,
     endIcon: ImageVector? = null,
     onEndIconClicked: (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    iconTint: Color = DimGray,
-    focusedBorderColor: Color = UnbGreen,
-    backgroundColor: Color = AntiFlashWhite,
+    iconTint: Color = Colors.DimGray,
+    focusedBorderColor: Color = Colors.UnbGreen,
+    backgroundColor: Color = Colors.AntiFlashWhite,
     enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {

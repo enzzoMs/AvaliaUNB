@@ -14,10 +14,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import theme.DimGray
-import theme.LightSilver
-import theme.UnbGreen
-import theme.White
+import utils.resources.Colors
 
 @Composable
 fun MultilineTextField(
@@ -29,11 +26,11 @@ fun MultilineTextField(
     maxNumberOfCharacters: Int? = null,
     showCharacterCount: Boolean = true,
     hintText: String = "",
-    hintTextColor: Color = DimGray,
+    hintTextColor: Color = Colors.DimGray,
     textStyle: TextStyle = MaterialTheme.typography.body1,
-    borderColor: Color = LightSilver,
-    focusedBorderColor: Color = UnbGreen,
-    backgroundColor: Color = White,
+    borderColor: Color = Colors.LightSilver,
+    focusedBorderColor: Color = Colors.UnbGreen,
+    backgroundColor: Color = Colors.White,
     enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {

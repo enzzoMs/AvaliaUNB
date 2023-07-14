@@ -23,15 +23,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.ClassModel
-import theme.DarkAntiFlashWhite
-import theme.DarkCharcoal
-import theme.UnbBlue
-import theme.White
-import ui.components.cards.ClassCard
 import ui.components.buttons.SecondaryButton
+import ui.components.cards.ClassCard
 import ui.components.cards.SubjectCard
 import ui.screens.subjects.single.viewmodel.SingleSubjectViewModel
-import utils.resources.ResourcesUtils
+import utils.resources.Colors
+import utils.resources.Strings
 
 @Composable
 fun SingleSubjectScreen(
@@ -44,17 +41,17 @@ fun SingleSubjectScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkAntiFlashWhite)
+            .background(Colors.DarkAntiFlashWhite)
             .padding(horizontal = 20.dp, vertical = 5.dp)
     ) {
         SubjectCard(
             subject = singleSubjectUiState.subjectModel,
-            backgroundColor = DarkAntiFlashWhite,
+            backgroundColor = Colors.DarkAntiFlashWhite,
             subjectTitleTextStyle = TextStyle(
                 fontFamily = MaterialTheme.typography.subtitle1.fontFamily,
                 fontWeight = MaterialTheme.typography.subtitle1.fontWeight,
                 fontSize = 20.sp,
-                color = DarkCharcoal
+                color = Colors.DarkCharcoal
             ),
         )
         SubjectClasses(
@@ -88,19 +85,19 @@ private fun SubjectClasses(
                 modifier = Modifier
                     .padding(end = 12.dp)
                     .clip(RoundedCornerShape(percent = 15))
-                    .background(UnbBlue)
+                    .background(Colors.UnbBlue)
             ) {
                 Icon(
                     imageVector = Icons.Outlined.CollectionsBookmark,
                     contentDescription = null,
-                    tint = White,
+                    tint = Colors.White,
                     modifier = Modifier
                         .padding(5.dp)
                 )
             }
 
             Text(
-                text = ResourcesUtils.Strings.CLASSES,
+                text = Strings.CLASSES,
                 style = MaterialTheme.typography.subtitle1,
                 fontSize = 20.sp
             )
@@ -153,7 +150,7 @@ private fun BackButton(
                 .weight(1.5f)
         )
         SecondaryButton(
-            label = ResourcesUtils.Strings.BACK_BUTTON,
+            label = Strings.CAPITALIZED_BACK,
             onClick = onClicked,
             modifier = Modifier
                 .weight(1f)

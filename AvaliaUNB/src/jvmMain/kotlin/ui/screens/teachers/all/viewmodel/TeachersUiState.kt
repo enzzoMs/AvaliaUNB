@@ -1,6 +1,5 @@
 package ui.screens.teachers.all.viewmodel
 
-import data.models.ClassModel
 import data.models.TeacherModel
 
 data class TeachersUiState(

@@ -11,13 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import theme.LightGray
-import theme.UnbBlue
-import theme.White
 import utils.Utils
-import utils.resources.ResourcesUtils
-import utils.schedule.ScheduleShifts
+import utils.resources.Colors
+import utils.resources.Strings
 import utils.schedule.ClassScheduleDays
+import utils.schedule.ScheduleShifts
 
 private val SCHEDULE_MORNING_CODES = 1..5
 private val SCHEDULE_AFTERNOON_CODES = 1..7
@@ -62,22 +60,22 @@ private fun ScheduleColumn(
         modifier = modifier
     ) {
         Text(
-            text = ResourcesUtils.Strings.SCHEDULES,
+            text = Strings.SCHEDULES,
             style = MaterialTheme.typography.subtitle1,
             textAlign = TextAlign.Center,
-            color = White,
+            color = Colors.White,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(UnbBlue)
+                .background(Colors.UnbBlue)
                 .padding(vertical = 8.dp, horizontal = 20.dp)
         )
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .background(LightGray)
+                .background(Colors.LightGray)
         ) {
-            for (scheduleTime in ResourcesUtils.Strings.SCHEDULES_LIST) {
+            for (scheduleTime in Strings.LIST_SCHEDULES) {
                 Text(
                     text = scheduleTime,
                     style = MaterialTheme.typography.subtitle1,
@@ -106,17 +104,17 @@ private fun ScheduleWeekDay(
             text = day.label,
             style = MaterialTheme.typography.subtitle1,
             textAlign = TextAlign.Center,
-            color = White,
+            color = Colors.White,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(UnbBlue)
+                .background(Colors.UnbBlue)
                 .padding(vertical = 8.dp, horizontal = 10.dp)
         )
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .background(White)
+                .background(Colors.White)
         ) {
             val scheduleCodesByShift = listOf(
                 SCHEDULE_MORNING_CODES to ScheduleShifts.MORNING,

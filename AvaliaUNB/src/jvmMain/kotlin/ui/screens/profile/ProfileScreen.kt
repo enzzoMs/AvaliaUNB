@@ -20,12 +20,13 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import utils.resources.ResourcesUtils
 import theme.*
 import ui.components.buttons.PrimaryButton
 import ui.components.buttons.SecondaryButton
 import ui.components.forms.UserFormFields
 import ui.screens.profile.viewmodel.ProfileViewModel
+import utils.resources.Colors
+import utils.resources.Strings
 
 private const val NUMBER_OF_FIELDS = 5
 
@@ -44,7 +45,7 @@ fun ProfileScreen(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .background(DarkAntiFlashWhite)
+                .background(Colors.DarkAntiFlashWhite)
                 .verticalScroll(stateVertical)
         ) {
             Row(
@@ -106,7 +107,7 @@ fun ProfileScreen(
                             )
                         },
                         enabledFields = List(NUMBER_OF_FIELDS) { profileUiState.isEditingFields },
-                        backgroundColor = Platinum,
+                        backgroundColor = Colors.Platinum,
                         modifier = Modifier
                             .padding(top = 30.dp)
                     )
@@ -158,20 +159,20 @@ private fun DeleteAccountButton(
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = MaterialTheme.colors.error,
-                contentColor = White
+                contentColor = Colors.White
             )
         ) {
             Icon(
                 imageVector = Icons.Filled.Delete,
                 contentDescription = null,
-                tint = White,
+                tint = Colors.White,
                 modifier = Modifier
                     .padding(end = 8.dp)
             )
             Text(
-                text = ResourcesUtils.Strings.DELETE_ACCOUNT_BUTTON,
+                text = Strings.ACTION_DELETE_ACCOUNT,
                 style = MaterialTheme.typography.button,
-                color = White
+                color = Colors.White
             )
         }
 
@@ -188,15 +189,15 @@ private fun DeleteAccountButton(
                     ),
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = White
+                        backgroundColor = Colors.White
                     ),
                     modifier = Modifier
                         .padding(start = 24.dp)
                 ) {
                     Text(
-                        text = ResourcesUtils.Strings.CANCEL_BUTTON_LOWERCASE,
+                        text = Strings.CANCEL,
                         style = MaterialTheme.typography.button,
-                        color = DimGray
+                        color = Colors.DimGray
                     )
                 }
 
@@ -212,15 +213,15 @@ private fun DeleteAccountButton(
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = MaterialTheme.colors.error,
-                        contentColor = White
+                        contentColor = Colors.White
                     ),
                     modifier = Modifier
                         .padding(start = 16.dp)
                 ) {
                     Text(
-                        text = ResourcesUtils.Strings.CONFIRM_BUTTON,
+                        text = Strings.CONFIRM,
                         style = MaterialTheme.typography.button,
-                        color = White
+                        color = Colors.White
                     )
                 }
             }
@@ -269,7 +270,7 @@ private fun UserProfilePicture(
                     Icon(
                         imageVector = Icons.Outlined.Close,
                         contentDescription = null,
-                        tint = White
+                        tint = Colors.White
                     )
                 }
             }
@@ -287,7 +288,7 @@ private fun UserProfilePicture(
                     focusedElevation = 0.dp
                 ),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = DarkAntiFlashWhite
+                    backgroundColor = Colors.DarkAntiFlashWhite
                 ),
                 modifier = Modifier
                     .padding(top = 30.dp, end = 60.dp, start = 60.dp)
@@ -295,21 +296,21 @@ private fun UserProfilePicture(
                     .clip(RoundedCornerShape(4.dp))
                     .border(
                         width = 2.dp,
-                        color = Platinum,
+                        color = Colors.Platinum,
                         shape = RoundedCornerShape(4.dp),
                     )
             ) {
                 Icon(
                     imageVector = Icons.Filled.Image,
                     contentDescription = null,
-                    tint = Gray,
+                    tint = Colors.Gray,
                     modifier = Modifier
                         .padding(end = 8.dp)
                 )
                 Text(
-                    text = ResourcesUtils.Strings.PICK_PROFILE_PIC_BUTTON,
+                    text = Strings.ACTION_PICK_IMAGE,
                     style = MaterialTheme.typography.button,
-                    color = Gray
+                    color = Colors.Gray
                 )
             }
         }
@@ -324,7 +325,7 @@ private fun EditAndBackButtons(
 ) {
     Row {
         PrimaryButton(
-            label = ResourcesUtils.Strings.EDIT_PROFILE_BUTTON,
+            label = Strings.CAPITALIZED_EDIT,
             onClick = onEditClicked,
             modifier = Modifier
                 .weight(1f)
@@ -333,7 +334,7 @@ private fun EditAndBackButtons(
         )
 
         SecondaryButton(
-            label = ResourcesUtils.Strings.BACK_BUTTON,
+            label = Strings.CAPITALIZED_BACK,
             onClick = onBackClicked,
             modifier = Modifier
                 .weight(1f)
@@ -351,7 +352,7 @@ private fun FinishAndCancelButtons(
 ) {
     Row {
         PrimaryButton(
-            label = ResourcesUtils.Strings.FINISH_BUTTON,
+            label = Strings.CAPITALIZED_FINISH,
             onClick = onFinishEditClicked,
             modifier = Modifier
                 .weight(1f)
@@ -360,7 +361,7 @@ private fun FinishAndCancelButtons(
         )
 
         SecondaryButton(
-            label = ResourcesUtils.Strings.CANCEL_BUTTON_UPPERCASE,
+            label = Strings.CAPITALIZED_CANCEL,
             onClick = onCancelEditClicked,
             modifier = Modifier
                 .weight(1f)

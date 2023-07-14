@@ -1,11 +1,11 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import di.DaggerComponentHolder
-import theme.AvaliaUnbTheme
 import ui.screens.entry.EntryScreen
 import ui.screens.main.MainScreen
 import ui.screens.main.viewmodel.MainScreenViewModel
@@ -13,7 +13,9 @@ import ui.screens.splash.SplashScreen
 import utils.navigation.NavigationComponent
 import utils.navigation.NavigationController
 import utils.navigation.Screen
-import utils.resources.ResourcesUtils
+import utils.resources.Paths
+import utils.resources.Strings
+import utils.resources.Typography
 import java.awt.GraphicsEnvironment
 import javax.swing.JFrame
 import javax.swing.UIManager
@@ -31,15 +33,18 @@ fun main() = application {
 
     Window(
         onCloseRequest = ::exitApplication,
-        title = ResourcesUtils.Strings.COMPLETE_APP_TITLE,
-        icon = painterResource(ResourcesUtils.ImagePaths.APP_ICON)
+        title = Strings.APP_TITLE_COMPLETE,
+        icon = painterResource(Paths.Images.APP_ICON)
     ) {
         window.minimumSize = screenBounds.size
         window.extendedState = JFrame.MAXIMIZED_BOTH
 
-        AvaliaUnbTheme {
-            AppAvaliaUNB()
-        }
+        MaterialTheme(
+            typography = Typography,
+            content = {
+                AppAvaliaUNB()
+            }
+        )
     }
 }
 

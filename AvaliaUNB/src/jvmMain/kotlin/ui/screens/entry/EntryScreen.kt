@@ -18,6 +18,7 @@ import ui.screens.register.RegisterSuccessfulPanel
 import utils.navigation.NavigationComponent
 import utils.navigation.NavigationController
 import utils.navigation.Screen
+import utils.resources.Colors
 
 @Composable
 fun EntryScreen(
@@ -77,7 +78,7 @@ fun EntryScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f)
-                .background(MaterialTheme.colors.primary)
+                .background(Colors.UnbBlue)
         ) {
             EntrySideCarouselPanel()
         }

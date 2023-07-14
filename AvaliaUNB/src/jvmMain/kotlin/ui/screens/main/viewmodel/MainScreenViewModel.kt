@@ -17,19 +17,19 @@ import ui.screens.main.NAV_ITEM_CLASSES_INDEX
 import ui.screens.main.NAV_ITEM_SUBJECTS_INDEX
 import ui.screens.main.NAV_ITEM_TEACHERS_INDEX
 import utils.navigation.Screen
-import utils.resources.ResourcesUtils
+import utils.resources.Strings
 
 class MainScreenViewModel(
     userModel: UserModel
 ) {
     private val navItemSubjects = NavigationItem(
-        ResourcesUtils.Strings.SUBJECTS, Icons.Outlined.School, NAV_ITEM_SUBJECTS_INDEX
+        Strings.SUBJECTS, Icons.Outlined.School, NAV_ITEM_SUBJECTS_INDEX
     )
     private val navItemClasses = NavigationItem(
-        ResourcesUtils.Strings.CLASSES, Icons.Outlined.CollectionsBookmark, NAV_ITEM_CLASSES_INDEX
+        Strings.CLASSES, Icons.Outlined.CollectionsBookmark, NAV_ITEM_CLASSES_INDEX
     )
     private val navItemTeachers = NavigationItem(
-        ResourcesUtils.Strings.TEACHERS, Icons.Outlined.Group, NAV_ITEM_TEACHERS_INDEX
+        Strings.TEACHERS, Icons.Outlined.Group, NAV_ITEM_TEACHERS_INDEX
     )
 
     private val _mainScreenUiState = MutableStateFlow(

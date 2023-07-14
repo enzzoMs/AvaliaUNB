@@ -14,11 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import data.models.SubjectModel
-import theme.DarkAntiFlashWhite
 import ui.components.cards.SubjectCard
 import ui.components.forms.SearchAndFilterFields
 import ui.components.loading.Loading
 import ui.screens.subjects.all.viewmodel.SubjectsViewModel
+import utils.resources.Colors
 
 @Composable
 fun SubjectsScreen(
@@ -30,7 +30,7 @@ fun SubjectsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkAntiFlashWhite)
+            .background(Colors.DarkAntiFlashWhite)
             .padding(horizontal = 20.dp, vertical = 30.dp)
     ) {
         SearchAndFilterFields(

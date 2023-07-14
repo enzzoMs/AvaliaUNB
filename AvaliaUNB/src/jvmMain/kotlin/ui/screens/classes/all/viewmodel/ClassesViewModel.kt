@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import utils.resources.ResourcesUtils
+import utils.resources.Strings
 import javax.inject.Inject
 
 class ClassesViewModel @Inject constructor(
@@ -33,7 +33,7 @@ class ClassesViewModel @Inject constructor(
                 departmentNames = listOf(),
                 semesters = semesters,
                 semesterFilter = semesters.first(),
-                ratingFilters = ResourcesUtils.Strings.RATING_FILTERS
+                ratingFilters = Strings.LIST_RATING_FILTERS
             )
         )
 

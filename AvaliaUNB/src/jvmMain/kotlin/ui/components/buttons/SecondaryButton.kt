@@ -9,8 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import theme.DimGray
-import theme.Platinum
+import utils.resources.Colors
 
 @Composable
 fun SecondaryButton(
@@ -23,14 +22,14 @@ fun SecondaryButton(
         shape = RoundedCornerShape(4.dp),
         contentPadding = PaddingValues(10.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Platinum
+            backgroundColor = Colors.Platinum
         ),
         modifier = modifier
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.button,
-            color = DimGray
+            color = Colors.DimGray
         )
     }
 }

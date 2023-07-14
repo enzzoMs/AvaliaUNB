@@ -14,11 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import data.models.ClassModel
-import theme.DarkAntiFlashWhite
 import ui.components.cards.ClassCard
 import ui.components.forms.SearchAndFilterFields
 import ui.components.loading.Loading
 import ui.screens.classes.all.viewmodel.ClassesViewModel
+import utils.resources.Colors
 
 @Composable
 fun ClassesScreen(
@@ -30,7 +30,7 @@ fun ClassesScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkAntiFlashWhite)
+            .background(Colors.DarkAntiFlashWhite)
             .padding(horizontal = 20.dp, vertical = 30.dp)
     ) {
         SearchAndFilterFields(

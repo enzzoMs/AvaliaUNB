@@ -32,14 +32,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import utils.resources.ResourcesUtils
-import theme.DimGray
-import theme.Gray
-import theme.UnbBlue
-import theme.UnbGreen
 import ui.components.splash.AnimatedSplashScreen
 import ui.screens.splash.viewmodel.SplashViewModel
 import utils.database.PrePopulatedSemester
+import utils.resources.Colors
+import utils.resources.Strings
 
 const val SPLASH_ANIMATION_DURATION_MS = 2000
 const val POST_DATABASE_INITIALIZATION_DELAY_MS = 700L
@@ -92,22 +89,22 @@ fun SplashScreen(
                         text = buildAnnotatedString {
                             withStyle(
                                 style = SpanStyle(
-                                    color = UnbBlue,
+                                    color = Colors.UnbBlue,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 56.sp
                                 )
                             ) {
-                                append(ResourcesUtils.Strings.FIRST_PART_APP_TITLE)
+                                append(Strings.APP_TITLE_FIRST_PART)
                             }
 
                             withStyle(
                                 style = SpanStyle(
-                                    color = UnbGreen,
+                                    color = Colors.UnbGreen,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 56.sp
                                 )
                             ) {
-                                append(ResourcesUtils.Strings.SECOND_PART_APP_TITLE)
+                                append(Strings.APP_TITLE_SECOND_PART)
                             }
                         }
                     )
@@ -137,10 +134,10 @@ private fun LoadDatabaseStatus(
     ) {
         // Initializing database schema
         Text(
-            text = ResourcesUtils.Strings.INITIALIZING_DATABASE,
+            text = Strings.DATABASE_INITIALIZING,
             style = MaterialTheme.typography.h4,
             fontSize = 26.sp,
-            color = DimGray
+            color = Colors.DimGray
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -148,13 +145,13 @@ private fun LoadDatabaseStatus(
                 .padding(top = 20.dp)
         ) {
             Text(
-                text = ResourcesUtils.Strings.CREATING_DATABASE_SCHEMA,
+                text = Strings.DATABASE_CREATING_SCHEMA,
                 style = MaterialTheme.typography.h6,
-                color = Gray
+                color = Colors.Gray
             )
             if (isSchemaLoading) {
                 CircularProgressIndicator(
-                    color = UnbGreen,
+                    color = Colors.UnbGreen,
                     strokeWidth = 2.dp,
                     modifier = Modifier
                         .padding(start = 10.dp)
@@ -164,7 +161,7 @@ private fun LoadDatabaseStatus(
                 Icon(
                     imageVector = Icons.Filled.Check,
                     contentDescription = null,
-                    tint = UnbGreen,
+                    tint = Colors.UnbGreen,
                     modifier = Modifier
                         .padding(start = 10.dp)
                 )
@@ -174,10 +171,10 @@ private fun LoadDatabaseStatus(
         // Initializing database data
         if (initializeDatabaseData) {
             Text(
-                text = ResourcesUtils.Strings.INITIALIZING_DATABASE_DATA,
+                text = Strings.DATABASE_INITIALIZING_DATA,
                 style = MaterialTheme.typography.h4,
                 fontSize = 26.sp,
-                color = DimGray,
+                color = Colors.DimGray,
                 modifier = Modifier
                     .padding(top = 30.dp)
             )
@@ -211,19 +208,19 @@ private fun SemesterDataLoadingStatus(
             text = "${prePopulatedSemester.year}-${prePopulatedSemester.semester_number}",
             style = MaterialTheme.typography.h4,
             fontSize = 26.sp,
-            color = DimGray
+            color = Colors.DimGray
         )
 
         ItemLoadingStatus(
-            itemLabel = ResourcesUtils.Strings.DEPARTMENTS,
+            itemLabel = Strings.DEPARTMENTS,
             itemStatus = departmentStatus
         )
         ItemLoadingStatus(
-            itemLabel = ResourcesUtils.Strings.SUBJECTS,
+            itemLabel = Strings.SUBJECTS,
             itemStatus = subjectsStatus
         )
         ItemLoadingStatus(
-            itemLabel = ResourcesUtils.Strings.CLASSES,
+            itemLabel = Strings.CLASSES,
             itemStatus = classesStatus
         )
     }
@@ -242,11 +239,11 @@ private fun ItemLoadingStatus(
         Text(
             text = itemLabel,
             style = MaterialTheme.typography.h6,
-            color = Gray
+            color = Colors.Gray
         )
         if (itemStatus == LoadingStatus.LOADING) {
             CircularProgressIndicator(
-                color = UnbGreen,
+                color = Colors.UnbGreen,
                 strokeWidth = 2.dp,
                 modifier = Modifier
                     .padding(start = 10.dp)
@@ -256,7 +253,7 @@ private fun ItemLoadingStatus(
             Icon(
                 imageVector = if (itemStatus == LoadingStatus.COMPLETED) Icons.Filled.Check else Icons.Outlined.Schedule,
                 contentDescription = null,
-                tint = if (itemStatus == LoadingStatus.COMPLETED) UnbGreen else Gray,
+                tint = if (itemStatus == LoadingStatus.COMPLETED) Colors.UnbGreen else Colors.Gray,
                 modifier = Modifier
                     .padding(start = 10.dp)
             )

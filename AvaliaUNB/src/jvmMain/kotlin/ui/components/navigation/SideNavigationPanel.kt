@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import theme.White
+import utils.resources.Colors
 
 data class NavigationPanelColors(
     val backgroundColor: Color,
@@ -40,14 +40,7 @@ fun SideNavigationPanel(
     contentTop: (@Composable () -> Unit) = {},
     contentBottom: (@Composable () -> Unit) = {},
     onItemClicked: (NavigationItem) -> Unit = {},
-    navPanelColors: NavigationPanelColors = NavigationPanelColors(
-        backgroundColor = MaterialTheme.colors.primary,
-        selectedItemColor = MaterialTheme.colors.onPrimary,
-        unSelectedItemColor = MaterialTheme.colors.primaryVariant,
-        selectedTextColor = MaterialTheme.colors.secondary,
-        unSelectedTextColor = MaterialTheme.colors.secondaryVariant,
-        selectedIndicatorColor = MaterialTheme.colors.onPrimary
-    ),
+    navPanelColors: NavigationPanelColors,
     navItems: List<NavigationItem>,
     textStyle: TextStyle = MaterialTheme.typography.h6,
     modifier: Modifier = Modifier
@@ -89,11 +82,11 @@ fun NavigationItem(
     textStyle: TextStyle = MaterialTheme.typography.subtitle2,
     icon: ImageVector? = null,
     isSelected: Boolean = false,
-    selectedColor: Color = MaterialTheme.colors.onPrimary,
-    unSelectedColor: Color = MaterialTheme.colors.primaryVariant,
-    selectedTextColor: Color = MaterialTheme.colors.secondary,
-    unSelectedTextColor: Color = MaterialTheme.colors.secondaryVariant,
-    selectedIndicatorColor: Color = MaterialTheme.colors.onPrimary,
+    selectedColor: Color,
+    unSelectedColor: Color,
+    selectedTextColor: Color,
+    unSelectedTextColor: Color,
+    selectedIndicatorColor: Color,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -103,7 +96,7 @@ fun NavigationItem(
             .height(IntrinsicSize.Min)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(color = White),
+                indication = rememberRipple(color = Colors.White),
             ) { onClick() }
             .then(modifier)
     ) {

@@ -1,11 +1,14 @@
 package ui.components.forms
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -19,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import theme.*
+import utils.resources.Colors
 
 @Composable
 fun GeneralDropDownMenu(
@@ -30,7 +33,7 @@ fun GeneralDropDownMenu(
     dropDownMenuMinHeight: Dp = 400.dp,
     selectedItemTextStyle: TextStyle = MaterialTheme.typography.subtitle2,
     dropDownTextStyle: TextStyle = MaterialTheme.typography.subtitle2,
-    backgroundColor: Color = White,
+    backgroundColor: Color = Colors.White,
     modifier: Modifier = Modifier
 ) {
     var expandedState by remember { mutableStateOf(false) }
@@ -42,7 +45,7 @@ fun GeneralDropDownMenu(
             .background(backgroundColor)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(color = Gray),
+                indication = rememberRipple(color = Colors.Gray),
             ) { expandedState = !expandedState }
             .padding(vertical = 8.dp, horizontal = 10.dp)
             .then(modifier)
@@ -103,7 +106,7 @@ fun GeneralDropDownMenu(
         Icon(
             imageVector = Icons.Filled.ExpandMore,
             contentDescription = null,
-            tint = DimGray,
+            tint = Colors.DimGray,
             modifier = Modifier
                 .padding(
                     end = 6.dp

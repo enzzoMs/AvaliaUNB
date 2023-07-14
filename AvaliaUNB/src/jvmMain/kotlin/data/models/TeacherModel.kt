@@ -2,7 +2,7 @@ package data.models
 
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toComposeImageBitmap
-import utils.resources.ResourcesUtils
+import utils.resources.Paths
 import java.io.File
 import javax.imageio.ImageIO
 
@@ -13,5 +13,5 @@ data class TeacherModel(
     val semester: String,
     val score: Double?,
     val numOfReviews: Int = 0,
-    val profilePicture: ImageBitmap = ImageIO.read(File(ResourcesUtils.ImagePaths.PERSON)).toComposeImageBitmap()
+    val profilePicture: ImageBitmap = ImageIO.read(File(Paths.Images.PERSON)).toComposeImageBitmap()
 )

@@ -16,14 +16,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-import utils.resources.ResourcesUtils
-import theme.AntiFlashWhite
-import theme.DimGray
-import theme.UnbGreen
-import theme.White
 import ui.components.buttons.PrimaryButton
 import ui.components.forms.UserFormFields
 import ui.screens.register.viewmodel.RegisterFormViewModel
+import utils.resources.Colors
+import utils.resources.Strings
 
 @Composable
 fun RegisterFormPanel(
@@ -95,14 +92,14 @@ private fun RegisterFormTitle(
             shape = RectangleShape,
             contentPadding = PaddingValues(start = 38.dp, end = 24.dp, top = 10.dp, bottom = 10.dp),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = UnbGreen,
-                contentColor = White
+                backgroundColor = Colors.UnbGreen,
+                contentColor = Colors.White
             ),
         ) {
             Icon(
                 imageVector = Icons.Filled.ArrowBackIos,
                 contentDescription = null,
-                tint = White
+                tint = Colors.White
             )
         }
 
@@ -115,12 +112,12 @@ private fun RegisterFormTitle(
             modifier = Modifier
                 .padding(end = 32.dp)
                 .clip(CircleShape)
-                .background(AntiFlashWhite)
+                .background(Colors.AntiFlashWhite)
         ) {
             Icon(
                 imageVector = Icons.Outlined.PersonAdd,
                 contentDescription = null,
-                tint = DimGray,
+                tint = Colors.DimGray,
                 modifier = Modifier
                     .size(60.dp)
                     .padding(10.dp)
@@ -130,7 +127,7 @@ private fun RegisterFormTitle(
     }
 
     Text(
-        text = ResourcesUtils.Strings.REGISTER_FORM_TITLE,
+        text = Strings.REGISTER,
         style = MaterialTheme.typography.h6,
         modifier = Modifier
             .padding(start = 32.dp, end = 32.dp, top = 40.dp)
@@ -146,7 +143,7 @@ private fun RegisterFormTitle(
 @Composable
 private fun RegisterFormButton(onRegisterButtonClicked: () -> Unit) {
     PrimaryButton(
-        label = ResourcesUtils.Strings.REGISTER_BUTTON,
+        label = Strings.REGISTER,
         onClick = onRegisterButtonClicked,
         modifier = Modifier
             .fillMaxWidth()

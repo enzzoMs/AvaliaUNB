@@ -4,9 +4,7 @@ import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import data.models.UserModel
 import utils.Utils
-import utils.resources.ResourcesUtils
 import java.io.ByteArrayOutputStream
-import java.io.File
 import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.inject.Singleton

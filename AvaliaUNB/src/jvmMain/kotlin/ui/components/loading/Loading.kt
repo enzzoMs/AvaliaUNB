@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import theme.LightGray
-import utils.resources.ResourcesUtils
+import utils.resources.Colors
+import utils.resources.Strings
 
 @Composable
 fun Loading() {
@@ -23,13 +23,13 @@ fun Loading() {
             .padding(vertical = 80.dp)
     ) {
         CircularProgressIndicator(
-            color = LightGray,
+            color = Colors.LightGray,
             strokeWidth = 3.dp,
             modifier = Modifier
                 .size(80.dp)
         )
         Text(
-            text = ResourcesUtils.Strings.LOADING,
+            text = Strings.LOADING,
             style = MaterialTheme.typography.subtitle2,
             modifier = Modifier
                 .padding(top = 16.dp)

@@ -18,9 +18,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
-import theme.Green
-import theme.LightSilver
-import theme.White
+import utils.resources.Colors
 
 @Composable
 fun AutoSlidingImageCarousel(
@@ -62,7 +60,7 @@ fun AutoSlidingImageCarousel(
                     Text(
                         text = it,
                         style = MaterialTheme.typography.subtitle2,
-                        color = White,
+                        color = Colors.White,
                         fontSize = 18.sp,
                         textAlign = TextAlign.Justify,
                         modifier = Modifier
@@ -73,7 +71,7 @@ fun AutoSlidingImageCarousel(
                     Text(
                         text = it,
                         style = MaterialTheme.typography.body1,
-                        color = White,
+                        color = Colors.White,
                         textAlign = TextAlign.Justify
                     )
                 }
@@ -102,8 +100,8 @@ private fun GroupIndicatorDots(
     numberOfDots: Int,
     dotPadding: Dp = 8.dp,
     selectedDotIndex: Int = 0,
-    dotSelectedColor: Color = Green,
-    dotUnSelectedColor: Color = LightSilver,
+    dotSelectedColor: Color = Colors.Green,
+    dotUnSelectedColor: Color = Colors.LightSilver,
     modifier: Modifier = Modifier
 ) {
     Row(

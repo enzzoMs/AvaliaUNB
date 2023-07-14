@@ -16,7 +16,7 @@ import utils.Utils
 import utils.database.DatabaseConfiguration
 import utils.database.DatabaseUtils
 import utils.database.PrePopulatedSemester
-import utils.resources.ResourcesUtils
+import utils.resources.Paths
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.sql.DriverManager
@@ -50,6 +50,11 @@ class DatabaseManager @Inject constructor(
     )
     val databaseLoadingStatus = _databaseLoadingStatus.asStateFlow()
 
+    fun prepareStatement(sqlStatement: String): PreparedStatement = databaseConnection.prepareStatement(sqlStatement)
+
+    fun executeStatement(sqlStatement: String) = databaseConnection.prepareStatement(sqlStatement).execute()
+
+    fun executeQuery(sqlQueryStatement: String): ResultSet = databaseConnection.prepareStatement(sqlQueryStatement).executeQuery()
 
     fun configureDatabase() {
         CoroutineScope(Dispatchers.IO).launch {
@@ -64,12 +69,6 @@ class DatabaseManager @Inject constructor(
             }
         }
     }
-
-    fun prepareStatement(sqlStatement: String): PreparedStatement = databaseConnection.prepareStatement(sqlStatement)
-
-    fun executeStatement(sqlStatement: String) = databaseConnection.prepareStatement(sqlStatement).execute()
-
-    fun executeQuery(sqlQueryStatement: String): ResultSet = databaseConnection.prepareStatement(sqlQueryStatement).executeQuery()
 
     private fun initializeDatabase() {
         databaseConnection.autoCommit = false
@@ -100,7 +99,7 @@ class DatabaseManager @Inject constructor(
 
         val splitDatabaseSchemaBySemicolon = Regex("(?<![a-z])(?<!([a-z]\\)));")
 
-        val databaseSchema = File(DatabaseUtils.getSchemaPath()).readText()
+        val databaseSchema = File(DatabaseUtils.SCHEMA_PATH).readText()
 
         val statements = databaseSchema.split(splitDatabaseSchemaBySemicolon)
 
@@ -116,7 +115,7 @@ class DatabaseManager @Inject constructor(
     private fun initializeDatabaseDefaultData() {
         val splitDatabaseSchemaBySemicolon = Regex("(?<![a-z])(?<!([a-z]\\)));")
 
-        val defaultData = File(DatabaseUtils.getDefaultDataPath()).readText()
+        val defaultData = File(DatabaseUtils.DEFAULT_DATA_PATH).readText()
 
         val statements = defaultData.split(splitDatabaseSchemaBySemicolon)
 
@@ -300,7 +299,7 @@ class DatabaseManager @Inject constructor(
                 )
             }
 
-            val defaultProfilePic = ImageIO.read(File(ResourcesUtils.ImagePaths.PERSON)).toComposeImageBitmap().toAwtImage()
+            val defaultProfilePic = ImageIO.read(File(Paths.Images.PERSON)).toComposeImageBitmap().toAwtImage()
             val stream = ByteArrayOutputStream()
             ImageIO.write(defaultProfilePic, "png", stream)
             val defaultProfilePicBytes = stream.toByteArray()

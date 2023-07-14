@@ -1,7 +1,5 @@
 package ui.screens.teachers.single.viewmodel
 
-import data.models.ClassModel
-import data.models.ClassReviewModel
 import data.models.TeacherModel
 import data.models.TeacherReviewModel
 
