@@ -16,14 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import data.models.ReportModel
-import data.models.ReviewModel
 import data.models.TeacherReviewModel
 import ui.components.buttons.SecondaryButton
 import ui.components.cards.TeacherCard
 import ui.components.review.RatingInformation
-import ui.components.review.ReviewForm
-import ui.components.review.ReviewList
+import ui.components.review.Reviews
 import ui.screens.teachers.single.viewmodel.SingleTeacherViewModel
 import utils.resources.Colors
 import utils.resources.Strings
@@ -61,39 +58,45 @@ fun SingleTeacherScreen(
                 onCommentChanged = { singleTeacherViewModel.updateReviewComment(it) },
                 error = singleTeacherUiState.userAlreadyMadeReview,
                 onPublishClicked = { comment, rating -> singleTeacherViewModel.publishReview(comment, rating) },
-                teacherReviews = singleTeacherUiState.reviews,
+                reviews = singleTeacherUiState.reviews,
                 isLoading = singleTeacherUiState.isReviewsLoading,
-                decideShowEditRemoveButtons = { reviewModel ->
+                decideShowEditButton = { reviewModel ->
                     singleTeacherViewModel.reviewBelongsToUser(reviewModel)
                 },
+                decideShowDeleteButton = { reviewModel ->
+                    singleTeacherViewModel.let {
+                        it.reviewBelongsToUser(reviewModel) || (it.userIsAdministrator() && it.reviewHasReports(reviewModel))
+                    }
+                },
                 decideShowReportButton = { reviewModel ->
-                    !singleTeacherViewModel.reviewBelongsToUser(reviewModel) &&
-                            !singleTeacherViewModel.userIsAdministrator()
+                    singleTeacherViewModel.let {
+                        !it.reviewBelongsToUser(reviewModel) && !it.userIsAdministrator() && it.getUserReport(reviewModel) == null
+                    }
                 },
-                getUserReport = { reviewModel ->
-                    singleTeacherViewModel.getUserReport(reviewModel)
-                },
-                onRemoveClicked = { reviewModel ->
-                    singleTeacherViewModel.deleteReview(reviewModel as TeacherReviewModel)
+                decideShowReport = { report ->
+                    singleTeacherViewModel.userIsAdministrator() || singleTeacherViewModel.reportBelongsToUser(report)
                 },
                 onEditClicked = { oldReviewModel, newRating, newComment ->
                     singleTeacherViewModel.editReview(oldReviewModel, newRating, newComment)
                 },
+                onRemoveClicked = { reviewModel ->
+                    singleTeacherViewModel.deleteReview(reviewModel as TeacherReviewModel)
+                },
                 onReportClicked = { reviewId, description ->
                     singleTeacherViewModel.submitReviewReport(reviewId, description)
                 },
-                onEditReportClicked = { reviewId, newDescription ->
-                    singleTeacherViewModel.editReport(reviewId, newDescription)
+                onEditReportClicked = { oldReportModel, newDescription ->
+                    singleTeacherViewModel.editReport(oldReportModel, newDescription)
                 },
-                onRemoveReportClicked = { reviewId ->
-                    singleTeacherViewModel.deleteReport(reviewId)
-                },
-                onRemoveAnyReportClicked = { reportModel ->
+                onRemoveReportClicked = { reportModel ->
                     singleTeacherViewModel.deleteReport(reportModel)
                 },
-                showAllReports = singleTeacherViewModel.userIsAdministrator(),
-                getAllReports = { reviewModel -> singleTeacherViewModel.getReviewReports(reviewModel) },
-                userRegistrationNumber = singleTeacherViewModel.getUserRegistrationNumber()
+                decideShowEditReport = { reportModel ->
+                    singleTeacherViewModel.reportBelongsToUser(reportModel)
+                },
+                decideShowRemoveReport = { reportModel ->
+                    singleTeacherViewModel.reportBelongsToUser(reportModel) || singleTeacherViewModel.userIsAdministrator()
+                }
             )
 
             Spacer(
@@ -161,58 +164,6 @@ private fun Rating(
     }
 }
 
-@Composable
-private fun Reviews(
-    reviewComment: String,
-    onCommentChanged: (String) -> Unit,
-    error: Boolean,
-    onEditClicked: (ReviewModel, Int, String) -> Unit = { _: ReviewModel, _: Int, _: String -> },
-    onRemoveClicked: (ReviewModel) -> Unit = {},
-    onReportClicked: (Int, String) -> Unit = {_: Int, _: String -> },
-    onEditReportClicked: (Int, String) -> Unit = {_: Int, _: String -> },
-    onRemoveReportClicked: (Int) -> Unit = {_: Int ->},
-    onRemoveAnyReportClicked: (ReportModel) -> Unit = {},
-    onPublishClicked: (String, Int) -> Unit,
-    decideShowEditRemoveButtons: (ReviewModel) -> Boolean,
-    decideShowReportButton: (ReviewModel) -> Boolean,
-    getUserReport: (ReviewModel) -> ReportModel?,
-    teacherReviews: List<TeacherReviewModel>,
-    showAllReports: Boolean,
-    getAllReports: (ReviewModel) -> List<ReportModel>,
-    userRegistrationNumber: String,
-    isLoading: Boolean
-) {
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 14.dp, vertical = 20.dp)
-    ) {
-        ReviewForm(
-            value = reviewComment,
-            onValueChanged = onCommentChanged,
-            errorMessage = Strings.FIELD_ERROR_ALREADY_MADE_REVIEW,
-            error = error,
-            onPublishClicked = onPublishClicked,
-        )
-        ReviewList(
-            reviews = teacherReviews,
-            isLoading = isLoading,
-            decideShowEditRemoveButtons = decideShowEditRemoveButtons,
-            decideShowReportButton = decideShowReportButton,
-            onRemoveClicked = onRemoveClicked,
-            onEditClicked = onEditClicked,
-            onReportClicked = onReportClicked,
-            onEditReportClicked = onEditReportClicked,
-            onRemoveUserReportClicked = onRemoveReportClicked,
-            onRemoveAnyReportClicked = onRemoveAnyReportClicked,
-            getUserReport = getUserReport,
-            showAllReports = showAllReports,
-            userRegistrationNumber = userRegistrationNumber,
-            getAllReports = getAllReports,
-            modifier = Modifier
-                .padding(top = 16.dp)
-        )
-    }
-}
 
 @Composable
 private fun BackButton(

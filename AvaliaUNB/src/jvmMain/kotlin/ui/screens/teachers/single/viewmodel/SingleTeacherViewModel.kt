@@ -38,7 +38,7 @@ class SingleTeacherViewModel(
 
     private fun loadAllReviews() {
         CoroutineScope(Dispatchers.IO).launch {
-            val allReviews = teacherRepository.getTeacherReviews(teacherModel).reversed()
+            val allReviews = teacherRepository.getTeacherReviews(teacherModel)
 
             _singleTeacherUiState.update { singleTeacherUiState ->
                 singleTeacherUiState.copy(
@@ -49,15 +49,19 @@ class SingleTeacherViewModel(
         }
     }
 
-    fun getUserRegistrationNumber(): String = user.registrationNumber
-
     fun reviewBelongsToUser(review: ReviewModel): Boolean = review.userRegistrationNumber == user.registrationNumber
+
+    fun reportBelongsToUser(report: ReportModel): Boolean = report.userRegistrationNumber == user.registrationNumber
 
     fun getUserReport(review: ReviewModel): ReportModel? = reportRepository.getUserReport(review.id, user.registrationNumber)
 
     fun userIsAdministrator(): Boolean = userRepository.isUserAdministrator(user.registrationNumber)
 
-    fun getReviewReports(reviewModel: ReviewModel): List<ReportModel> =  reportRepository.getReviewReports(reviewModel.id)
+    private fun getReviewReports(reviewModel: ReviewModel): List<ReportModel> =  reportRepository.getReviewReports(reviewModel.id)
+
+    fun reviewHasReports(reviewModel: ReviewModel): Boolean = getReviewReports(reviewModel).isNotEmpty()
+
+    fun deleteReport(reportModel: ReportModel) = reportRepository.deleteReport(reportModel.reviewId, reportModel.userRegistrationNumber)
 
     fun updateReviewComment(newComment: String) {
         _singleTeacherUiState.update { singleTeacherUiState ->
@@ -68,11 +72,6 @@ class SingleTeacherViewModel(
         }
     }
 
-
-    fun deleteReport(reviewId: Int) = reportRepository.deleteReport(reviewId, user.registrationNumber)
-
-    fun deleteReport(reportModel: ReportModel) = reportRepository.deleteReport(reportModel.reviewId, reportModel.userRegistrationNumber)
-
     fun publishReview(comment: String, rating: Int) {
         val reviewModel = TeacherReviewModel(
             id = UUID.randomUUID().hashCode(),
@@ -82,7 +81,8 @@ class SingleTeacherViewModel(
             userName = user.name,
             userRegistrationNumber = user.registrationNumber,
             teacherName = teacherModel.name,
-            departmentCode = teacherModel.departmentCode
+            departmentCode = teacherModel.departmentCode,
+            reports = listOf()
         )
 
         val insertionResult = reviewRepository.insertReview(reviewModel)
@@ -123,8 +123,8 @@ class SingleTeacherViewModel(
         )
     }
 
-    fun editReport(reviewId: Int, newDescription: String) {
-        reportRepository.updateReport(reviewId, user.registrationNumber, newDescription)
+    fun editReport(oldReportModel: ReportModel, newDescription: String) {
+        reportRepository.updateReport(oldReportModel.reviewId, oldReportModel.userRegistrationNumber, newDescription)
     }
 
     fun editReview(oldReviewModel: ReviewModel, newRating: Int, newComment: String) {

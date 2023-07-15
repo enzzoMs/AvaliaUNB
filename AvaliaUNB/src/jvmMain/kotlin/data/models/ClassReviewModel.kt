@@ -9,5 +9,6 @@ data class ClassReviewModel(
     override val userProfilePicture: ImageBitmap? = null,
     override val userName: String,
     override val userRegistrationNumber: String,
-    val classId: Int
+    override val reports: List<ReportModel>,
+    val classId: Int,
 ): ReviewModel

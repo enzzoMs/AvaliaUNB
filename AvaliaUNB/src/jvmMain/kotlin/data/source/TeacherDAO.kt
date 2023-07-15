@@ -3,13 +3,15 @@ package data.source
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import data.models.TeacherModel
 import data.models.TeacherReviewModel
+import data.repositories.ReportRepository
 import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TeacherDAO @Inject constructor(
-    private val database: DatabaseManager
+    private val database: DatabaseManager,
+    private val reportRepository: ReportRepository
 ) {
 
     fun getAllTeachers(): List<TeacherModel> {
@@ -79,6 +81,7 @@ class TeacherDAO @Inject constructor(
                     profilePic,
                     reviewsQueryResult.getString("usuario_nome"),
                     reviewsQueryResult.getString("matricula"),
+                    reportRepository.getReviewReports(reviewsQueryResult.getInt("id")),
                     reviewsQueryResult.getString("nome_professor"),
                     reviewsQueryResult.getInt("codigo_departamento")
                 )

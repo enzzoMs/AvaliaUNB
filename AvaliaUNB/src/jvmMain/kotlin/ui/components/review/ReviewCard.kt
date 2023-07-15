@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -38,34 +39,29 @@ private val REPORT_FORM_HEIGHT = 100.dp
 @Composable
 fun ReviewCard(
     review: ReviewModel,
-    showEditAndRemove: Boolean = false,
+    showEditButton: Boolean = false,
+    showDeleteButton: Boolean = false,
     showReportButton: Boolean = false,
     onEditClicked: (ReviewModel, Int, String) -> Unit,
     onRemoveClicked: (ReviewModel) -> Unit,
     onReportClicked: (Int, String) -> Unit,
-    onEditReportClicked: (Int, String) -> Unit,
-    onRemoveUserReportClicked: (Int) -> Unit,
-    onRemoveAnyReportClicked: (ReportModel) -> Unit = {},
-    userReport: ReportModel? = null,
-    showAllReports: Boolean = false,
-    getAllReports: (ReviewModel) -> List<ReportModel>,
+    onEditReportClicked: (ReportModel, String) -> Unit,
+    onRemoveReportClicked: (ReportModel) -> Unit,
+    decideShowReport: (ReportModel) -> Boolean,
+    decideShowEditReport: (ReportModel) -> Boolean,
+    decideShowRemoveReport: (ReportModel) -> Boolean,
     userNameTextStyle: TextStyle = MaterialTheme.typography.subtitle2,
     backgroundColor: Color = Colors.White,
-    userRegistrationNumber: String,
     modifier: Modifier = Modifier
 ) {
     var isEditingReview by remember { mutableStateOf(false) }
     var isDeletingReview by remember { mutableStateOf(false) }
     var isReportingReview by remember { mutableStateOf(false) }
-    var isEditingReport by remember { mutableStateOf(false) }
-    var userMadeReport by remember { mutableStateOf(userReport != null) }
-    var userEditComment by remember { mutableStateOf(review.comment) }
-    var userReportEditComment by remember { mutableStateOf(userReport?.description ?: "") }
-    var reportComment by remember { mutableStateOf(userReportEditComment) }
-    var selectedStarRating by remember { mutableStateOf(Strings.LIST_STAR_RATINGS.find {
-            rating -> rating.length == review.rating }!!)
-    }
-    var allReports by remember { mutableStateOf(getAllReports(review)) }
+
+    var reviewEditComment by remember { mutableStateOf("") }
+    var reviewStarRating by remember { mutableStateOf("") }
+
+    var reportComment by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -83,48 +79,52 @@ fun ReviewCard(
                 modifier = Modifier
                     .padding(bottom = 12.dp)
             ) {
-                UserInformation(review, userNameTextStyle)
+                UserInformation(
+                    userName = review.userName,
+                    userProfilePicture = review.userProfilePicture,
+                    userNameTextStyle = userNameTextStyle
+                )
 
                 Spacer(
                     modifier = Modifier
                         .weight(1f)
                 )
 
-                if (showReportButton && !isReportingReview && !userMadeReport) {
-                    ReportButton { isReportingReview = true }
+                if (showReportButton && !isReportingReview) {
+                    ReportButton {
+                        reportComment = ""
+                        isReportingReview = true
+                    }
                 }
 
-                if (showEditAndRemove && !isEditingReview && !isDeletingReview) {
-                    EditRemoveButtons(
-                        onEditClicked = {
-                            userEditComment = review.comment
-                            selectedStarRating = Strings.LIST_STAR_RATINGS.find {
+                if (!isEditingReview && !isDeletingReview) {
+                    if (showEditButton) {
+                        EditButton {
+                            reviewEditComment = review.comment
+                            reviewStarRating = Strings.LIST_STAR_RATINGS.find {
                                     rating -> rating.length == review.rating
                             }!!
                             isEditingReview = true
-                        },
-                        onRemoveClicked = { isDeletingReview = true }
-                    )
-                }
-                if (isEditingReview || isDeletingReview) {
+                        }
+                    }
+
+                    if (showDeleteButton) {
+                        DeleteButton { isDeletingReview = true }
+                    }
+                } else {
                     ConfirmCancelButtons(
                         onConfirmClicked = {
                             if (isDeletingReview) {
-                                isEditingReview = false
                                 isDeletingReview = false
                                 onRemoveClicked(review)
                             } else {
                                 isEditingReview = false
-                                onEditClicked(review, selectedStarRating.length, userEditComment)
+                                onEditClicked(review, reviewStarRating.length, reviewEditComment)
                             }
                         },
                         onCancelClicked = {
                             isEditingReview = false
                             isDeletingReview = false
-                            selectedStarRating = Strings.LIST_STAR_RATINGS.find {
-                                    rating -> rating.length == review.rating
-                            }!!
-                            userEditComment = review.comment
                         }
                     )
                 }
@@ -132,67 +132,49 @@ fun ReviewCard(
 
             if (isEditingReview) {
                 ScoreDropdown(
-                    selectedStarRating = selectedStarRating,
-                    onSelectRating = { selectedStarRating = it }
+                    selectedStarRating = reviewStarRating,
+                    onSelectRating = { reviewStarRating = it }
                 )
                 CommentTextField(
-                    value = userEditComment,
-                    onValueChanged = { userEditComment = it }
+                    value = reviewEditComment,
+                    onValueChanged = { reviewEditComment = it }
                 )
             } else {
                 UserReviewScore(review.rating)
                 UserReviewComment(review.comment)
+            }
 
-                if (isReportingReview || isEditingReport) {
-                    ReportTextField(
-                        reportText = reportComment,
-                        isEditingReport = isEditingReport,
-                        onReportTextChanged = { reportComment = it },
-                        onCancelClicked = {
-                            reportComment = if (isReportingReview) "" else userReportEditComment
-                            isEditingReport = false
-                            isReportingReview = false
-                        },
-                        onConfirmClicked = {
-                            if (isReportingReview) {
-                                onReportClicked(review.id, reportComment)
-                            } else {
-                                onEditReportClicked(review.id, reportComment)
-                            }
+            if (isReportingReview) {
+                ReportTextField(
+                    fieldTitle = Strings.FIELD_PREFIX_REPORT_REVIEW,
+                    reportText = reportComment,
+                    onReportTextChanged = { reportComment = it },
+                    onCancelClicked = {
+                        isReportingReview = false
+                    },
+                    onConfirmClicked = {
+                        isReportingReview = false
+                        onReportClicked(review.id, reportComment)
+                    },
+                    modifier = Modifier
+                        .padding(top = 30.dp)
+                )
+            }
 
-                            userMadeReport = true
-                            isReportingReview = false
-                            isEditingReport = false
-                            userReportEditComment = reportComment
-                        }
-                    )
-                } else if (getAllReports(review).find { it.userRegistrationNumber == userRegistrationNumber } != null) {
-                    val report = getAllReports(review).find { it.userRegistrationNumber == userRegistrationNumber }
 
+            for (report in review.reports) {
+                if (decideShowReport(report)) {
                     ReportCard(
-                        reportTitle = Strings.FIELD_PREFIX_REPORT_MADE,
-                        description = report?.description ?: "",
-                        showEdit = true,
-                        onEditClicked = { isEditingReport = true },
-                        onDeleteClicked = {
-                            reportComment = ""
-                            userMadeReport = false
-                            onRemoveUserReportClicked(review.id)
+                        report = report,
+                        showDelete = decideShowRemoveReport(report),
+                        showEdit = decideShowEditReport(report),
+                        onEditClicked = { reportModel: ReportModel, reportDescription ->
+                            onEditReportClicked(reportModel, reportDescription)
+                        },
+                        onDeleteClicked = { reportModel: ReportModel ->
+                            onRemoveReportClicked(reportModel)
                         }
                     )
-                }
-
-                if (showAllReports) {
-                    for (report in allReports) {
-                        ReportCard(
-                            reportTitle = "${report.userName}  fez uma denúncia: ",
-                            description = report.description,
-                            onDeleteClicked = {
-                                onRemoveAnyReportClicked(report)
-                                allReports = getAllReports(review)
-                            }
-                        )
-                    }
                 }
             }
         }
@@ -201,91 +183,118 @@ fun ReviewCard(
 
 @Composable
 private fun ReportCard(
-    reportTitle: String,
-    description: String,
+    report: ReportModel,
     showEdit: Boolean = false,
-    onEditClicked: () -> Unit = {},
-    onDeleteClicked: () -> Unit
+    showDelete: Boolean = false,
+    onEditClicked: (ReportModel, String) -> Unit = { _: ReportModel, _: String -> },
+    onDeleteClicked: (ReportModel) -> Unit = {}
 ) {
-    var isRemovingReport by remember { mutableStateOf(false) }
+    var isDeleting by remember { mutableStateOf(false) }
+    var isEditing by remember { mutableStateOf(false) }
+    var reportEditComment by remember { mutableStateOf("") }
 
     Column (
         modifier = Modifier
             .padding(top = 30.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Report,
-                contentDescription = null,
-                tint = MaterialTheme.colors.error,
-                modifier = Modifier
-                    .padding(end = 6.dp)
-            )
-            Text(
-                text = reportTitle,
-                style = MaterialTheme.typography.subtitle1,
-                color = MaterialTheme.colors.error
-            )
+        if (!isEditing) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Report,
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.error,
+                    modifier = Modifier
+                        .padding(end = 6.dp)
+                )
 
-            Spacer(
-                modifier = Modifier
-                    .weight(1f)
-            )
+                Text(
+                    text = if (showEdit) {
+                        Strings.FIELD_PREFIX_REPORT_MADE
+                    } else {
+                        "${report.userRegistrationNumber}  fez uma denúncia:"
+                    },
+                    style = MaterialTheme.typography.subtitle1,
+                    color = MaterialTheme.colors.error
+                )
 
-            when {
-                isRemovingReport -> {
+                Spacer(
+                    modifier = Modifier
+                        .weight(1f)
+                )
+
+
+                if (!isDeleting) {
+                    if (showEdit) {
+                        EditButton {
+                            reportEditComment = report.description
+                            isEditing = true
+                        }
+                    }
+
+                    if (showDelete) {
+                        DeleteButton { isDeleting = true }
+                    }
+                } else {
                     ConfirmCancelButtons(
-                        onConfirmClicked = onDeleteClicked,
-                        onCancelClicked = { isRemovingReport = false }
-                    )
-                }
-                showEdit -> {
-                    EditRemoveButtons(
-                        onEditClicked = onEditClicked,
-                        onRemoveClicked = { isRemovingReport = true }
-                    )
-                }
-                else -> {
-                    Icon(
-                        imageVector = Icons.Filled.Delete,
-                        contentDescription = null,
-                        tint = Colors.DimGray,
-                        modifier = Modifier
-                            .padding(start = 6.dp)
-                            .clip(CircleShape)
-                            .clickable { isRemovingReport = true }
+                        onConfirmClicked = {
+                            if (isDeleting) {
+                                isDeleting = false
+                                onDeleteClicked(report)
+                            } else {
+                                isEditing = false
+                                onEditClicked(report, reportEditComment)
+                            }
+                        },
+                        onCancelClicked = {
+                            isEditing = false
+                            isDeleting = false
+                        }
                     )
                 }
             }
-        }
 
-        Text(
-            text = description,
-            style = MaterialTheme.typography.body1,
-            color = MaterialTheme.colors.error,
-            softWrap = true,
-            modifier = Modifier
-                .padding(top = 14.dp)
-        )
+            Text(
+                text = report.description,
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.error,
+                softWrap = true,
+                modifier = Modifier
+                    .padding(top = 14.dp)
+            )
+
+        } else {
+            ReportTextField(
+                fieldTitle = Strings.FIELD_PREFIX_REPORT_MADE,
+                reportText = reportEditComment,
+                onReportTextChanged = { reportEditComment = it },
+                onCancelClicked = {
+                    isEditing = false
+                },
+                onConfirmClicked = {
+                    isEditing = false
+                    onEditClicked(report, reportEditComment)
+                }
+            )
+        }
     }
 }
 
 
 @Composable
 private fun ReportTextField(
+    fieldTitle: String = "",
     reportText: String,
-    isEditingReport: Boolean,
     onReportTextChanged: (String) -> Unit,
     onConfirmClicked: () -> Unit,
-    onCancelClicked: () -> Unit
+    onCancelClicked: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var isReportEmpty by remember { mutableStateOf(false) }
 
     Column (
-        modifier = Modifier
-            .padding(top = 30.dp)
+        modifier = modifier
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -298,11 +307,7 @@ private fun ReportTextField(
                     .padding(end = 6.dp)
             )
             Text(
-                text = if (isEditingReport) {
-                    Strings.FIELD_PREFIX_REPORT_MADE
-                } else {
-                    Strings.FIELD_PREFIX_REPORT_REVIEW
-                },
+                text = fieldTitle,
                 style = MaterialTheme.typography.subtitle1,
                 color = MaterialTheme.colors.error
             )
@@ -434,14 +439,15 @@ private fun UserReviewScore(
 
 @Composable
 private fun UserInformation(
-    review: ReviewModel,
+    userName: String,
+    userProfilePicture: ImageBitmap?,
     userNameTextStyle: TextStyle
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            bitmap = review.userProfilePicture ?: Utils.getDefaultProfilePicture(),
+            bitmap = userProfilePicture ?: Utils.getDefaultProfilePicture(),
             contentDescription = null,
             contentScale = ContentScale.Fit,
             modifier = Modifier
@@ -449,7 +455,7 @@ private fun UserInformation(
                 .padding(end = 10.dp)
         )
         UserName(
-            userName = review.userName,
+            userName = userName,
             userNameTextStyle = userNameTextStyle
         )
 
@@ -501,9 +507,8 @@ private fun ReportButton(
 }
 
 @Composable
-private fun EditRemoveButtons(
-    onEditClicked: () -> Unit,
-    onRemoveClicked: () -> Unit
+private fun EditButton(
+    onEditClicked: () -> Unit
 ) {
     Icon(
         imageVector = Icons.Filled.Edit,
@@ -513,6 +518,12 @@ private fun EditRemoveButtons(
             .clip(CircleShape)
             .clickable { onEditClicked() }
     )
+}
+
+@Composable
+private fun DeleteButton (
+    onRemoveClicked: () -> Unit
+) {
     Icon(
         imageVector = Icons.Filled.Delete,
         contentDescription = null,
@@ -523,6 +534,8 @@ private fun EditRemoveButtons(
             .clickable { onRemoveClicked() }
     )
 }
+
+
 
 @Composable
 private fun ConfirmCancelButtons(

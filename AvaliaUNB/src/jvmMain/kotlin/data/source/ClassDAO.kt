@@ -6,13 +6,15 @@ import data.models.ClassModel
 import data.models.ClassReviewModel
 import data.models.SemesterModel
 import data.models.TeacherModel
+import data.repositories.ReportRepository
 import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ClassDAO @Inject constructor(
-    private val database: DatabaseManager
+    private val database: DatabaseManager,
+    private val reportRepository: ReportRepository
 ) {
 
     fun getAllClasses(): List<ClassModel> {
@@ -126,6 +128,7 @@ class ClassDAO @Inject constructor(
                     profilePic,
                     reviewsQueryResult.getString("usuario_nome"),
                     reviewsQueryResult.getString("matricula"),
+                    reportRepository.getReviewReports(reviewsQueryResult.getInt("id")),
                     reviewsQueryResult.getInt("id_turma"),
                 )
             )
