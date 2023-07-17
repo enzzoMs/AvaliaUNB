@@ -75,7 +75,8 @@ object Strings {
     const val NO_REVIEW_MULTILINE = "Nenhuma\nanálise"
     const val NO_REVIEW = "Nenhuma análise"
     const val NO_REVIEW_PUBLISHED = "Nenhuma análise publicada"
-    const val NO_REPORTS = "Nenhuma denúncia sobre o usuário"
+    const val NO_REPORTS_ABOUT_USER = "Nenhuma denúncia sobre o usuário"
+    const val NO_REPORTS = "Nenhuma denúncia"
 
     const val CAPITALIZED_EDIT = "EDITAR"
     const val CAPITALIZED_FINISH = "FINALIZAR"

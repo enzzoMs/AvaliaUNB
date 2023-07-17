@@ -40,21 +40,23 @@ class ViewProfileViewModel(
 
     fun deleteReport(reportModel: ReportModel) {
         reportRepository.deleteReport(reportModel.reviewId, reportModel.userRegistrationNumber)
-        updateReviews()
-    }
 
-    fun deleteReview(review: ReviewModel) {
-        reviewRepository.deleteReview(review.id)
-        updateReviews()
-    }
-
-    private fun updateReviews() {
         val newReviews = reviewRepository.getUserReviews(userModel.registrationNumber).filter { it.reports.isNotEmpty() }
 
         _viewProfileUiState.update { viewProfileUiState ->
             viewProfileUiState.copy(
                 userReviews = newReviews,
                 showDeleteButton = newReviews.isNotEmpty()
+            )
+        }
+    }
+
+    fun deleteReview(review: ReviewModel) {
+        reviewRepository.deleteReview(review.id)
+
+        _viewProfileUiState.update { viewProfileUiState ->
+            viewProfileUiState.copy(
+                userReviews = viewProfileUiState.userReviews.filter { it.id != review.id }
             )
         }
     }

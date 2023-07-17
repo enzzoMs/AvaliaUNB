@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import utils.navigation.Screen
 import utils.resources.Colors
 
 data class NavigationPanelColors(
@@ -31,7 +32,8 @@ data class NavigationPanelColors(
 data class NavigationItem(
     val label: String,
     val icon: ImageVector? = null,
-    val index: Int
+    val index: Int,
+    val screen: Screen
 )
 
 @Composable

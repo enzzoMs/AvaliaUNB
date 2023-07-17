@@ -14,5 +14,6 @@ enum class Screen {
     TEACHERS,
     SINGLE_TEACHER,
     EDIT_PROFILE,
-    VIEW_PROFILE
+    VIEW_PROFILE,
+    REPORTS
 }

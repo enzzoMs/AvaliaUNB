@@ -11,6 +11,8 @@ import javax.inject.Singleton
 class ReviewRepository @Inject constructor(
     private val reviewDAO: ReviewDAO
 ) {
+    fun getAllReportedReviews(): List<ReviewModel> = reviewDAO.getReportedReviews()
+
     fun insertReview(reviewModel: ReviewModel): ReviewInsertionResult {
         return when(reviewModel) {
             is ClassReviewModel -> {

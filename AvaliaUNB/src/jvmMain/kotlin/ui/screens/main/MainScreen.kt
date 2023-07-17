@@ -10,7 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.outlined.Badge
 import androidx.compose.material.icons.outlined.Logout
-import androidx.compose.material.icons.outlined.School
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +35,7 @@ import ui.screens.profile.edit.EditProfileScreen
 import ui.screens.profile.edit.viewmodel.ProfileViewModel
 import ui.screens.profile.view.ViewProfileScreen
 import ui.screens.profile.view.viewmodel.ViewProfileViewModel
+import ui.screens.reports.ReportsScreen
 import ui.screens.subjects.all.SubjectsScreen
 import ui.screens.subjects.single.SingleSubjectScreen
 import ui.screens.subjects.single.viewmodel.SingleSubjectViewModel
@@ -48,9 +48,6 @@ import utils.resources.Colors
 import utils.resources.Strings
 
 const val NAV_NO_SELECTED_ITEM_INDEX = -1
-const val NAV_ITEM_SUBJECTS_INDEX = 0
-const val NAV_ITEM_CLASSES_INDEX = 1
-const val NAV_ITEM_TEACHERS_INDEX = 2
 private const val USER_NAME_MAX_LENGTH = 25
 
 @Composable
@@ -67,11 +64,8 @@ fun MainScreen(
             selectedNavIndex = when {
                 mainScreenUiState.onEditProfile -> NAV_NO_SELECTED_ITEM_INDEX
                 mainScreenUiState.selectedNavItemIndex == null -> {
-                    mainScreenViewModel.updatePageInformation(
-                        newTitle = Strings.SUBJECTS,
-                        newIcon = Icons.Outlined.School
-                    )
-                    NAV_ITEM_SUBJECTS_INDEX
+                    mainScreenViewModel.selectNavItem(mainScreenUiState.navItems.first())
+                    mainScreenUiState.navItems.first().index
                 }
                 else -> mainScreenUiState.selectedNavItemIndex!!
             },
@@ -79,15 +73,7 @@ fun MainScreen(
             onItemClicked = { navItem ->
                 mainScreenViewModel.clearItemsSelection()
 
-                mainScreenViewModel.updateCurrentScreen(
-                    when(navItem.index) {
-                        NAV_ITEM_SUBJECTS_INDEX -> Screen.SUBJECTS
-                        NAV_ITEM_CLASSES_INDEX -> Screen.CLASSES
-                        NAV_ITEM_TEACHERS_INDEX -> Screen.TEACHERS
-                        else -> Screen.SUBJECTS
-                    }
-                )
-
+                mainScreenViewModel.updateCurrentScreen(navItem.screen)
             },
             modifier = Modifier
                 .weight(1f)
@@ -222,8 +208,10 @@ fun MainScreen(
                                 mainScreenViewModel.updateCurrentScreen(
                                     if (mainScreenUiState.selectedTeacher != null) {
                                         Screen.SINGLE_TEACHER
-                                    } else {
+                                    } else if (mainScreenUiState.selectedClass != null) {
                                         Screen.SINGLE_CLASS
+                                    } else {
+                                        Screen.REPORTS
                                     }
                                 )
                                 mainScreenViewModel.setUserSelection(null)
@@ -249,13 +237,7 @@ fun MainScreen(
                                 profileViewModel = profileViewModel,
                                 onBackClicked = {
                                     mainScreenViewModel.setIsOnProfile(false)
-                                    mainScreenViewModel.updateCurrentScreen(
-                                        when (mainScreenUiState.selectedNavItemIndex) {
-                                            null, NAV_ITEM_SUBJECTS_INDEX -> Screen.SUBJECTS
-                                            NAV_ITEM_CLASSES_INDEX -> Screen.CLASSES
-                                            else -> Screen.TEACHERS
-                                        }
-                                    )
+                                    mainScreenViewModel.backToSelectedNav()
                                 },
                                 onFinishEditClicked = {
                                     CoroutineScope(Dispatchers.IO).launch {
@@ -273,6 +255,13 @@ fun MainScreen(
                                 }
                             )
                         }
+                        Screen.REPORTS -> ReportsScreen(
+                            reportsViewModel = DaggerComponentHolder.appComponent.getReportsViewModel(),
+                            onUserClicked = { userRegistrationNumber ->
+                                mainScreenViewModel.updateCurrentScreen(Screen.VIEW_PROFILE)
+                                mainScreenViewModel.setUserSelection(userRegistrationNumber)
+                            }
+                        )
                         else -> error("Destination not supported: $screen")
                     }
                 }

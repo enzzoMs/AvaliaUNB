@@ -140,7 +140,7 @@ private fun UserReportedReviews(
                         .size(80.dp)
                 )
                 Text(
-                    text = Strings.NO_REPORTS,
+                    text = Strings.NO_REPORTS_ABOUT_USER,
                     style = MaterialTheme.typography.subtitle2,
                     color = Colors.SilverChalice,
                     modifier = Modifier
