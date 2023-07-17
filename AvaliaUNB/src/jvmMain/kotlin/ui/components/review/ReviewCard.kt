@@ -3,6 +3,9 @@ package ui.components.review
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
@@ -17,8 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.ReportModel
@@ -28,6 +34,7 @@ import ui.components.forms.MultilineTextField
 import utils.Utils
 import utils.resources.Colors
 import utils.resources.Strings
+import java.awt.Cursor
 
 private const val MAX_SCORE_STARS = 5
 private const val REVIEW_MAX_NUMBER_OF_CHARS = 850
@@ -42,6 +49,8 @@ fun ReviewCard(
     showEditButton: Boolean = false,
     showDeleteButton: Boolean = false,
     showReportButton: Boolean = false,
+    userNameClickable: Boolean = false,
+    onUserClicked: (String) -> Unit,
     onEditClicked: (ReviewModel, Int, String) -> Unit,
     onRemoveClicked: (ReviewModel) -> Unit,
     onReportClicked: (Int, String) -> Unit,
@@ -82,7 +91,9 @@ fun ReviewCard(
                 UserInformation(
                     userName = review.userName,
                     userProfilePicture = review.userProfilePicture,
-                    userNameTextStyle = userNameTextStyle
+                    userNameTextStyle = userNameTextStyle,
+                    userNameClickable = userNameClickable,
+                    onUserClicked = { onUserClicked(review.userRegistrationNumber) }
                 )
 
                 Spacer(
@@ -213,7 +224,7 @@ private fun ReportCard(
                     text = if (showEdit) {
                         Strings.FIELD_PREFIX_REPORT_MADE
                     } else {
-                        "${report.userRegistrationNumber}  fez uma denúncia:"
+                        "${getFormattedUserName(report.userName)}  fez uma denúncia:"
                     },
                     style = MaterialTheme.typography.subtitle1,
                     color = MaterialTheme.colors.error
@@ -441,11 +452,16 @@ private fun UserReviewScore(
 private fun UserInformation(
     userName: String,
     userProfilePicture: ImageBitmap?,
-    userNameTextStyle: TextStyle
+    userNameTextStyle: TextStyle,
+    userNameClickable: Boolean,
+    onUserClicked: () -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
+        val interactionSource = remember { MutableInteractionSource() }
+        val isNameHovered by interactionSource.collectIsHoveredAsState()
+
         Image(
             bitmap = userProfilePicture ?: Utils.getDefaultProfilePicture(),
             contentDescription = null,
@@ -454,9 +470,19 @@ private fun UserInformation(
                 .size(40.dp)
                 .padding(end = 10.dp)
         )
-        UserName(
-            userName = userName,
-            userNameTextStyle = userNameTextStyle
+
+        Text(
+            text = getFormattedUserName(userName),
+            textDecoration = if (isNameHovered) TextDecoration.Underline else null,
+            style = userNameTextStyle,
+            color = Colors.UnbBlue,
+            modifier = Modifier
+                .padding(end = 10.dp)
+                .pointerHoverIcon(PointerIcon(Cursor.getPredefinedCursor(
+                    if (isNameHovered) Cursor.HAND_CURSOR else Cursor.DEFAULT_CURSOR
+                )))
+                    then(if (userNameClickable) Modifier.hoverable(interactionSource) else Modifier)
+                    then(if (userNameClickable) Modifier.clickable { onUserClicked() } else Modifier)
         )
 
         Text(
@@ -464,32 +490,6 @@ private fun UserInformation(
             style = userNameTextStyle
         )
     }
-}
-
-@Composable
-private fun UserName(
-    userName: String,
-    userNameTextStyle: TextStyle
-) {
-    val nameSplit = userName.split(" ")
-
-    var name = ""
-
-    for (part in nameSplit) {
-        name += if ("$name$part".length <= USER_NAME_MAX_LENGTH) "$part " else ""
-    }
-
-    if (name.isEmpty()) {
-        name = nameSplit[0].substring(0, USER_NAME_MAX_LENGTH) + "..."
-    }
-
-    Text(
-        text = name,
-        style = userNameTextStyle,
-        color = Colors.UnbBlue,
-        modifier = Modifier
-            .padding(end = 10.dp)
-    )
 }
 
 @Composable
@@ -559,4 +559,20 @@ private fun ConfirmCancelButtons(
             .clip(CircleShape)
             .clickable { onCancelClicked() }
     )
+}
+
+private fun getFormattedUserName(userName: String): String {
+    val nameSplit = userName.split(" ")
+
+    var name = ""
+
+    for (part in nameSplit) {
+        name += if ("$name $part".length <= USER_NAME_MAX_LENGTH) " $part" else ""
+    }
+
+    if (name.isEmpty()) {
+        name = nameSplit[0].substring(0, USER_NAME_MAX_LENGTH) + "..."
+    }
+
+    return name.trim()
 }

@@ -21,6 +21,9 @@ import utils.resources.Colors
 import utils.resources.Paths
 import utils.resources.Strings
 
+private val REVIEW_LIST_HEIGHT = 600.dp
+
+
 @Composable
 fun Reviews(
     reviewComment: String,
@@ -33,6 +36,7 @@ fun Reviews(
     decideShowDeleteButton: (ReviewModel) -> Boolean,
     decideShowReportButton: (ReviewModel) -> Boolean,
     decideShowReport: (ReportModel) -> Boolean,
+    onUserClicked: (String) -> Unit,
     onEditClicked: (ReviewModel, Int, String) -> Unit,
     onRemoveClicked: (ReviewModel) -> Unit,
     onReportClicked: (Int, String) -> Unit,
@@ -40,6 +44,7 @@ fun Reviews(
     onRemoveReportClicked: (ReportModel) -> Unit,
     decideShowEditReport: (ReportModel) -> Boolean,
     decideShowRemoveReport: (ReportModel) -> Boolean,
+    userNameClickable: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -87,7 +92,7 @@ fun Reviews(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(600.dp)
+                        .height(REVIEW_LIST_HEIGHT)
                         .then(modifier)
                 ) {
                     val listState = rememberLazyListState()
@@ -105,6 +110,8 @@ fun Reviews(
                                 showDeleteButton = decideShowDeleteButton(review),
                                 showReportButton = decideShowReportButton(review),
                                 decideShowReport = decideShowReport,
+                                userNameClickable = userNameClickable,
+                                onUserClicked = onUserClicked,
                                 onEditClicked = onEditClicked,
                                 onRemoveClicked = onRemoveClicked,
                                 onReportClicked = onReportClicked,

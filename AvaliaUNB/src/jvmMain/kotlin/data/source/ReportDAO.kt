@@ -24,7 +24,7 @@ class ReportDAO @Inject constructor(
 
     fun getReviewReports(reviewId: Int): List<ReportModel> {
         val reportQueryResult = database.executeQuery(
-    "SELECT denuncia.*, usuario.nome AS usuario_nome " +
+        "SELECT denuncia.*, usuario.nome AS usuario_nome " +
             "FROM denuncia " +
             "INNER JOIN usuario ON " +
             "usuario.matricula = denuncia.matricula_aluno " +
@@ -43,7 +43,6 @@ class ReportDAO @Inject constructor(
                 )
             )
         }
-
         return reports.toList()
     }
 
@@ -62,7 +61,20 @@ class ReportDAO @Inject constructor(
         )
     }
 
-    fun getUserReport(reviewId: Int, userRegistrationNumber: String): ReportModel? {
+    fun userWasReported(userRegistrationNumber: String): Boolean {
+        val reportQueryResult = database.executeQuery(
+            "SELECT denuncia.* " +
+            "FROM denuncia " +
+            "INNER JOIN avaliacao ON " +
+            "avaliacao.id = denuncia.id_avaliacao " +
+            "WHERE avaliacao.matricula_aluno = $userRegistrationNumber"
+        )
+
+        return reportQueryResult.next()
+    }
+
+
+    fun getUserReviewReport(reviewId: Int, userRegistrationNumber: String): ReportModel? {
         val reportQueryResult = database.executeQuery(
     "SELECT denuncia.*, usuario.nome AS usuario_nome " +
             "FROM denuncia " +

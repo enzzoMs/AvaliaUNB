@@ -53,7 +53,7 @@ class SingleTeacherViewModel(
 
     fun reportBelongsToUser(report: ReportModel): Boolean = report.userRegistrationNumber == user.registrationNumber
 
-    fun getUserReport(review: ReviewModel): ReportModel? = reportRepository.getUserReport(review.id, user.registrationNumber)
+    fun getUserReviewReport(review: ReviewModel): ReportModel? = reportRepository.getUserReviewReport(review.id, user.registrationNumber)
 
     fun userIsAdministrator(): Boolean = userRepository.isUserAdministrator(user.registrationNumber)
 
@@ -61,7 +61,19 @@ class SingleTeacherViewModel(
 
     fun reviewHasReports(reviewModel: ReviewModel): Boolean = getReviewReports(reviewModel).isNotEmpty()
 
-    fun deleteReport(reportModel: ReportModel) = reportRepository.deleteReport(reportModel.reviewId, reportModel.userRegistrationNumber)
+    private fun updateReports(reviewId: Int) {
+        _singleTeacherUiState.update { singleTeacherUiState ->
+            singleTeacherUiState.copy(
+                reviews = singleTeacherUiState.reviews.map {
+                    if (it.id == reviewId) {
+                        it.copy(reports = getReviewReports(it))
+                    } else {
+                        it
+                    }
+                }
+            )
+        }
+    }
 
     fun updateReviewComment(newComment: String) {
         _singleTeacherUiState.update { singleTeacherUiState ->
@@ -121,11 +133,21 @@ class SingleTeacherViewModel(
                 userName = user.name
             )
         )
+        updateReports(reviewId)
     }
 
     fun editReport(oldReportModel: ReportModel, newDescription: String) {
         reportRepository.updateReport(oldReportModel.reviewId, oldReportModel.userRegistrationNumber, newDescription)
+
+        updateReports(oldReportModel.reviewId)
     }
+
+    fun deleteReport(reportModel: ReportModel) {
+        reportRepository.deleteReport(reportModel.reviewId, reportModel.userRegistrationNumber)
+
+        updateReports(reportModel.reviewId)
+    }
+
 
     fun editReview(oldReviewModel: ReviewModel, newRating: Int, newComment: String) {
         val newReview = (oldReviewModel as TeacherReviewModel).copy(

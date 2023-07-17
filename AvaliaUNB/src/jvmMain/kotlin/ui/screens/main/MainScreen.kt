@@ -32,8 +32,10 @@ import ui.screens.classes.all.ClassesScreen
 import ui.screens.classes.single.SingleClassScreen
 import ui.screens.classes.single.viewmodel.SingleClassViewModel
 import ui.screens.main.viewmodel.MainScreenViewModel
-import ui.screens.profile.ProfileScreen
-import ui.screens.profile.viewmodel.ProfileViewModel
+import ui.screens.profile.edit.EditProfileScreen
+import ui.screens.profile.edit.viewmodel.ProfileViewModel
+import ui.screens.profile.view.ViewProfileScreen
+import ui.screens.profile.view.viewmodel.ViewProfileViewModel
 import ui.screens.subjects.all.SubjectsScreen
 import ui.screens.subjects.single.SingleSubjectScreen
 import ui.screens.subjects.single.viewmodel.SingleSubjectViewModel
@@ -105,12 +107,12 @@ fun MainScreen(
                 } else {
                     mainScreenUiState.pageIcon
                 },
-                userName = mainScreenUiState.userModel.name,
-                userProfilePicture = mainScreenUiState.userModel.profilePicture ?: Utils.getDefaultProfilePicture(),
-                isUserAdministrator = mainScreenUiState.userModel.isAdministrator,
+                userName = mainScreenUiState.currentUser.name,
+                userProfilePicture = mainScreenUiState.currentUser.profilePicture ?: Utils.getDefaultProfilePicture(),
+                isUserAdministrator = mainScreenUiState.currentUser.isAdministrator,
                 onEditProfileClicked = {
-                    mainScreenViewModel.updateCurrentScreen(Screen.PROFILE)
-                    mainScreenViewModel.setIsEditingProfile(true)
+                    mainScreenViewModel.updateCurrentScreen(Screen.EDIT_PROFILE)
+                    mainScreenViewModel.setIsOnProfile(true)
                 },
                 currentScreen = mainScreenUiState.currentScreen,
                 getScreenContent = { screen ->
@@ -148,7 +150,7 @@ fun MainScreen(
                                 classModel = mainScreenUiState.selectedClass!!,
                                 classRepository = DaggerComponentHolder.appComponent.getClassRepository(),
                                 reviewRepository = DaggerComponentHolder.appComponent.getReviewRepository(),
-                                user = mainScreenUiState.userModel,
+                                user = mainScreenUiState.currentUser,
                                 userRepository = DaggerComponentHolder.appComponent.getUserRepository(),
                                 reportRepository = DaggerComponentHolder.appComponent.getReportRepository()
                             ),
@@ -166,6 +168,10 @@ fun MainScreen(
                             onSeeTeacherDetailsClicked = { teacherModel ->
                                 mainScreenViewModel.updateCurrentScreen(Screen.SINGLE_TEACHER)
                                 mainScreenViewModel.setTeacherSelection(teacherModel)
+                            },
+                            onUserClicked = { userRegistrationNumber ->
+                                mainScreenViewModel.updateCurrentScreen(Screen.VIEW_PROFILE)
+                                mainScreenViewModel.setUserSelection(userRegistrationNumber)
                             }
                         )
                         Screen.TEACHERS -> TeachersScreen(
@@ -180,7 +186,7 @@ fun MainScreen(
                                 teacherModel = mainScreenUiState.selectedTeacher!!,
                                 teacherRepository = DaggerComponentHolder.appComponent.getTeacherRepository(),
                                 reviewRepository = DaggerComponentHolder.appComponent.getReviewRepository(),
-                                user = mainScreenUiState.userModel,
+                                user = mainScreenUiState.currentUser,
                                 userRepository = DaggerComponentHolder.appComponent.getUserRepository(),
                                 reportRepository = DaggerComponentHolder.appComponent.getReportRepository()
                             ),
@@ -194,22 +200,58 @@ fun MainScreen(
                                 )
 
                                 mainScreenViewModel.setTeacherSelection(null)
+                            },
+                            onUserClicked = { userRegistrationNumber ->
+                                mainScreenViewModel.updateCurrentScreen(Screen.VIEW_PROFILE)
+                                mainScreenViewModel.setUserSelection(userRegistrationNumber)
                             }
                         )
-                        Screen.PROFILE -> {
+                        Screen.VIEW_PROFILE -> {
+                            mainScreenViewModel.setIsOnProfile(true)
+
+                            val viewProfileViewModel = ViewProfileViewModel(
+                                    userRegistrationNumber = mainScreenUiState.selectedUserRegistrationNumber!!,
+                                    userRepository = DaggerComponentHolder.appComponent.getUserRepository(),
+                                    reportRepository = DaggerComponentHolder.appComponent.getReportRepository(),
+                                    reviewRepository = DaggerComponentHolder.appComponent.getReviewRepository()
+                                )
+
+                            val onBackClicked = {
+                                mainScreenViewModel.updateSelectedItemsScore()
+
+                                mainScreenViewModel.updateCurrentScreen(
+                                    if (mainScreenUiState.selectedTeacher != null) {
+                                        Screen.SINGLE_TEACHER
+                                    } else {
+                                        Screen.SINGLE_CLASS
+                                    }
+                                )
+                                mainScreenViewModel.setUserSelection(null)
+                            }
+
+                            ViewProfileScreen(
+                                viewProfileViewModel = viewProfileViewModel,
+                                onDeleteAccount = {
+                                    viewProfileViewModel.deleteUser()
+
+                                    onBackClicked()
+                                },
+                                onBackClicked = onBackClicked
+                            )
+                        }
+                        Screen.EDIT_PROFILE -> {
                             val profileViewModel = ProfileViewModel(
-                                mainScreenUiState.userModel,
+                                mainScreenUiState.currentUser,
                                 DaggerComponentHolder.appComponent.getUserRepository()
                             )
 
-                            ProfileScreen(
+                            EditProfileScreen(
                                 profileViewModel = profileViewModel,
                                 onBackClicked = {
-                                    mainScreenViewModel.setIsEditingProfile(false)
+                                    mainScreenViewModel.setIsOnProfile(false)
                                     mainScreenViewModel.updateCurrentScreen(
                                         when (mainScreenUiState.selectedNavItemIndex) {
-                                            null -> Screen.SUBJECTS
-                                            NAV_ITEM_SUBJECTS_INDEX -> Screen.SUBJECTS
+                                            null, NAV_ITEM_SUBJECTS_INDEX -> Screen.SUBJECTS
                                             NAV_ITEM_CLASSES_INDEX -> Screen.CLASSES
                                             else -> Screen.TEACHERS
                                         }

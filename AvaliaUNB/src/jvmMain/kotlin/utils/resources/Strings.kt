@@ -42,6 +42,7 @@ object Strings {
     const val FIELD_HINT_SEARCH = "Pesquisar"
     const val FIELD_HINT_REVIEW = "Insira sua análise"
     const val FIELD_HINT_REVIEW_REPORT = "Descreva o motivo da denúncia"
+    const val FIELD_HINT_NOT_INFORMED = "Não informado"
 
     const val FIELD_PREFIX_DEPARTMENT = "Departamento:"
     const val FIELD_PREFIX_SEMESTER = "Semestre:"
@@ -74,6 +75,7 @@ object Strings {
     const val NO_REVIEW_MULTILINE = "Nenhuma\nanálise"
     const val NO_REVIEW = "Nenhuma análise"
     const val NO_REVIEW_PUBLISHED = "Nenhuma análise publicada"
+    const val NO_REPORTS = "Nenhuma denúncia sobre o usuário"
 
     const val CAPITALIZED_EDIT = "EDITAR"
     const val CAPITALIZED_FINISH = "FINALIZAR"
@@ -92,6 +94,7 @@ object Strings {
     const val LOGOUT = "Sair"
     const val RATINGS = "Avaliações"
     const val LOADING = "Carregando..."
+    const val REPORTS = "Denúncias"
 
     const val ACTION_PICK_IMAGE = "Escolher imagem"
     const val ACTION_DELETE_ACCOUNT = "Excluir Conta"

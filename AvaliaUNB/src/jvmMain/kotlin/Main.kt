@@ -75,7 +75,9 @@ fun AppAvaliaUNB() {
                 Screen.MAIN -> MainScreen(
                     mainScreenViewModel = MainScreenViewModel(
                         userModel =
-                            DaggerComponentHolder.appComponent.getUserRepository().getUser(userRegistrationNumber!!)
+                            DaggerComponentHolder.appComponent.getUserRepository().getUser(userRegistrationNumber!!),
+                            DaggerComponentHolder.appComponent.getClassRepository(),
+                            DaggerComponentHolder.appComponent.getTeacherRepository()
                     ),
                     onLogout = { navigationController.navigateTo(Screen.ENTRY) },
                     onDeleteAccount = { navigationController.navigateTo(Screen.ENTRY) }

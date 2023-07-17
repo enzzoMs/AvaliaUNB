@@ -9,6 +9,8 @@ import data.models.ClassModel
 import data.models.SubjectModel
 import data.models.TeacherModel
 import data.models.UserModel
+import data.repositories.ClassRepository
+import data.repositories.TeacherRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -20,7 +22,9 @@ import utils.navigation.Screen
 import utils.resources.Strings
 
 class MainScreenViewModel(
-    userModel: UserModel
+    userModel: UserModel,
+    private val classRepository: ClassRepository,
+    private val teacherRepository: TeacherRepository
 ) {
     private val navItemSubjects = NavigationItem(
         Strings.SUBJECTS, Icons.Outlined.School, NAV_ITEM_SUBJECTS_INDEX
@@ -34,7 +38,7 @@ class MainScreenViewModel(
 
     private val _mainScreenUiState = MutableStateFlow(
         MainScreenUiState(
-            userModel = userModel,
+            currentUser = userModel,
             currentScreen = Screen.SUBJECTS,
             navItems = listOf(navItemSubjects, navItemClasses, navItemTeachers)
         )
@@ -77,6 +81,15 @@ class MainScreenViewModel(
         }
     }
 
+    fun setUserSelection(userRegistrationNumber: String?) {
+        _mainScreenUiState.update { mainScreenUiState ->
+            mainScreenUiState.copy(
+                selectedUserRegistrationNumber = userRegistrationNumber
+            )
+        }
+    }
+
+
     fun setSubjectSelection(subjectModel: SubjectModel?) {
         _mainScreenUiState.update { mainScreenUiState ->
             mainScreenUiState.copy(
@@ -101,10 +114,36 @@ class MainScreenViewModel(
         }
     }
 
+    fun updateSelectedItemsScore() {
+        _mainScreenUiState.update { mainScreenUiState ->
+            mainScreenUiState.copy(
+                selectedClass = if (mainScreenUiState.selectedClass != null) {
+                    mainScreenUiState.selectedClass.copy(
+                        score =  classRepository.getClassScore(
+                            mainScreenUiState.selectedClass.id
+                        )
+                    )
+                } else {
+                    null
+                },
+                selectedTeacher = if (mainScreenUiState.selectedTeacher != null) {
+                    mainScreenUiState.selectedTeacher.copy(
+                        score =  teacherRepository.getTeacherScore(
+                            mainScreenUiState.selectedTeacher.name,
+                            mainScreenUiState.selectedTeacher.departmentCode
+                        )
+                    )
+                } else {
+                    null
+                }
+            )
+        }
+    }
+
     fun updateUserModel(newUserModel: UserModel) {
         _mainScreenUiState.update { mainScreenUiState ->
             mainScreenUiState.copy(
-                userModel = newUserModel
+                currentUser = newUserModel
             )
         }
     }
@@ -118,10 +157,10 @@ class MainScreenViewModel(
         }
     }
 
-    fun setIsEditingProfile(isEditing: Boolean) {
+    fun setIsOnProfile(isOnProfile: Boolean) {
         _mainScreenUiState.update { mainScreenUiState ->
             mainScreenUiState.copy(
-                onEditProfile = isEditing
+                onEditProfile = isOnProfile
             )
         }
     }

@@ -172,6 +172,15 @@ INNER JOIN departamento
 -- TRIGGERS
 --------------------------------
 
+-- Trigger para remover avaliacoes quando um usuario for deletado
+
+CREATE TRIGGER IF NOT EXISTS usuario_deletado
+AFTER DELETE ON usuario
+BEGIN
+    DELETE FROM avaliacao WHERE matricula_aluno = OLD.matricula;
+END;
+
+
 -- Trigger para remover avalicoes de turmas, avaliacoes de professores e denuncias quando uma avaliacao
 -- for removida
 

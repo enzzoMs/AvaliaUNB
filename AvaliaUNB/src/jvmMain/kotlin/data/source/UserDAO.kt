@@ -33,7 +33,7 @@ class UserDAO @Inject constructor(
         val userUpdateStatement =
             "UPDATE usuario " +
             "SET matricula = ?, nome = ?, curso = ?, email = ?, " +
-            "senha = ?, foto_de_perfil = ? WHERE matricula = '${oldRegistrationNumber}';"
+            "senha = ?, foto_de_perfil = ?, eh_administrador = ? WHERE matricula = '${oldRegistrationNumber}';"
 
         val profilePictureBytes = if (updatedUserModel.profilePicture != null) {
             val profilePicture = updatedUserModel.profilePicture.toAwtImage()
@@ -52,6 +52,7 @@ class UserDAO @Inject constructor(
             preparedStatement.setString(4, email)
             preparedStatement.setString(5, password)
             preparedStatement.setBytes(6, profilePictureBytes)
+            preparedStatement.setBoolean(7, updatedUserModel.isAdministrator)
         }
 
         preparedStatement.execute()

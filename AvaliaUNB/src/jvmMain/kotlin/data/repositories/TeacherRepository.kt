@@ -2,6 +2,7 @@ package data.repositories
 
 import data.models.TeacherModel
 import data.models.TeacherReviewModel
+import data.source.ReviewDAO
 import data.source.TeacherDAO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,11 +12,12 @@ import javax.inject.Singleton
 
 @Singleton
 class TeacherRepository @Inject constructor(
-    private val teacherDAO: TeacherDAO
+    private val teacherDAO: TeacherDAO,
+    private val reviewDAO: ReviewDAO
 ) {
     suspend fun getTeacherReviews(teacherModel: TeacherModel): List<TeacherReviewModel> {
         val allReviewsDeferred = CoroutineScope(Dispatchers.IO).async {
-            teacherDAO.getTeacherReviews(
+            reviewDAO.getTeacherReviews(
                 teacherModel.name,
                 teacherModel.departmentCode
             )

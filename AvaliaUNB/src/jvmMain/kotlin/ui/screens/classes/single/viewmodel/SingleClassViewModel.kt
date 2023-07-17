@@ -55,7 +55,7 @@ class SingleClassViewModel(
 
     fun reportBelongsToUser(report: ReportModel): Boolean = report.userRegistrationNumber == user.registrationNumber
 
-    fun getUserReport(review: ReviewModel): ReportModel? = reportRepository.getUserReport(review.id, user.registrationNumber)
+    fun getUserReviewReport(review: ReviewModel): ReportModel? = reportRepository.getUserReviewReport(review.id, user.registrationNumber)
 
     fun userIsAdministrator(): Boolean = userRepository.isUserAdministrator(user.registrationNumber)
 

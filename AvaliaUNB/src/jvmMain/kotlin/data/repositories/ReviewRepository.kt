@@ -41,6 +41,10 @@ class ReviewRepository @Inject constructor(
         }
     }
 
+    fun getUserReviews(userRegistrationNumber: String): List<ReviewModel> {
+        return reviewDAO.getUserReviews(userRegistrationNumber)
+    }
+
     fun updateReview(review: ReviewModel) = reviewDAO.updateReview(review)
 
     fun deleteReview(reviewId: Int) = reviewDAO.deleteReview(reviewId)

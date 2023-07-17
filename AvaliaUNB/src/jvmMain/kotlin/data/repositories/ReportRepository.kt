@@ -12,8 +12,12 @@ class ReportRepository @Inject constructor(
 
     fun insertReport(reportModel: ReportModel) = reportDAO.insertReport(reportModel)
 
-    fun getUserReport(reviewId: Int, userRegistrationNumber: String): ReportModel? {
-        return reportDAO.getUserReport(reviewId, userRegistrationNumber)
+    fun getUserReviewReport(reviewId: Int, userRegistrationNumber: String): ReportModel? {
+        return reportDAO.getUserReviewReport(reviewId, userRegistrationNumber)
+    }
+
+    fun userWasReported(userRegistrationNumber: String): Boolean {
+        return reportDAO.userWasReported(userRegistrationNumber)
     }
 
     fun updateReport(reviewId: Int, userRegistrationNumber: String, newDescription: String) {

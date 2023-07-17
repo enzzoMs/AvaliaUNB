@@ -28,6 +28,7 @@ import utils.resources.Strings
 @Composable
 fun SingleTeacherScreen(
     singleTeacherViewModel: SingleTeacherViewModel,
+    onUserClicked: (String) -> Unit,
     onBackClicked: () -> Unit
 ) {
     val singleTeacherUiState by singleTeacherViewModel.singleTeacherUiState.collectAsState()
@@ -70,12 +71,13 @@ fun SingleTeacherScreen(
                 },
                 decideShowReportButton = { reviewModel ->
                     singleTeacherViewModel.let {
-                        !it.reviewBelongsToUser(reviewModel) && !it.userIsAdministrator() && it.getUserReport(reviewModel) == null
+                        !it.reviewBelongsToUser(reviewModel) && !it.userIsAdministrator() && it.getUserReviewReport(reviewModel) == null
                     }
                 },
                 decideShowReport = { report ->
                     singleTeacherViewModel.userIsAdministrator() || singleTeacherViewModel.reportBelongsToUser(report)
                 },
+                onUserClicked = onUserClicked,
                 onEditClicked = { oldReviewModel, newRating, newComment ->
                     singleTeacherViewModel.editReview(oldReviewModel, newRating, newComment)
                 },
@@ -96,7 +98,8 @@ fun SingleTeacherScreen(
                 },
                 decideShowRemoveReport = { reportModel ->
                     singleTeacherViewModel.reportBelongsToUser(reportModel) || singleTeacherViewModel.userIsAdministrator()
-                }
+                },
+                userNameClickable = singleTeacherViewModel.userIsAdministrator()
             )
 
             Spacer(

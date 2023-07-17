@@ -39,6 +39,7 @@ import utils.resources.Strings
 fun SingleClassScreen(
     singleClassViewModel: SingleClassViewModel,
     onSeeTeacherDetailsClicked: (TeacherModel) -> Unit,
+    onUserClicked: (String) -> Unit,
     onBackClicked: () -> Unit
 ) {
     val singleClassUiState by singleClassViewModel.singleClassUiState.collectAsState()
@@ -97,12 +98,13 @@ fun SingleClassScreen(
                 },
                 decideShowReportButton = {reviewModel ->
                     singleClassViewModel.let {
-                        !it.reviewBelongsToUser(reviewModel) && !it.userIsAdministrator() && it.getUserReport(reviewModel) == null
+                        !it.reviewBelongsToUser(reviewModel) && !it.userIsAdministrator() && it.getUserReviewReport(reviewModel) == null
                     }
                 },
                 decideShowReport = { report ->
                     singleClassViewModel.userIsAdministrator() || singleClassViewModel.reportBelongsToUser(report)
                 },
+                onUserClicked = onUserClicked,
                 onEditClicked = { oldReviewModel, newRating, newComment ->
                     singleClassViewModel.editReview(oldReviewModel, newRating, newComment)
                 },
@@ -123,7 +125,8 @@ fun SingleClassScreen(
                 },
                 decideShowRemoveReport = { reportModel ->
                     singleClassViewModel.reportBelongsToUser(reportModel) || singleClassViewModel.userIsAdministrator()
-                }
+                },
+                userNameClickable = singleClassViewModel.userIsAdministrator()
             )
 
             Spacer(
