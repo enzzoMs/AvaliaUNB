@@ -1,8 +1,6 @@
 package data.source
 
-import androidx.compose.ui.graphics.toComposeImageBitmap
 import data.models.TeacherModel
-import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,25 +11,17 @@ class TeacherDAO @Inject constructor(
 
     fun getAllTeachers(): List<TeacherModel> {
         val allTeachersQueryResult = database.executeQuery(
-        "SELECT * FROM PROFESSORES_INFORMACOES"
+            "SELECT * FROM PROFESSORES_INFORMACOES"
         )
 
         val teachers = mutableListOf<TeacherModel>()
 
         while (allTeachersQueryResult.next()) {
-            val profilePic = if (allTeachersQueryResult.getObject("foto_de_perfil") == null) {
-                null
-            } else {
-                val profilePicBytes = allTeachersQueryResult.getBytes("foto_de_perfil")
-                val bufferedProfilePicImage = ImageIO.read(profilePicBytes.inputStream())
-                bufferedProfilePicImage.toComposeImageBitmap()
-            }
-
             val teacherSemesterYear = allTeachersQueryResult.getString("ano_semestre")
             val teacherSemesterNumber = allTeachersQueryResult.getString("numero_semestre")
 
             val teacherSemester = "${teacherSemesterYear}-${teacherSemesterNumber}"
-
+            println(allTeachersQueryResult.getString("nome"))
             teachers.add(
                 TeacherModel(
                     allTeachersQueryResult.getString("nome"),
@@ -40,7 +30,7 @@ class TeacherDAO @Inject constructor(
                     teacherSemester,
                     allTeachersQueryResult.getObject("pontuacao") as Double?,
                     allTeachersQueryResult.getInt("num_avaliacoes"),
-                    profilePic
+                    null
                 )
             )
         }

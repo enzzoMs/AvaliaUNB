@@ -1,7 +1,7 @@
 # (BD - 2023-1): AvaliaUNB
 
 <h1 align="center">
-    <img alt="Lig4 Logo" src="./readme_assets/logo_avalia_unb.png" />
+    <img alt="AvaliaUNB Logo" src="./readme_assets/logo_avalia_unb.png" />
 </h1>
 <p align="center">Sistema de avaliação de disciplinas e professores da UnB</p>
 
@@ -23,6 +23,10 @@ O AvaliaUNB se trata de um aplicativo que permite aos estudantes avaliarem profe
 
 O aplicativo foi desenvolvido como projeto final da discplina de Bancos de Dados (BD) ofertada pela [Universidade de Brasília](https://www.unb.br/) durante o semestre 2023/1. 
 
+<h1 align="center">
+    <img alt="Exemplo de funcionamento" src="./readme_assets/avalia_unb_exemplo.gif" />
+</h1>
+
 ---
 
 ## Execução
@@ -35,7 +39,7 @@ git clone https://github.com/enzzoMs/BD_AvaliaUNB.git
 
 ### Requisitos
 
-* Para a exucação do projeto basta ter o Java JDK 11 ou superior instalado no seu sistema.
+Para a exucação do projeto basta ter o Java JDK 11 ou superior instalado no seu sistema.
 
 ### Como executar
 
@@ -59,7 +63,7 @@ Certifique-se de que todas as dependências são baixadas corretamente e não h�
 
 ## Configurações adicionais (Opcional)
 
-Como base de dados o projeto utiliza SQLite, portanto o banco de dados já vem embutido no próprio projeto, não necessitando de configuração separada. Porém, no caso deste aplicativo é possível especificar alguns parâmetros para a inicialização dos dados.
+O AvaliaUNB utiliza SQLite, portanto o banco de dados já vem embutido no próprio projeto e não necessita de configuração separada. Porém, no caso deste aplicativo é possível ainda especificar alguns parâmetros para a inicialização dos dados.
 
 Essas configurações podem ser encontradas no arquivo
 `database_config.properties` localizado em:
@@ -79,7 +83,7 @@ reiniciar_banco_de_dados=true
 
 As três primeiras configurações permitem personalizar quais dados serão incluídos no aplicativo quando o banco de dados for reiniciado. Esses dados fazem parte de arquivos `.CSV` disponíveis em `resouces/database/data`. 
 
-A última configuração indica se o banco de dados deve ser reiniciado. Caso tem valor `true` da próxima vez que o aplicativo for inicializado todos os dados atuais do banco serão excluídos e os dados das outras configurações (se indicados) serão inseridos. 
+A última configuração indica se o banco de dados deve ser reiniciado. Caso o campo tenha valor `true` da próxima vez que o aplicativo for inicializado todos os dados atuais do banco serão excluídos e os dados dos `.CSV` (se indicados) serão inseridos. 
 
 ---
 
@@ -124,16 +128,29 @@ Linguagem: [Kotlin](https://kotlinlang.org/)
 
 Interface gráfica: [Compose Multiplatform](https://www.jetbrains.com/lp/compose-multiplatform/) - [Desktop](https://github.com/JetBrains/compose-multiplatform-desktop-template/#readme)
 
-Banco de Dados: [SQLite](https://www.sqlite.org/index.html)
+Banco de Dados: [JDBC](https://docs.oracle.com/javase/8/docs/technotes/guides/jdbc/) + [SQLite](https://www.sqlite.org/index.html)
 
 Injeção de dependência: [Dagger2](https://dagger.dev/)
 
 Arquitetura: [MVVM (Model–View–ViewModel)](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)
 
---
+---
 
 ## Showcase
 
-TODO
 
+<h1 align="center">
+    <img alt="Tela de Login" src="./readme_assets/exemplo_login.png" />
+</h1>
 
+<h1 align="center">
+    <img alt="Tela de Perfil" src="./readme_assets/exemplo_perfil.png" />
+</h1>
+
+<h1 align="center">
+    <img alt="Tela Principal" src="./readme_assets/exemplo_tela_principal.png" />
+</h1>
+
+<h1 align="center">
+    <img alt="Tela de Avaliações" src="./readme_assets/exemplo_avaliacoes.png" />
+</h1>
