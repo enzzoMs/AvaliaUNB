@@ -55,7 +55,7 @@ Utilize o seguinte comando:
 gradlew run
 ```
 
-Esse comando vai checar e baixar as dendências, compilar e executar o projeto. Depois disso o AvaliaUnB deve ser iniciado, mostrando a interface gráfica para interação.
+Esse comando vai checar e baixar as dependências, compilar e executar o projeto. Depois disso o AvaliaUnB deve ser iniciado, mostrando a interface gráfica para interação.
 
 Certifique-se de que todas as dependências são baixadas corretamente e não há erros relatados durante o processo de compilação. Caso ocorra algum erro, verifique se você possui as versões corretas do Java JDK instaladas e se todos os arquivos do projeto foram clonados corretamente.
 

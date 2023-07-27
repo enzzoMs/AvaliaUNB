@@ -21,7 +21,7 @@ class TeacherDAO @Inject constructor(
             val teacherSemesterNumber = allTeachersQueryResult.getString("numero_semestre")
 
             val teacherSemester = "${teacherSemesterYear}-${teacherSemesterNumber}"
-            println(allTeachersQueryResult.getString("nome"))
+
             teachers.add(
                 TeacherModel(
                     allTeachersQueryResult.getString("nome"),
